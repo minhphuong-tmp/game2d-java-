@@ -1,0 +1,20 @@
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath "com.android.tools.build:gradle:8.1.2"
+    }
+}
+
+allprojects {
+    version = "1.0"
+    ext {
+        appName = "Unlucky"
+        gdxVersion = "1.12.1"
+        box2DLightsVersion = "1.4"
+        ashleyVersion = "1.7.4"
+        aiVersion = "1.8.2"
+    }
+}

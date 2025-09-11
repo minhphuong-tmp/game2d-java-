@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/Unlucky-master/android/android.iml" filepath="$PROJECT_DIR$/Unlucky-master/android/android.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Unlucky-master/core/core.iml" filepath="$PROJECT_DIR$/Unlucky-master/core/core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Unlucky-master/desktop/desktop.iml" filepath="$PROJECT_DIR$/Unlucky-master/desktop/desktop.iml" />
+    </modules>
+  </component>
+</project>

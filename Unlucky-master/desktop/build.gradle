@@ -1,0 +1,25 @@
+apply plugin: "java"
+apply plugin: "application"
+
+mainClassName = "com.unlucky.main.DesktopLauncher"
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+dependencies {
+    implementation project(":core")
+    implementation "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
+    implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+    implementation "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
+}
+
+application {
+    mainClass = mainClassName
+}
+
+tasks.named("run", JavaExec) {
+    workingDir = file("../android/assets")   // để load resource
+    standardInput = System.in
+}
