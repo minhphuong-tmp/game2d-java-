@@ -145,23 +145,47 @@ public class GameScreen extends AbstractScreen {
     /**
      * Updates the camera position to follow the player unless he's on the edges of the map
      */
+
     public void updateCamera() {
         // camera directs on the player
-        if (gameMap.player.getPosition().x <= gameMap.tileMap.mapWidth * 16 - 7 * 16 &&
-            gameMap.player.getPosition().x >= 6 * 16)
-            cam.position.x = gameMap.player.getPosition().x + 8;
-        if (gameMap.player.getPosition().y <= gameMap.tileMap.mapHeight * 16 - 4 * 16 &&
-            gameMap.player.getPosition().y >= 4 * 16 - 8)
-            cam.position.y = gameMap.player.getPosition().y + 4;
-        cam.update();
+//        if (gameMap.player.getPosition().x <= gameMap.tileMap.mapWidth * 16 - 7 * 16 &&
+//                gameMap.player.getPosition().x >= 6 * 16)
+//            cam.position.x = gameMap.player.getPosition().x + 8;
+//        if (gameMap.player.getPosition().y <= gameMap.tileMap.mapHeight * 16 - 4 * 16 &&
+//                gameMap.player.getPosition().y >= 4 * 16 - 8)
+//            cam.position.y = gameMap.player.getPosition().y + 4;
+//        cam.update();
+//
+//        if (gameMap.player.getPosition().x < 6 * 16) cam.position.x = 104;
+//        if (gameMap.player.getPosition().y < 4 * 16 - 8) cam.position.y = 60.5f;
+//        if (gameMap.player.getPosition().x > gameMap.tileMap.mapWidth * 16 - 7 * 16)
+//            cam.position.x = (gameMap.tileMap.mapWidth * 16 - 7 * 16) + 8;
+//        if (gameMap.player.getPosition().y > gameMap.tileMap.mapHeight * 16 - 4 * 16)
+//            cam.position.y = (gameMap.tileMap.mapHeight * 16 - 4 * 16) + 4;
 
-        if (gameMap.player.getPosition().x < 6 * 16) cam.position.x = 104;
-        if (gameMap.player.getPosition().y < 4 * 16 - 8) cam.position.y = 60.5f;
-        if (gameMap.player.getPosition().x > gameMap.tileMap.mapWidth * 16 - 7 * 16)
-            cam.position.x = (gameMap.tileMap.mapWidth * 16 - 7 * 16) + 8;
-        if (gameMap.player.getPosition().y > gameMap.tileMap.mapHeight * 16 - 4 * 16)
-            cam.position.y = (gameMap.tileMap.mapHeight * 16 - 4 * 16) + 4;
+        //-----------------------test camera ----------------------------
+        float playerX = gameMap.player.getPosition().x;
+        float playerY = gameMap.player.getPosition().y;
+
+        // Lấy nửa chiều cao màn hình
+        float halfHeight = cam.viewportHeight / 2f;
+
+        // Đặt camera sao cho nhân vật nằm sát mép trái
+        cam.position.x = playerX;
+        cam.position.y = playerY;
+
+        // Giữ camera trong biên của map
+        if (cam.position.y < halfHeight) cam.position.y = halfHeight;
+        if (cam.position.y > gameMap.tileMap.mapHeight * 16 - halfHeight)
+            cam.position.y = gameMap.tileMap.mapHeight * 16 - halfHeight;
+
+        if (cam.position.x < 0) cam.position.x = 0;
+        if (cam.position.x > gameMap.tileMap.mapWidth * 16 - cam.viewportWidth)
+            cam.position.x = gameMap.tileMap.mapWidth * 16 - cam.viewportWidth;
+
+        cam.update();
     }
+
 
     public void update(float dt) {
         if (currentEvent != EventState.PAUSE) {
