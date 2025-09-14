@@ -125,7 +125,9 @@ public class GameScreen extends AbstractScreen {
         TextureRegion[] images = rm.battleBackgrounds400x240[bgIndex];
         for (int i = 0; i < 2; i++) bg[i].setImage(images[i]);
         // set background movement for the specific worlds
-        if (bgIndex == 0) bg[0].setVector(40, 0);
+       // if (bgIndex == 0) bg[0].setVector(40, 0);
+        if (bgIndex == 0) bg[0].setVector(160, 0);
+
         else if (bgIndex == 1) bg[0].setVector(0, 0);
         else if (bgIndex == 2) bg[0].setVector(40, 0);
         bg[1].setVector(0, 0);
@@ -200,13 +202,25 @@ public class GameScreen extends AbstractScreen {
             hud.update(dt);
         }
 
+//        if (currentEvent == EventState.BATTLING) {
+//            // update bg
+//            for (int i = 0; i < bg.length; i++) {
+//                bg[i].update(dt);
+//            }
+//            battleUIHandler.update(dt);
+//        }
+
+
+        for (int i = 0; i < bg.length; i++) {
+            bg[i].update(dt);
+        }
+
         if (currentEvent == EventState.BATTLING) {
-            // update bg
-            for (int i = 0; i < bg.length; i++) {
-                bg[i].update(dt);
-            }
             battleUIHandler.update(dt);
         }
+
+
+
 
         if (currentEvent == EventState.TRANSITION) transition.update(dt);
         if (currentEvent == EventState.LEVEL_UP) levelUp.update(dt);
@@ -226,13 +240,21 @@ public class GameScreen extends AbstractScreen {
             // fix fading
             if (batchFade) game.batch.setColor(Color.WHITE);
 
-            if (currentEvent == EventState.BATTLING || transition.renderBattle) {
-                // bg camera
-                game.batch.setProjectionMatrix(battleUIHandler.getStage().getCamera().combined);
-                for (int i = 0; i < bg.length; i++) {
-                    bg[i].render(game.batch);
-                }
+//            if (currentEvent == EventState.BATTLING || transition.renderBattle) {
+//                // bg camera
+//                game.batch.setProjectionMatrix(battleUIHandler.getStage().getCamera().combined);
+//                for (int i = 0; i < bg.length; i++) {
+//                    bg[i].render(game.batch);
+//                }
+//            }
+            game.batch.setProjectionMatrix(cam.combined); // dùng camera chính
+            for (int i = 0; i < bg.length; i++) {
+                bg[i].render(game.batch);
             }
+
+
+
+
 
             if (currentEvent == EventState.MOVING || currentEvent == EventState.INVENTORY ||
                 transition.renderMap || currentEvent == EventState.TILE_EVENT ||
