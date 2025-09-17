@@ -204,6 +204,7 @@ public class DialogScreen extends UI {
                 if (player.getHp() <= 0) {
                     gameScreen.gameMap.setDeath();
                     gameScreen.die();
+
                     return;
                 }
                 gameScreen.setCurrentEvent(EventState.MOVING);

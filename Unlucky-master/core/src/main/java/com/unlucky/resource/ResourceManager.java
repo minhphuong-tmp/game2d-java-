@@ -20,6 +20,7 @@ import com.unlucky.inventory.Item;
 import com.unlucky.inventory.ShopItem;
 import com.unlucky.map.Level;
 import com.unlucky.map.World;
+import com.badlogic.gdx.graphics.Texture;
 
 /**
  * Main resource loading and storage class. Uses an AssetManager to manage textures, sounds,
@@ -28,7 +29,11 @@ import com.unlucky.map.World;
  * @author Ming Li
  */
 public class ResourceManager {
-
+    public TextureRegion bullet;
+    public void load() {
+        // load ảnh bullet từ thư mục assets
+        bullet = new TextureRegion(new Texture("bullet.png"));
+    }
     public AssetManager assetManager;
     // json
     private JsonReader jsonReader;
