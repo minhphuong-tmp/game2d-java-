@@ -30,9 +30,12 @@ import com.badlogic.gdx.graphics.Texture;
  */
 public class ResourceManager {
     public TextureRegion bullet;
+    public TextureRegion cloudTexture;
     public void load() {
         // load ảnh bullet từ thư mục assets
         bullet = new TextureRegion(new Texture("bullet.png"));
+        cloudTexture = new TextureRegion(new Texture("cloud.png"));
+
     }
     public AssetManager assetManager;
     // json
