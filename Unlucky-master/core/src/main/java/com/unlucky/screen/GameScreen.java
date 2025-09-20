@@ -56,11 +56,9 @@ public class GameScreen extends AbstractScreen {
 
     // === Bullet System ===
     private Array<Bullet> bullets;
-    private TextureRegion bulletTexture;
 
-    // NEW: === Cloud System ===
-    private Array<Cloud> clouds;
-    private TextureRegion cloudTexture;
+    // NEW: === Raindrop System (replaces Cloud system) ===
+    private Array<Raindrop> raindrops;
 
     // NEW: Sound for bullet end
     private Sound bulletEndSound;
@@ -81,13 +79,8 @@ public class GameScreen extends AbstractScreen {
         }
 
         void render(SpriteBatch batch) {
-            if (bulletTexture != null) {
-                batch.draw(bulletTexture, x - size / 2, y - size / 2, size, size);
-            } else {
-                batch.setColor(Color.RED);
-                batch.draw(rm.redarrow10x9, x - size / 2, y - size / 2, size, size);
-                batch.setColor(Color.WHITE);
-            }
+            // Use redarrow10x9 from atlas instead of separate texture
+            batch.draw(rm.redarrow10x9, x - size / 2, y - size / 2, size, size);
         }
 
         boolean isOutOfScreen(float screenHeight) {
@@ -95,38 +88,32 @@ public class GameScreen extends AbstractScreen {
         }
     }
 
-    // NEW: --- Inner Cloud Class ---
-    private class Cloud {
+    // NEW: --- Inner Raindrop Class (renamed from Cloud) ---
+    private class Raindrop {
         float x, y;
-        float speed = -50f; // Di chuyển từ trên xuống dưới (tốc độ âm cho trục y)
-        float size = 16f; // Kích thước giống nhau
+        float speed = -50f; // Moving downward
+        float size = 16f;
 
-        Cloud(float x, float y) {
+        Raindrop(float x, float y) {
             this.x = x;
             this.y = y;
         }
 
         void update(float dt) {
-            y += speed * dt; // Cập nhật vị trí theo trục y (xuống dưới)
+            y += speed * dt; // Move downward
         }
 
         void render(SpriteBatch batch) {
-            if (cloudTexture != null) {
-                batch.draw(cloudTexture, x - size / 2, y - size / 2, size, size);
-            } else {
-                // Fallback: Vẽ hình dạng giống đám mây đơn giản
-                batch.setColor(Color.BLUE);
-                batch.draw(rm.redarrow10x9, x - size / 2, y - size / 2, size, size);
-                batch.setColor(Color.BLUE);
-            }
+            // Use raindrop from atlas - perfect for falling weather effect
+            batch.draw(rm.raindrop, x - size / 2, y - size / 2, size, size);
         }
 
         boolean isOutOfScreen(float screenBottom) {
-            return y + size / 2 < screenBottom; // Ra khỏi dưới màn hình
+            return y + size / 2 < screenBottom; // Off bottom of screen
         }
 
         void resetPosition(float screenTop) {
-            y = screenTop + size / 2; // Reset lên trên cùng
+            y = screenTop + size / 2; // Reset to top
         }
     }
 
@@ -142,22 +129,6 @@ public class GameScreen extends AbstractScreen {
         transition = new TransitionScreen(this, battle, battleUIHandler, hud, gameMap.player, rm);
         levelUp = new LevelUpScreen(this, gameMap.tileMap, gameMap.player, rm);
         dialog = new DialogScreen(this, gameMap.tileMap, gameMap.player, rm);
-
-        // load bullet texture
-        bulletTexture = rm.bullet;
-        if (bulletTexture == null) {
-            Gdx.app.log("GameScreen", "Bullet texture is NULL, will use red fallback!");
-        } else {
-            Gdx.app.log("GameScreen", "Bullet texture loaded: " + bulletTexture);
-        }
-
-        // NEW: load cloud texture
-        cloudTexture = rm.cloudTexture;
-        if (cloudTexture == null) {
-            Gdx.app.log("GameScreen", "Cloud texture is NULL, will use white cloud-like fallback!");
-        } else {
-            Gdx.app.log("GameScreen", "Cloud texture loaded: " + cloudTexture);
-        }
 
         // NEW: load bullet end sound with error handling
         try {
@@ -183,8 +154,8 @@ public class GameScreen extends AbstractScreen {
         // === Bullet init ===
         bullets = new Array<>();
 
-        // NEW: === Cloud init ===
-        clouds = new Array<>();
+        // NEW: === Raindrop init (replaces clouds) ===
+        raindrops = new Array<>();
 
         // input multiplexer
         multiplexer = new InputMultiplexer();
@@ -193,20 +164,26 @@ public class GameScreen extends AbstractScreen {
         multiplexer.addProcessor(new InputAdapter() {
             @Override
             public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-                if (pointer > 0) return false;
+                if (pointer > 0)
+                    return false;
 
                 Vector2 stageCoords = hud.getStage().screenToStageCoordinates(new Vector2(screenX, screenY));
 
                 boolean hitUI = false;
-                if (currentEvent == EventState.MOVING && hud.getStage().hit(stageCoords.x, stageCoords.y, true) != null) {
+                if (currentEvent == EventState.MOVING
+                        && hud.getStage().hit(stageCoords.x, stageCoords.y, true) != null) {
                     hitUI = true;
-                } else if (currentEvent == EventState.BATTLING && battleUIHandler.getStage().hit(stageCoords.x, stageCoords.y, true) != null) {
+                } else if (currentEvent == EventState.BATTLING
+                        && battleUIHandler.getStage().hit(stageCoords.x, stageCoords.y, true) != null) {
                     hitUI = true;
-                } else if (currentEvent == EventState.LEVEL_UP && levelUp.getStage().hit(stageCoords.x, stageCoords.y, true) != null) {
+                } else if (currentEvent == EventState.LEVEL_UP
+                        && levelUp.getStage().hit(stageCoords.x, stageCoords.y, true) != null) {
                     hitUI = true;
-                } else if (currentEvent == EventState.TILE_EVENT && dialog.getStage().hit(stageCoords.x, stageCoords.y, true) != null) {
+                } else if (currentEvent == EventState.TILE_EVENT
+                        && dialog.getStage().hit(stageCoords.x, stageCoords.y, true) != null) {
                     hitUI = true;
-                } else if (currentEvent == EventState.INVENTORY && game.inventoryUI.getStage().hit(stageCoords.x, stageCoords.y, true) != null) {
+                } else if (currentEvent == EventState.INVENTORY
+                        && game.inventoryUI.getStage().hit(stageCoords.x, stageCoords.y, true) != null) {
                     hitUI = true;
                 }
 
@@ -217,7 +194,8 @@ public class GameScreen extends AbstractScreen {
                     Bullet bullet = new Bullet(playerX, playerY + 8);
                     bullets.add(bullet);
 
-                    Gdx.app.log("Bullet", "Bullet fired at: " + playerX + ", " + playerY + " | total bullets: " + bullets.size);
+                    Gdx.app.log("Bullet",
+                            "Bullet fired at: " + playerX + ", " + playerY + " | total bullets: " + bullets.size);
                     return true;
                 }
 
@@ -242,16 +220,6 @@ public class GameScreen extends AbstractScreen {
 
         hud.getStage().addAction(Actions.sequence(Actions.alpha(0), Actions.fadeIn(0.5f)));
 
-        // bullet fallback check
-        if (bulletTexture == null) {
-            Gdx.app.log("GameScreen", "Bullet texture still null, will use red fallback");
-        }
-
-        // NEW: cloud fallback check
-        if (cloudTexture == null) {
-            Gdx.app.log("GameScreen", "Cloud texture still null, will use white cloud-like fallback");
-        }
-
         if (resetGame) {
             setCurrentEvent(EventState.MOVING);
             hud.deathGroup.setVisible(false);
@@ -273,21 +241,25 @@ public class GameScreen extends AbstractScreen {
             hud.shade.setVisible(false);
             hud.startLevelDescriptor();
 
-            // NEW: Khởi tạo 2 đám mây ban đầu, cạnh nhau (x khác nhau), ở trên cùng màn hình
-            clouds.clear();
+            // NEW: Initialize 2 raindrops at the top of screen
+            raindrops.clear();
             float centerX = cam.position.x;
-            float topY = cam.position.y + cam.viewportHeight / 2 + 16f / 2; // Trên cùng, ngoài màn hình một chút
-            clouds.add(new Cloud(centerX - 40f, topY)); // Đám mây 1, bên trái
-            clouds.add(new Cloud(centerX - 70f, topY)); // Đám mây 2, bên phải
+            float topY = cam.position.y + cam.viewportHeight / 2 + 16f / 2; // Top of screen
+            raindrops.add(new Raindrop(centerX - 40f, topY)); // Raindrop 1, left
+            raindrops.add(new Raindrop(centerX + 40f, topY)); // Raindrop 2, right
         }
     }
 
     private void createBackground(int bgIndex) {
         TextureRegion[] images = rm.battleBackgrounds400x240[bgIndex];
-        for (int i = 0; i < 2; i++) bg[i].setImage(images[i]);
-        if (bgIndex == 0) bg[0].setVector(160, 0);
-        else if (bgIndex == 1) bg[0].setVector(0, 0);
-        else if (bgIndex == 2) bg[0].setVector(40, 0);
+        for (int i = 0; i < 2; i++)
+            bg[i].setImage(images[i]);
+        if (bgIndex == 0)
+            bg[0].setVector(160, 0);
+        else if (bgIndex == 1)
+            bg[0].setVector(0, 0);
+        else if (bgIndex == 2)
+            bg[0].setVector(40, 0);
         bg[1].setVector(0, 0);
     }
 
@@ -307,11 +279,13 @@ public class GameScreen extends AbstractScreen {
         cam.position.x = playerX;
         cam.position.y = playerY;
 
-        if (cam.position.y < halfHeight) cam.position.y = halfHeight;
+        if (cam.position.y < halfHeight)
+            cam.position.y = halfHeight;
         if (cam.position.y > gameMap.tileMap.mapHeight * 16 - halfHeight)
             cam.position.y = gameMap.tileMap.mapHeight * 16 - halfHeight;
 
-        if (cam.position.x < 0) cam.position.x = 0;
+        if (cam.position.x < 0)
+            cam.position.x = 0;
         if (cam.position.x > gameMap.tileMap.mapWidth * 16 - cam.viewportWidth)
             cam.position.x = gameMap.tileMap.mapWidth * 16 - cam.viewportWidth;
 
@@ -333,11 +307,16 @@ public class GameScreen extends AbstractScreen {
             bgi.update(dt);
         }
 
-        if (currentEvent == EventState.BATTLING) battleUIHandler.update(dt);
-        if (currentEvent == EventState.TRANSITION) transition.update(dt);
-        if (currentEvent == EventState.LEVEL_UP) levelUp.update(dt);
-        if (currentEvent == EventState.TILE_EVENT) dialog.update(dt);
-        if (currentEvent == EventState.INVENTORY) game.inventoryUI.update(dt);
+        if (currentEvent == EventState.BATTLING)
+            battleUIHandler.update(dt);
+        if (currentEvent == EventState.TRANSITION)
+            transition.update(dt);
+        if (currentEvent == EventState.LEVEL_UP)
+            levelUp.update(dt);
+        if (currentEvent == EventState.TILE_EVENT)
+            dialog.update(dt);
+        if (currentEvent == EventState.INVENTORY)
+            game.inventoryUI.update(dt);
 
         // update bullets
         for (int i = bullets.size - 1; i >= 0; i--) {
@@ -352,14 +331,14 @@ public class GameScreen extends AbstractScreen {
             }
         }
 
-        // NEW: update clouds - Chỉ có 2 đám mây, di chuyển cùng lúc, reset khi ra khỏi dưới
+        // NEW: update raindrops - falling weather effect
         float screenBottom = cam.position.y - cam.viewportHeight / 2;
         float screenTop = cam.position.y + cam.viewportHeight / 2;
-        for (Cloud c : clouds) {
-            c.update(dt);
-            if (c.isOutOfScreen(screenBottom)) {
-                c.resetPosition(screenTop);
-                Gdx.app.log("Cloud", "Cloud reset to top: " + c.y);
+        for (Raindrop r : raindrops) {
+            r.update(dt);
+            if (r.isOutOfScreen(screenBottom)) {
+                r.resetPosition(screenTop);
+                Gdx.app.log("Raindrop", "Raindrop reset to top: " + r.y);
             }
         }
     }
@@ -368,12 +347,14 @@ public class GameScreen extends AbstractScreen {
         update(dt);
 
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
+        
         if (game.batch != null) {
             game.batch.begin();
-
+            
+            game.batch.setColor(Color.WHITE);
             game.batch.setProjectionMatrix(cam.combined);
-            for (Background bgi : bg) bgi.render(game.batch);
+            for (Background bgi : bg)
+                bgi.render(game.batch);
 
             if (currentEvent == EventState.MOVING || currentEvent == EventState.INVENTORY ||
                     transition.renderMap || currentEvent == EventState.TILE_EVENT ||
@@ -383,21 +364,31 @@ public class GameScreen extends AbstractScreen {
             }
 
             // render bullets
-            for (Bullet b : bullets) b.render(game.batch);
+            for (Bullet b : bullets)
+                b.render(game.batch);
 
-            // NEW: render clouds
-            for (Cloud c : clouds) c.render(game.batch);
+            // NEW: render raindrops - beautiful falling weather effect
+            for (Raindrop r : raindrops)
+                r.render(game.batch);
 
             game.batch.end();
         }
 
         // render HUD / UI
-        if (currentEvent == EventState.MOVING) hud.render(dt);
-        else if (currentEvent == EventState.BATTLING) battleUIHandler.render(dt);
-        else if (currentEvent == EventState.TRANSITION) transition.render(dt);
-        else if (currentEvent == EventState.LEVEL_UP) levelUp.render(dt);
-        else if (currentEvent == EventState.TILE_EVENT) dialog.render(dt);
-        else if (currentEvent == EventState.INVENTORY) game.inventoryUI.render(dt);
+        if (currentEvent == EventState.MOVING)
+            hud.render(dt);
+        else if (currentEvent == EventState.BATTLING)
+            battleUIHandler.render(dt);
+        else if (currentEvent == EventState.TRANSITION)
+            transition.render(dt);
+        else if (currentEvent == EventState.LEVEL_UP)
+            levelUp.render(dt);
+        else if (currentEvent == EventState.TILE_EVENT)
+            dialog.render(dt);
+        else if (currentEvent == EventState.INVENTORY)
+            game.inventoryUI.render(dt);
+        else if (currentEvent == EventState.PAUSE)
+            hud.render(dt);  // Render HUD when paused to show settings dialog
     }
 
     public void setCurrentEvent(EventState event) {
