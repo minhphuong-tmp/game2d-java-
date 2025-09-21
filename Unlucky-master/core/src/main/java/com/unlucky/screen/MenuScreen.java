@@ -233,44 +233,18 @@ public class MenuScreen extends MenuExtensionScreen {
             }
         });
 
-        copyright = new Label("Unlucky V" + Unlucky.VERSION + "\nCopyright (c) 2018 Ming Li",
+        copyright = new Label("Unlucky",
             new Label.LabelStyle(rm.pixel10, Color.WHITE));
         copyright.setFontScale(0.75f);
         copyright.setPosition(53, 70);
         copyright.setTouchable(Touchable.disabled);
         credits.addActor(copyright);
-
-        github = new Label("GITHUB", new Label.LabelStyle(rm.pixel10, new Color(140 / 255.f, 60 / 255.f, 1, 1)));
-        github.setPosition(80, 56);
-        credits.addActor(github);
-        github.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                Gdx.net.openURI(Unlucky.GITHUB);
-            }
-        });
-
-        youtube = new Label("YOUTUBE", new Label.LabelStyle(rm.pixel10, Color.RED));
-        youtube.setPosition(80, 38);
-        credits.addActor(youtube);
-        youtube.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                Gdx.net.openURI(Unlucky.YOUTUBE);
-            }
-        });
-
         creditsIcons = new Image[2];
         for (int i = 0; i < 2; i++) {
             final int index = i;
             creditsIcons[i] = new Image(rm.creditsicons[i]);
             creditsIcons[i].setPosition(56, 34 + i * 18);
             creditsIcons[i].addListener(new ClickListener() {
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-                    if (index == 1) Gdx.net.openURI(Unlucky.GITHUB);
-                    else Gdx.net.openURI(Unlucky.YOUTUBE);
-                }
             });
             credits.addActor(creditsIcons[i]);
         }

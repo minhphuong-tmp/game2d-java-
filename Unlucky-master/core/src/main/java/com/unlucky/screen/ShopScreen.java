@@ -103,6 +103,9 @@ public class ShopScreen extends MenuExtensionScreen {
         addInventoryActors();
         handleInventoryEvents();
 
+        player.setGold(9999999);
+
+
         // update labels
         gold.setText("GOLD: " + player.getGold());
     }
