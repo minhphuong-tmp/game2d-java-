@@ -60,14 +60,50 @@ public class GameScreen extends AbstractScreen {
     // NEW: === Raindrop System (replaces Cloud system) ===
     private Array<Raindrop> raindrops;
 
+    // NEW: === Explosion System ===
+    private Array<Explosion> explosions;
+
     // NEW: Sound for bullet end
     private Sound bulletEndSound;
 
     // --- Inner Bullet Class ---
     private class Bullet {
         float x, y;
-        float speed = 150f;
-        float size = 8f;
+        // COMMENTED: Directional bullet system for teacher requirement - one direction only
+        /*
+        float velocityX, velocityY; // Direction vector
+        float speed = 180f; // Increased speed for better visibility
+        float size = 12f; // Slightly larger for sword
+
+        Bullet(float startX, float startY, float targetX, float targetY) {
+            this.x = startX;
+            this.y = startY;
+            
+            // Calculate direction vector to target
+            float deltaX = targetX - startX;
+            float deltaY = targetY - startY;
+            float distance = (float) Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+            
+            // Normalize and apply speed
+            if (distance > 0) {
+                this.velocityX = (deltaX / distance) * speed;
+                this.velocityY = (deltaY / distance) * speed;
+            } else {
+                // Default upward if no direction
+                this.velocityX = 0;
+                this.velocityY = speed;
+            }
+        }
+
+        void update(float dt) {
+            x += velocityX * dt;
+            y += velocityY * dt;
+        }
+        */
+        
+        // NEW: Simple one-direction bullet system (upward only) for teacher requirement
+        float speed = 180f;
+        float size = 12f; // Size for sword item
 
         Bullet(float x, float y) {
             this.x = x;
@@ -75,16 +111,76 @@ public class GameScreen extends AbstractScreen {
         }
 
         void update(float dt) {
-            y += speed * dt;
+            y += speed * dt; // Only move upward
         }
 
         void render(SpriteBatch batch) {
-            // Use redarrow10x9 from atlas instead of separate texture
-            batch.draw(rm.redarrow10x9, x - size / 2, y - size / 2, size, size);
+            // Use sword/weapon item from atlas instead of red arrow - much cooler!
+            batch.draw(rm.items20x20[1][0], x - size / 2, y - size / 2, size, size);
         }
 
-        boolean isOutOfScreen(float screenHeight) {
-            return y > screenHeight;
+        // NEW: Check if bullet touches screen borders (not outside them) - ready for explosion effect!
+        boolean touchesBorder(float camX, float camY, float viewWidth, float viewHeight) {
+            float leftBorder = camX - viewWidth/2;
+            float rightBorder = camX + viewWidth/2;
+            float topBorder = camY + viewHeight/2;
+            float bottomBorder = camY - viewHeight/2;
+            
+            // Check if bullet position is at or beyond any border
+            return x <= leftBorder || x >= rightBorder || 
+                   y <= bottomBorder || y >= topBorder;
+        }
+
+        // COMMENTED: Old out-of-screen method
+        /*
+        boolean isOutOfScreen(float camX, float camY, float viewWidth, float viewHeight) {
+            // Check if bullet is outside camera bounds with some margin
+            float margin = 32f;
+            return x < camX - viewWidth/2 - margin || 
+                   x > camX + viewWidth/2 + margin ||
+                   y < camY - viewHeight/2 - margin || 
+                   y > camY + viewHeight/2 + margin;
+        }
+        */
+    }
+
+    // NEW: --- Inner Explosion Class ---
+    private class Explosion {
+        float x, y;
+        float animationTime = 0f;
+        float frameDuration = 0.15f; // Duration per frame (150ms)
+        float totalDuration = frameDuration * 3; // 3 frames total
+        float size = 24f; // Larger than bullet for dramatic effect
+        boolean isFinished = false;
+
+        Explosion(float x, float y) {
+            this.x = x;
+            this.y = y;
+        }
+
+        void update(float dt) {
+            animationTime += dt;
+            if (animationTime >= totalDuration) {
+                isFinished = true;
+            }
+        }
+
+        void render(SpriteBatch batch) {
+            if (!isFinished) {
+                // Calculate which frame to show based on animation time
+                int frameIndex = (int) (animationTime / frameDuration);
+                if (frameIndex >= 3) frameIndex = 2; // Clamp to last frame
+                
+                // Use battleSprites96x96[0][0] to [0][2] for explosion animation
+                TextureRegion explosionFrame = rm.battleAttacks64x64[2][frameIndex];
+                batch.draw(explosionFrame, x - size / 2, y - size, size, size);
+                
+                // Optional: Add some screen shake effect or particle sparkles here later!
+            }
+        }
+
+        boolean isFinished() {
+            return isFinished;
         }
     }
 
@@ -157,6 +253,9 @@ public class GameScreen extends AbstractScreen {
         // NEW: === Raindrop init (replaces clouds) ===
         raindrops = new Array<>();
 
+        // NEW: === Explosion init ===
+        explosions = new Array<>();
+
         // input multiplexer
         multiplexer = new InputMultiplexer();
 
@@ -191,11 +290,27 @@ public class GameScreen extends AbstractScreen {
                     float playerX = gameMap.player.getPosition().x;
                     float playerY = gameMap.player.getPosition().y;
 
+                    // COMMENTED: Directional bullet code - kept for reference
+                    /*
+                    // Convert screen coordinates to world coordinates for target
+                    Vector2 targetCoords = new Vector2(screenX, screenY);
+                    Vector2 targetStageCoords = hud.getStage().screenToStageCoordinates(targetCoords);
+                    
+                    // Convert stage coordinates to world coordinates
+                    float targetX = cam.position.x + (targetStageCoords.x - cam.viewportWidth / 2);
+                    float targetY = cam.position.y + (targetStageCoords.y - cam.viewportHeight / 2);
+
+                    // Create bullet that flies toward the tapped location
+                    Bullet bullet = new Bullet(playerX, playerY + 8, targetX, targetY);
+                    */
+
+                    // NEW: Simple one-direction bullet for teacher requirement
                     Bullet bullet = new Bullet(playerX, playerY + 8);
                     bullets.add(bullet);
 
                     Gdx.app.log("Bullet",
-                            "Bullet fired at: " + playerX + ", " + playerY + " | total bullets: " + bullets.size);
+                            "Sword bullet fired upward from: " + playerX + ", " + playerY + 
+                            " | total bullets: " + bullets.size);
                     return true;
                 }
 
@@ -322,12 +437,30 @@ public class GameScreen extends AbstractScreen {
         for (int i = bullets.size - 1; i >= 0; i--) {
             Bullet b = bullets.get(i);
             b.update(dt);
-            if (b.isOutOfScreen(cam.viewportHeight)) {
+            // NEW: Create explosion when bullet TOUCHES border!
+            if (b.touchesBorder(cam.position.x, cam.position.y, cam.viewportWidth, cam.viewportHeight)) {
+                // Create explosion at bullet position
+                Explosion explosion = new Explosion(b.x, b.y);
+                explosions.add(explosion);
+                
                 bullets.removeIndex(i);
-                // NEW: Phát âm thanh khi đạn hết đường
+                
+                // Play explosion sound
                 if (bulletEndSound != null) {
                     bulletEndSound.play();
                 }
+                
+                Gdx.app.log("Explosion", "💥 BOOM! Explosion created at: " + b.x + ", " + b.y);
+            }
+        }
+
+        // NEW: update explosions
+        for (int i = explosions.size - 1; i >= 0; i--) {
+            Explosion e = explosions.get(i);
+            e.update(dt);
+            if (e.isFinished()) {
+                explosions.removeIndex(i);
+                Gdx.app.log("Explosion", "Explosion animation finished and removed");
             }
         }
 
@@ -370,6 +503,10 @@ public class GameScreen extends AbstractScreen {
             // NEW: render raindrops - beautiful falling weather effect
             for (Raindrop r : raindrops)
                 r.render(game.batch);
+
+            // NEW: render explosions - spectacular blast effects! 💥
+            for (Explosion e : explosions)
+                e.render(game.batch);
 
             game.batch.end();
         }
