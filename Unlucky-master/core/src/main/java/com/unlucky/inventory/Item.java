@@ -218,22 +218,22 @@ public class Item {
         String ret = "";
         if (type == 0) {
             // percentage hp potions
-            if (hp < 0) ret = desc + "\nRECOVER " + -hp + "% OF HP";
-            // exp potions
-            else if (exp > 0) ret = desc + "\nGIVES " + exp + "% EXP";
-            else ret = desc + "\nHEALS FOR " + hp + " HP";
-            ret += "\n\ndouble tap to consume";
+            if (hp < 0) ret = desc + "\nHỒI " + -hp + "% MÁU";
+                // exp potions
+            else if (exp > 0) ret = desc + "\nNHẬN " + exp + "% KINH NGHIỆM";
+            else ret = desc + "\nHỒI " + hp + " MÁU";
+            ret += "\n\nnhấn đúp để sử dụng";
         } else if (type == 1) {
             ret = desc;
         } else if (type >= 2 && type <= 9) {
             ret = desc + "\n";
-            if (mhp != 0) ret += "+" + mhp + " HP\n";
-            if (dmg != 0) ret += "+" + dmg + " DAMAGE\n";
-            if (acc != 0) ret += "+" + acc + "% ACCURACY";
-            if (bonusEnchantChance != 0) ret += "\n+" + bonusEnchantChance + "% BONUS ENCHANT CHANCE";
+            if (mhp != 0) ret += "+" + mhp + " MÁU\n";
+            if (dmg != 0) ret += "+" + dmg + " SÁT THƯƠNG\n";
+            if (acc != 0) ret += "+" + acc + "% CHÍNH XÁC\n";
+            if (bonusEnchantChance != 0) ret += "\n+" + bonusEnchantChance + "% CƠ HỘI TĂNG CẤP";
         } else if (type == 10) {
-            ret = desc + "\n+" + eChance + "% ENCHANT CHANCE";
-            ret += "\n\ndrag onto an equip to use";
+            ret = desc + "\n+" + eChance + "% CƠ HỘI TĂNG CẤP";
+            ret += "\n\ndùng để tăng cơ hội thành công khi tăng cấp trang bị";
         }
         // remove newline from end of string if there is one
         ret = ret.trim();
@@ -296,16 +296,16 @@ public class Item {
         String ret = "";
         switch (rarity) {
             case 0:
-                ret = "[COMMON] " + name;
+                ret = "[THƯỜNG] " + name;
                 break;
             case 1:
-                ret = "[RARE] " + name;
+                ret = "[HIẾM] " + name;
                 break;
             case 2:
-                ret = "[EPIC] " + name;
+                ret = "[SỬ THI] " + name;
                 break;
             case 3:
-                ret = "[LEGENDARY] " + name;
+                ret = "[THẦN THOẠI] " + name;
                 break;
         }
         return ret;

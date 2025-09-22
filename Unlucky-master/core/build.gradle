@@ -10,6 +10,10 @@ repositories {
     maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
 }
 
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
 def gdxVersion = "1.11.0" // hoặc "1.12.1" nếu bạn đồng bộ với root build.gradle
 
 dependencies {

@@ -300,9 +300,9 @@ public class Player extends Entity {
             }
             // trigger dialog event
             else if (currentTile.isQuestionMark() || currentTile.isExclamationMark()) tileInteraction = true;
-            // trigger teleport event
+                // trigger teleport event
             else if (currentTile.isTeleport()) teleporting = true;
-            // ice sliding
+                // ice sliding
             else if (currentTile.isIce()) {
                 if (!nextTileBlocked(prevDir)) {
                     move(prevDir);
@@ -519,8 +519,8 @@ public class Player extends Entity {
                 this.gold += gold;
                 gameMap.goldObtained += gold;
                 ret = new String[] {
-                    "The random tile gave something!",
-                    "You obtained " + gold + " gold!"
+                        "Nhận được phần thưởng ngẫu nhiên!",
+                        "Nhận " + gold + " vàng!"
                 };
             }
             // heal
@@ -532,8 +532,8 @@ public class Player extends Entity {
                 this.hp += heal;
                 if (hp > maxHp) hp = maxHp;
                 ret = new String[] {
-                    "The random tile gave something!",
-                    "It healed you for " + heal + " hp!"
+                        "Nhận được phần thưởng ngẫu nhiên!",
+                        "Hồi " + heal + " máu!"
                 };
             }
             // item
@@ -541,16 +541,16 @@ public class Player extends Entity {
                 Item item = rm.getRandomItem();
                 if (inventory.isFull()) {
                     ret = new String[] {
-                        "The random tile gave something!",
-                        "It dropped a " + item.getDialogName() + "!",
-                        "Oh no, too bad your inventory was full."
+                            "Nhận được phần thưởng ngẫu nhiên!",
+                            "Rơi ra " + item.getDialogName() + "!",
+                            "Ôi không, túi đồ đã đầy."
                     };
                 }
                 else {
                     ret = new String[]{
-                        "The random tile gave something!",
-                        "It dropped a " + item.getDialogName() + "!",
-                        "The item was added to your inventory."
+                            "Nhận dược phần thưởng ngẫu nhiên!",
+                            "Nhặt được " + item.getDialogName() + "!",
+                            "Vật phẩm đã thêm vào túi."
                     };
                     item.adjust(mapLevel);
                     inventory.addItem(item);
@@ -560,7 +560,7 @@ public class Player extends Entity {
         }
         else {
             ret = new String[] {
-                "The random tile did not give anything."
+                    "Không có phần thưởng nào."
             };
         }
 
@@ -588,17 +588,17 @@ public class Player extends Entity {
                 // player dies from tile
                 if (hp <= 0) {
                     ret = new String[] { "" +
-                        "The random tile cursed you!",
-                        "It damaged you for " + dmg + " damage!",
-                        "Oh no, you took fatal damage and died!",
-                        "You will lose " + Util.DEATH_PENALTY +
-                            "% of your exp and gold and all the items obtained in this level as a penalty."
+                            "Bị nguyền rủa!",
+                            "Mất " + dmg + " máu!",
+                            "Trúng đòn chí mạng, bạn đã gục ngã!",
+                            "Hình phạt: -" + Util.DEATH_PENALTY +
+                                    "% kinh nghiệm, vàng và toàn bộ loot ở màn này."
                     };
                 }
                 else {
                     ret = new String[] {
-                        "The random tile cursed you!",
-                        "It damaged you for " + dmg + " damage!"
+                            "Bị nguyền rủa!",
+                            "Mất " + dmg + " máu!"
                     };
                 }
             }
@@ -610,14 +610,14 @@ public class Player extends Entity {
                 gold -= steal;
                 if (gold < 0) gold = 0;
                 ret = new String[] {
-                    "The random tile cursed you!",
-                    "It caused you to lose " + steal + " gold!"
+                        "Bị nguyền rủa!",
+                        "-" + steal + " vàng!"
                 };
             }
         }
         else {
             ret = new String[] {
-                "The random tile did not affect you."
+                    "Không có gì xảy ra."
             };
         }
 

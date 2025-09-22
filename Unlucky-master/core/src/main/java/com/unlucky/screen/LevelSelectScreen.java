@@ -49,11 +49,11 @@ public class LevelSelectScreen extends SelectScreen {
         bannerLabel.setText(rm.worlds.get(worldIndex).name);
         bannerLabel.setStyle(nameStyles[worldIndex]);
 
-        playerStats = "Player\n-----------------------------------\n" +
-            "LEVEL: " + game.player.getLevel() +
-            "\nHP: " + game.player.getHp() + "/" + game.player.getMaxHp() +
-            "\nDAMAGE: " + game.player.getMinDamage() + "-" + game.player.getMaxDamage() +
-            "\nSPECIAL MOVESET: \n" + game.player.smoveset.toString();
+        playerStats = "NGƯỜI CHƠI\n-----------------------------------\n" +
+                "CẤP ĐỘ: " + game.player.getLevel() +
+                "\nMÁU: " + game.player.getHp() + "/" + game.player.getMaxHp() +
+                "\nsÁT THƯƠNG: " + game.player.getMinDamage() + "-" + game.player.getMaxDamage() +
+                "\nKĨ NĂNG ĐẶC BIỆT: \n" + game.player.smoveset.toString();
 
         // the level the player is currently on and not completed
         if (this.worldIndex == game.player.maxWorld) {
@@ -111,19 +111,19 @@ public class LevelSelectScreen extends SelectScreen {
                     if (game.player.inventory.isFull()) {
                         new Dialog("Warning", rm.dialogSkin) {
                             {
-                                Label l = new Label("Your inventory is full.\nAre you sure you want to proceed?", rm.dialogSkin);
+                                Label l = new Label("Túi đầy.\nBạn có muốn tiếp tục?", rm.dialogSkin);
                                 l.setFontScale(0.5f);
                                 l.setAlignment(Align.center);
                                 text(l);
                                 getButtonTable().defaults().width(40);
                                 getButtonTable().defaults().height(15);
-                                button("Yes", "yes");
-                                button("No", "no");
+                                button("Có", "có");
+                                button("Không", "Không");
                             }
 
                             @Override
                             protected void result(Object object) {
-                                if (object.equals("yes")) enterGame();
+                                if (object.equals("có")) enterGame();
                             }
 
                         }.show(stage).getTitleLabel().setAlignment(Align.center);
@@ -178,7 +178,7 @@ public class LevelSelectScreen extends SelectScreen {
             name.setPosition(5, 10);
             name.setFontScale(0.66f);
             name.setTouchable(Touchable.disabled);
-            Label desc = new Label("Average level: " + l.avgLevel, descStyle);
+            Label desc = new Label("Cấp độ trung bình: " + l.avgLevel, descStyle);
             desc.setPosition(5, 4);
             desc.setFontScale(0.5f);
             desc.setTouchable(Touchable.disabled);
@@ -192,13 +192,13 @@ public class LevelSelectScreen extends SelectScreen {
             if (index > numLevelsToShow) {
                 b.setTouchable(Touchable.disabled);
                 name.setText("???????????????");
-                desc.setText("Average level:  ???");
+                desc.setText("Cấp độ trung bình:  ???");
             }
             else {
                 b.setTouchable(Touchable.enabled);
                 scrollButtons.add(b);
                 name.setText(l.name);
-                desc.setText("Average level: " + l.avgLevel);
+                desc.setText("Cấp độ trung bình: " + l.avgLevel);
             }
 
             // select level
@@ -223,7 +223,7 @@ public class LevelSelectScreen extends SelectScreen {
         selectionContainer.pack();
         selectionContainer.setTransform(false);
         selectionContainer.setOrigin(selectionContainer.getWidth() / 2,
-            selectionContainer.getHeight() / 2);
+                selectionContainer.getHeight() / 2);
 
         scrollPane = new ScrollPane(selectionContainer, rm.skin);
         scrollPane.setScrollingDisabled(true, false);
