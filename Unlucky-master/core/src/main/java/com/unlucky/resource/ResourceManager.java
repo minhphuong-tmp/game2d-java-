@@ -93,6 +93,13 @@ public class ResourceManager {
     public Skin skin;
     public Skin dialogSkin;
 
+    // NEW: Buttons Atlas for music/sfx toggle buttons
+    public TextureAtlas buttonsAtlas;
+    public TextureRegion musicOnButton;
+    public TextureRegion musicOffButton;
+    public TextureRegion sfxOnButton;
+    public TextureRegion sfxOffButton;
+
     // misc
     public TextureRegion shadow11x6;
     public TextureRegion redarrow10x9;
@@ -151,6 +158,7 @@ public class ResourceManager {
         jsonReader = new JsonReader();
 
         assetManager.load("textures.atlas", TextureAtlas.class);
+        assetManager.load("buttons.atlas", TextureAtlas.class); // NEW: Load buttons atlas
         assetManager.load("skins/ui.atlas", TextureAtlas.class);
         assetManager.load("skins/dialog.atlas", TextureAtlas.class);
 
@@ -183,6 +191,13 @@ public class ResourceManager {
         assetManager.finishLoading();
 
         atlas = assetManager.get("textures.atlas", TextureAtlas.class);
+        
+        // NEW: Load buttons atlas for music/sfx toggle buttons
+        buttonsAtlas = assetManager.get("buttons.atlas", TextureAtlas.class);
+        musicOnButton = buttonsAtlas.findRegion("music_on");
+        musicOffButton = buttonsAtlas.findRegion("music_off");
+        sfxOnButton = buttonsAtlas.findRegion("sfx_on");
+        sfxOffButton = buttonsAtlas.findRegion("sfx_off");
 
         // load font
         pixel10 = new BitmapFont(Gdx.files.internal("fonts/pixel.fnt"), atlas.findRegion("pixel"), false);
