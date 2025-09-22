@@ -64,7 +64,7 @@ public class Player extends Entity {
     private int maxExpIncrease = 0;
 
     // gold
-    private int gold = 0;
+    private int gold = 9999999;
 
     // inventory and equips
     public Inventory inventory;
@@ -119,6 +119,8 @@ public class Player extends Entity {
 
         statusEffects = new StatusSet(true, rm);
         smoveset = new SpecialMoveset();
+        this.gold = 999999;
+
     }
 
     public void update(float dt) {

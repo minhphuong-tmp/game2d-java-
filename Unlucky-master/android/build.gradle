@@ -38,26 +38,18 @@ android {
     }
 }
 
-def gdxVersion = "1.12.1"
+def gdxVersion = rootProject.ext.gdxVersion
 
 dependencies {
     implementation project(":core")
-
-    // Backend Android
     implementation "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
-
-    // Freetype
     implementation "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
 
-    // Native libs cho ARM
     implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi-v7a"
     implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-arm64-v8a"
-
-    // Native libs cho Emulator (Intel x86/x86_64)
     implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-x86"
     implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-x86_64"
 
-    // Freetype native libs
     implementation "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-armeabi-v7a"
     implementation "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-arm64-v8a"
     implementation "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-x86"

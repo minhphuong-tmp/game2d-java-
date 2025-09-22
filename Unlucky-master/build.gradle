@@ -9,6 +9,11 @@ buildscript {
 }
 
 allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
+
     version = "1.0"
     ext {
         appName = "Unlucky"

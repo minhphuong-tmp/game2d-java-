@@ -125,9 +125,7 @@ public class GameScreen extends AbstractScreen {
         TextureRegion[] images = rm.battleBackgrounds400x240[bgIndex];
         for (int i = 0; i < 2; i++) bg[i].setImage(images[i]);
         // set background movement for the specific worlds
-       // if (bgIndex == 0) bg[0].setVector(40, 0);
-        if (bgIndex == 0) bg[0].setVector(160, 0);
-
+        if (bgIndex == 0) bg[0].setVector(40, 0);
         else if (bgIndex == 1) bg[0].setVector(0, 0);
         else if (bgIndex == 2) bg[0].setVector(40, 0);
         bg[1].setVector(0, 0);
@@ -147,47 +145,23 @@ public class GameScreen extends AbstractScreen {
     /**
      * Updates the camera position to follow the player unless he's on the edges of the map
      */
-
     public void updateCamera() {
         // camera directs on the player
-//        if (gameMap.player.getPosition().x <= gameMap.tileMap.mapWidth * 16 - 7 * 16 &&
-//                gameMap.player.getPosition().x >= 6 * 16)
-//            cam.position.x = gameMap.player.getPosition().x + 8;
-//        if (gameMap.player.getPosition().y <= gameMap.tileMap.mapHeight * 16 - 4 * 16 &&
-//                gameMap.player.getPosition().y >= 4 * 16 - 8)
-//            cam.position.y = gameMap.player.getPosition().y + 4;
-//        cam.update();
-//
-//        if (gameMap.player.getPosition().x < 6 * 16) cam.position.x = 104;
-//        if (gameMap.player.getPosition().y < 4 * 16 - 8) cam.position.y = 60.5f;
-//        if (gameMap.player.getPosition().x > gameMap.tileMap.mapWidth * 16 - 7 * 16)
-//            cam.position.x = (gameMap.tileMap.mapWidth * 16 - 7 * 16) + 8;
-//        if (gameMap.player.getPosition().y > gameMap.tileMap.mapHeight * 16 - 4 * 16)
-//            cam.position.y = (gameMap.tileMap.mapHeight * 16 - 4 * 16) + 4;
-
-        //-----------------------test camera ----------------------------
-        float playerX = gameMap.player.getPosition().x;
-        float playerY = gameMap.player.getPosition().y;
-
-        // Lấy nửa chiều cao màn hình
-        float halfHeight = cam.viewportHeight / 2f;
-
-        // Đặt camera sao cho nhân vật nằm sát mép trái
-        cam.position.x = playerX;
-        cam.position.y = playerY;
-
-        // Giữ camera trong biên của map
-        if (cam.position.y < halfHeight) cam.position.y = halfHeight;
-        if (cam.position.y > gameMap.tileMap.mapHeight * 16 - halfHeight)
-            cam.position.y = gameMap.tileMap.mapHeight * 16 - halfHeight;
-
-        if (cam.position.x < 0) cam.position.x = 0;
-        if (cam.position.x > gameMap.tileMap.mapWidth * 16 - cam.viewportWidth)
-            cam.position.x = gameMap.tileMap.mapWidth * 16 - cam.viewportWidth;
-
+        if (gameMap.player.getPosition().x <= gameMap.tileMap.mapWidth * 16 - 7 * 16 &&
+                gameMap.player.getPosition().x >= 6 * 16)
+            cam.position.x = gameMap.player.getPosition().x + 8;
+        if (gameMap.player.getPosition().y <= gameMap.tileMap.mapHeight * 16 - 4 * 16 &&
+                gameMap.player.getPosition().y >= 4 * 16 - 8)
+            cam.position.y = gameMap.player.getPosition().y + 4;
         cam.update();
-    }
 
+        if (gameMap.player.getPosition().x < 6 * 16) cam.position.x = 104;
+        if (gameMap.player.getPosition().y < 4 * 16 - 8) cam.position.y = 60.5f;
+        if (gameMap.player.getPosition().x > gameMap.tileMap.mapWidth * 16 - 7 * 16)
+            cam.position.x = (gameMap.tileMap.mapWidth * 16 - 7 * 16) + 8;
+        if (gameMap.player.getPosition().y > gameMap.tileMap.mapHeight * 16 - 4 * 16)
+            cam.position.y = (gameMap.tileMap.mapHeight * 16 - 4 * 16) + 4;
+    }
 
     public void update(float dt) {
         if (currentEvent != EventState.PAUSE) {
@@ -202,25 +176,13 @@ public class GameScreen extends AbstractScreen {
             hud.update(dt);
         }
 
-//        if (currentEvent == EventState.BATTLING) {
-//            // update bg
-//            for (int i = 0; i < bg.length; i++) {
-//                bg[i].update(dt);
-//            }
-//            battleUIHandler.update(dt);
-//        }
-
-
-        for (int i = 0; i < bg.length; i++) {
-            bg[i].update(dt);
-        }
-
         if (currentEvent == EventState.BATTLING) {
+            // update bg
+            for (int i = 0; i < bg.length; i++) {
+                bg[i].update(dt);
+            }
             battleUIHandler.update(dt);
         }
-
-
-
 
         if (currentEvent == EventState.TRANSITION) transition.update(dt);
         if (currentEvent == EventState.LEVEL_UP) levelUp.update(dt);
@@ -240,25 +202,17 @@ public class GameScreen extends AbstractScreen {
             // fix fading
             if (batchFade) game.batch.setColor(Color.WHITE);
 
-//            if (currentEvent == EventState.BATTLING || transition.renderBattle) {
-//                // bg camera
-//                game.batch.setProjectionMatrix(battleUIHandler.getStage().getCamera().combined);
-//                for (int i = 0; i < bg.length; i++) {
-//                    bg[i].render(game.batch);
-//                }
-//            }
-            game.batch.setProjectionMatrix(cam.combined); // dùng camera chính
-            for (int i = 0; i < bg.length; i++) {
-                bg[i].render(game.batch);
+            if (currentEvent == EventState.BATTLING || transition.renderBattle) {
+                // bg camera
+                game.batch.setProjectionMatrix(battleUIHandler.getStage().getCamera().combined);
+                for (int i = 0; i < bg.length; i++) {
+                    bg[i].render(game.batch);
+                }
             }
 
-
-
-
-
             if (currentEvent == EventState.MOVING || currentEvent == EventState.INVENTORY ||
-                transition.renderMap || currentEvent == EventState.TILE_EVENT ||
-                currentEvent == EventState.DEATH || currentEvent == EventState.PAUSE) {
+                    transition.renderMap || currentEvent == EventState.TILE_EVENT ||
+                    currentEvent == EventState.DEATH || currentEvent == EventState.PAUSE) {
                 // map camera
                 game.batch.setProjectionMatrix(cam.combined);
                 // render map and player

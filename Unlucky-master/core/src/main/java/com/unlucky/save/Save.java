@@ -72,6 +72,9 @@ public class Save {
         loadInventory(rm);
         loadEquips(rm);
 
+        player.maxWorld = 2;   // world chỉ có 3, index 0,1,2
+        player.maxLevel = 12;   // giả sử mỗi world có ~10 level => index 0..9
+
         // load smoveset
         for (int i = 0; i < SpecialMoveset.MAX_MOVES; i++) {
             if (psave.smoveset[i] != -1) {

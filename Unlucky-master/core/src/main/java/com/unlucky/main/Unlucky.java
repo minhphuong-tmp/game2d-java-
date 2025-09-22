@@ -25,12 +25,7 @@ import com.unlucky.ui.inventory.InventoryUI;
  */
 public class Unlucky extends Game {
 
-    public static final String VERSION = "1.0";
-    public static final String TITLE = "Unlucky Version " + VERSION;
-
-    // Links
-    public static final String GITHUB = "https://github.com/mingli1/Unlucky";
-    public static final String YOUTUBE = "https://www.youtube.com/channel/UC-oA-vkeYrgEy23Sq2PLC8w/videos?shelf_id=0&sort=dd&view=0";
+    public static final String TITLE = "Unlucky " ;
 
     // Desktop screen dimensions
     public static final int V_WIDTH = 200;
