@@ -10,12 +10,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.Array;
 import com.unlucky.event.Battle;
 import com.unlucky.event.EventState;
@@ -73,7 +71,6 @@ public class GameScreen extends AbstractScreen {
     private Sound bulletEndSound;
 
     // NEW: === Toggle Buttons for Teacher Requirements ===
-    private Stage buttonStage;
     private ImageButton musicToggleButton;
     private ImageButton sfxToggleButton;
 
@@ -333,7 +330,6 @@ public class GameScreen extends AbstractScreen {
         });
 
         multiplexer.addProcessor(hud.getStage());
-        multiplexer.addProcessor(buttonStage);
         multiplexer.addProcessor(battleUIHandler.getStage());
         multiplexer.addProcessor(levelUp.getStage());
         multiplexer.addProcessor(dialog.getStage());
@@ -343,9 +339,6 @@ public class GameScreen extends AbstractScreen {
      * Initialize music and SFX toggle buttons in top-left corner
      */
     private void initToggleButtons() {
-        // Create button stage using the same viewport as other UI elements
-        buttonStage = new Stage(new StretchViewport(Unlucky.V_WIDTH, Unlucky.V_HEIGHT), game.batch);
-        
         // Create buttons with default style (will be updated based on settings)
         ImageButton.ImageButtonStyle defaultStyle = new ImageButton.ImageButtonStyle();
         defaultStyle.up = new TextureRegionDrawable(rm.musicOnButton);
@@ -365,7 +358,7 @@ public class GameScreen extends AbstractScreen {
         sfxToggleButton.setPosition(padding + buttonSize + 5f, Unlucky.V_HEIGHT - buttonSize - padding);
         
         // Set initial button styles based on current volume settings
-        if (game.player.settings.musicVolume <= 0) {
+        if (game.player.settings.muteMusic || game.player.settings.musicVolume <= 0) {
             // Music is OFF - show OFF icon
             ImageButton.ImageButtonStyle musicOffStyle = new ImageButton.ImageButtonStyle();
             musicOffStyle.up = new TextureRegionDrawable(rm.musicOffButton);
@@ -379,7 +372,7 @@ public class GameScreen extends AbstractScreen {
             musicToggleButton.setStyle(musicOnStyle);
         }
         
-        if (game.player.settings.sfxVolume <= 0) {
+        if (game.player.settings.muteSfx || game.player.settings.sfxVolume <= 0) {
             // SFX is OFF - show OFF icon
             ImageButton.ImageButtonStyle sfxOffStyle = new ImageButton.ImageButtonStyle();
             sfxOffStyle.up = new TextureRegionDrawable(rm.sfxOffButton);
@@ -392,64 +385,66 @@ public class GameScreen extends AbstractScreen {
             sfxOnStyle.down = new TextureRegionDrawable(rm.sfxOnButton);
             sfxToggleButton.setStyle(sfxOnStyle);
         }
-        
+
         // Add click listeners
         musicToggleButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                // Toggle music volume
-                if (game.player.settings.musicVolume > 0) {
-                    game.player.settings.musicVolume = 0f;
-                    // Change button style to show OFF icon
-                    ImageButton.ImageButtonStyle offStyle = new ImageButton.ImageButtonStyle();
-                    offStyle.up = new TextureRegionDrawable(rm.musicOffButton);
-                    offStyle.down = new TextureRegionDrawable(rm.musicOffButton);
-                    musicToggleButton.setStyle(offStyle);
-                    Gdx.app.log("Audio", "Music turned OFF");
-                } else {
-                    game.player.settings.musicVolume = 1f;
+                // Toggle music mute state (following SettingsScreen pattern)
+                if (game.player.settings.muteMusic) {
+                    // Currently muted - turn ON
+                    game.player.settings.muteMusic = false;
+                    rm.setMusicVolume(game.player.settings.musicVolume);
                     // Change button style to show ON icon
                     ImageButton.ImageButtonStyle onStyle = new ImageButton.ImageButtonStyle();
                     onStyle.up = new TextureRegionDrawable(rm.musicOnButton);
                     onStyle.down = new TextureRegionDrawable(rm.musicOnButton);
                     musicToggleButton.setStyle(onStyle);
                     Gdx.app.log("Audio", "Music turned ON");
+                } else {
+                    // Currently playing - turn OFF 
+                    game.player.settings.muteMusic = true;
+                    rm.setMusicVolume(0f);
+                    // Change button style to show OFF icon
+                    ImageButton.ImageButtonStyle offStyle = new ImageButton.ImageButtonStyle();
+                    offStyle.up = new TextureRegionDrawable(rm.musicOffButton);
+                    offStyle.down = new TextureRegionDrawable(rm.musicOffButton);
+                    musicToggleButton.setStyle(offStyle);
+                    Gdx.app.log("Audio", "Music turned OFF");
                 }
-                // Apply volume change immediately
-                rm.setMusicVolume(game.player.settings.musicVolume);
             }
         });
         
         sfxToggleButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                // Toggle SFX volume
-                if (game.player.settings.sfxVolume > 0) {
-                    game.player.settings.sfxVolume = 0f;
-                    // Change button style to show OFF icon
-                    ImageButton.ImageButtonStyle offStyle = new ImageButton.ImageButtonStyle();
-                    offStyle.up = new TextureRegionDrawable(rm.sfxOffButton);
-                    offStyle.down = new TextureRegionDrawable(rm.sfxOffButton);
-                    sfxToggleButton.setStyle(offStyle);
-                    Gdx.app.log("Audio", "SFX turned OFF");
-                } else {
-                    game.player.settings.sfxVolume = 1f;
+                // Toggle SFX mute state (following SettingsScreen pattern)  
+                if (game.player.settings.muteSfx) {
+                    // Currently muted - turn ON
+                    game.player.settings.muteSfx = false;
                     // Change button style to show ON icon
                     ImageButton.ImageButtonStyle onStyle = new ImageButton.ImageButtonStyle();
                     onStyle.up = new TextureRegionDrawable(rm.sfxOnButton);
                     onStyle.down = new TextureRegionDrawable(rm.sfxOnButton);
                     sfxToggleButton.setStyle(onStyle);
                     Gdx.app.log("Audio", "SFX turned ON");
+                } else {
+                    // Currently playing - turn OFF
+                    game.player.settings.muteSfx = true;
+                    // Change button style to show OFF icon
+                    ImageButton.ImageButtonStyle offStyle = new ImageButton.ImageButtonStyle();
+                    offStyle.up = new TextureRegionDrawable(rm.sfxOffButton);
+                    offStyle.down = new TextureRegionDrawable(rm.sfxOffButton);
+                    sfxToggleButton.setStyle(offStyle);
+                    Gdx.app.log("Audio", "SFX turned OFF");
                 }
             }
         });
         
-        // Add buttons to stage
-        buttonStage.addActor(musicToggleButton);
-        buttonStage.addActor(sfxToggleButton);
-    }
-
-    public void init(int worldIndex, int levelIndex) {
+        // Add buttons to HUD stage (same as movement buttons)
+        hud.getStage().addActor(musicToggleButton);
+        hud.getStage().addActor(sfxToggleButton);
+    }    public void init(int worldIndex, int levelIndex) {
         this.worldIndex = worldIndex;
         this.levelIndex = levelIndex;
     }
@@ -570,8 +565,8 @@ public class GameScreen extends AbstractScreen {
                 
                 bullets.removeIndex(i);
                 
-                // Play explosion sound with volume setting
-                if (bulletEndSound != null && game.player.settings.sfxVolume > 0) {
+                // Play explosion sound with volume setting (following game pattern)
+                if (bulletEndSound != null && !game.player.settings.muteSfx) {
                     bulletEndSound.play(game.player.settings.sfxVolume);
                 }
                 
@@ -651,12 +646,6 @@ public class GameScreen extends AbstractScreen {
             game.inventoryUI.render(dt);
         else if (currentEvent == EventState.PAUSE)
             hud.render(dt);  // Render HUD when paused to show settings dialog
-            
-        // NEW: Render toggle buttons on top of everything
-        if (buttonStage != null) {
-            buttonStage.act(dt);
-            buttonStage.draw();
-        }
     }
 
     public void setCurrentEvent(EventState event) {
@@ -668,10 +657,6 @@ public class GameScreen extends AbstractScreen {
         // NEW: Giải phóng âm thanh khi dispose
         if (bulletEndSound != null) {
             bulletEndSound.dispose();
-        }
-        // NEW: Dispose button stage
-        if (buttonStage != null) {
-            buttonStage.dispose();
         }
         super.dispose();
     }
