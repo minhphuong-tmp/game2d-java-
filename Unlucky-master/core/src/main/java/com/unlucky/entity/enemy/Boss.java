@@ -99,11 +99,11 @@ public class Boss extends Enemy {
     public String getPassiveDescription() {
         switch (bossId) {
             // king slime
-            case 0: return "Slime Revival (Respawns after death with half health points up to 4 times).";
+            case 0: return "Hồi sinh Slime (Sau khi chết hồi sinh lại với 50% máu, tối đa 4 lần).";
             // red reaper
-            case 1: return "Phantom Presence (Causes the player's accuracy to be decreased by 40% for all attacks).";
+            case 1: return "Hiện diện Ma Ảnh (Giảm 40% độ chính xác cho tất cả đòn tấn công).";
             // ice golem
-            case 2: return "Lifesteal (Heals for 20% of damage from each attack).";
+            case 2: return "Hút Máu (Hồi lại 20% sát thương gây ra từ mỗi đòn đánh).";
         }
         return "";
     }

@@ -107,8 +107,8 @@ public class Battle {
                     cumulativeHealing += damage;
 
                     dialog = new String[] {
-                            "You used inverted " + move.name + "!",
-                            "It healed you for " + damage + " health points!"
+                            "Bạn đã dùng " + move.name + " (ngược)!",
+                            "Bạn hồi " + damage + " máu!"
                     };
                 }
                 else {
@@ -120,8 +120,8 @@ public class Battle {
 
                     opponent.hit(damage);
                     dialog = new String[]{
-                            "You used " + move.name + "!",
-                            "It did " + damage + " damage to " + opponent.getId() + "."
+                            "Bạn đã dùng " + move.name + "!",
+                            "Gây " + damage + " sát thương lên " + opponent.getId() + "."
                     };
                 }
             }
@@ -145,9 +145,9 @@ public class Battle {
                         cumulativeHealing += damage;
 
                         dialog = new String[] {
-                                "You used inverted " + move.name + "!",
-                                "It's a critical strike!",
-                                "It healed you for " + damage + " health points!"
+                                "Bạn đã dùng " + move.name + " (ngược)!",
+                                "Đòn chí mạng!",
+                                "Bạn hồi " + damage + " máu!"
                         };
                     }
                     else {
@@ -159,9 +159,9 @@ public class Battle {
 
                         opponent.hit(damage);
                         dialog = new String[]{
-                                "You used " + move.name + "!",
-                                "It's a critical strike!",
-                                "It did " + damage + " damage to " + opponent.getId() + "."
+                                "Bạn đã dùng " + move.name + "!",
+                                "Đòn chí mạng!",
+                                "Gây " + damage + " sát thương lên " + opponent.getId() + "."
                         };
                     }
                 } else {
@@ -173,8 +173,8 @@ public class Battle {
                         cumulativeHealing += damage;
 
                         dialog = new String[] {
-                                "You used inverted " + move.name + "!",
-                                "It healed you for " + damage + " health points!"
+                                "Bạn đã dùng " + move.name + " (ngược)!",
+                                "Bạn hồi " + damage + " máu!"
                         };
                     }
                     else {
@@ -186,8 +186,8 @@ public class Battle {
 
                         opponent.hit(damage);
                         dialog = new String[]{
-                                "You used " + move.name + "!",
-                                "It did " + damage + " damage to " + opponent.getId() + "."
+                                "Bạn đã dùng " + move.name + "!",
+                                "Gây " + damage + " sát thương lên " + opponent.getId() + "."
                         };
                     }
                 }
@@ -203,8 +203,8 @@ public class Battle {
                     player.stats.updateMax(player.stats.maxDamageSingleHit, heal);
 
                     dialog = new String[] {
-                            "You used inverted " + move.name + "!",
-                            "It did " + heal + " damage to " + opponent.getId() + "."
+                            "Bạn đã dùng " + move.name + " (ngược)!",
+                            "Gây " + heal + " sát thương lên " + opponent.getId() + "."
                     };
                 }
                 else {
@@ -217,9 +217,9 @@ public class Battle {
                     player.statusEffects.addEffect(StatusEffect.DMG_RED);
 
                     dialog = new String[]{
-                            "You used " + move.name + "!",
-                            "The enemy's next attack does -" + move.dmgReduction + "% damage!",
-                            "You healed for " + heal + " health points."
+                            "Bạn đã dùng " + move.name + "!",
+                            "Đòn đánh tiếp theo của địch -" + move.dmgReduction + "% sát thương!",
+                            "Bạn được hồi " + heal + " máu."
                     };
                 }
             }
@@ -227,7 +227,7 @@ public class Battle {
         else {
             player.stats.numMovesMissed++;
             // move missed; enemy turn
-            dialog = new String[] {"Oh no, your move missed!"};
+            dialog = new String[] {"Ôi không, đòn đánh của bạn đã hụt!"};
         }
 
         return dialog;
@@ -245,7 +245,7 @@ public class Battle {
                 resetBuffs();
                 opponent.statusEffects.addEffect(StatusEffect.STUN);
                 return new String[] {
-                        "The enemy was stunned and could not move!"
+                        "Địch bị choáng và không thể di chuyển!"
                 };
             }
         }
@@ -279,8 +279,8 @@ public class Battle {
                     int damage = MathUtils.random(Math.round(move.minDamage), Math.round(move.maxDamage));
                     opponent.hit(damage);
                     dialog = new String[]{
-                            opponent.getId() + " used " + move.name + "!",
-                            "The attack was reflected back and did " + damage + " damage to " + opponent.getId() + "!"
+                            opponent.getId() + " đã sử dụng " + move.name + "!",
+                            "Phản đòn! Gây " + damage + " sát thương lên " + opponent.getId() + "!"
                     };
                 }
                 // crit (3x damage if success)
@@ -291,15 +291,15 @@ public class Battle {
                         damage *= Util.CRIT_MULTIPLIER;
                         opponent.hit(damage);
                         dialog = new String[]{
-                                opponent.getId() + " used " + move.name + "!",
-                                "It's a critical strike!",
-                                "The attack was reflected back and did " + damage + " damage to " + opponent.getId() + "!"
+                                opponent.getId() + " đã sử dụng " + move.name + "!",
+                                "Đòn chí mạng!",
+                                "Phản đòn! Gây " + damage + " sát thương lên " + opponent.getId() + "!"
                         };
                     } else {
                         opponent.hit(damage);
                         dialog = new String[] {
-                                opponent.getId() + " used " + move.name + "!",
-                                "The attack was reflected back and did " + damage + " damage to " + opponent.getId() + "!"
+                                opponent.getId() + " đã sử dụng " + move.name + "!",
+                                "Phản đòn! Gây " + damage + " damage to " + opponent.getId() + "!"
                         };
                     }
                 }
@@ -311,10 +311,10 @@ public class Battle {
                     enemyRed = move.dmgReduction;
                     opponent.heal(heal);
                     dialog = new String[]{
-                            opponent.getId() + " used " + move.name + "!",
-                            "Your next attack does -" + move.dmgReduction + "% damage!",
-                            "The heal was reflected and enhanced the enemy's healing!",
-                            opponent.getId() + " healed for " + heal + " health points."
+                            opponent.getId() + " đã sử dụng " + move.name + "!",
+                            "Đòn tấn công tiếp theo của bạn -" + move.dmgReduction + "% sát thương!",
+                            "Phản hồi! Địch được hồi máu nhiều hơn",
+                            opponent.getId() + " được hồi " + heal + " máu."
                     };
                 }
             }
@@ -327,8 +327,8 @@ public class Battle {
                     player.stats.damageTaken += damage;
                     player.hit(damage);
                     dialog = new String[]{
-                            opponent.getId() + " used " + move.name + "!",
-                            "It did " + damage + " damage to you."
+                            opponent.getId() + " đã sử dụng " + move.name + "!",
+                            "Gây " + damage + " sát thương lên bạn."
                     };
 
                     // ice golem passive
@@ -337,9 +337,9 @@ public class Battle {
                             int heal = (int) (0.2 * (float) damage);
                             opponent.heal(heal);
                             dialog = new String[] {
-                                opponent.getId() + " used " + move.name + "!",
-                                "It did " + damage + " damage to you.",
-                                opponent.getId() + "'s Lifesteal healed it for " + heal + " hp!"
+                                    opponent.getId() + " đã sử dụng " + move.name + "!",
+                                    "gây " + damage + " sát thương lên bạn.",
+                                    opponent.getId() + " hồi " + heal + " máu nhờ hút máu!"
                             };
                         }
                     }
@@ -353,17 +353,17 @@ public class Battle {
                         player.stats.damageTaken += damage;
                         player.hit(damage);
                         dialog = new String[]{
-                                opponent.getId() + " used " + move.name + "!",
-                                "It's a critical strike!",
-                                "It did " + damage + " damage to you."
+                                opponent.getId() + " dã sử dụng " + move.name + "!",
+                                "Đòn chí mạng!",
+                                "Gây " + damage + " sát thương lên bạn."
                         };
                     } else {
                         damage = reduceDamage(damage);
                         player.stats.damageTaken += damage;
                         player.hit(damage);
                         dialog = new String[]{
-                                opponent.getId() + " used " + move.name + "!",
-                                "It did " + damage + " damage to you."
+                                opponent.getId() + " đã sử dụng " + move.name + "!",
+                                "Gây " + damage + " sát thương lên bạn."
                         };
                     }
                 }
@@ -374,15 +374,15 @@ public class Battle {
                     opponent.heal(heal);
                     opponent.statusEffects.addEffect(StatusEffect.DMG_RED);
                     dialog = new String[]{
-                            opponent.getId() + " used " + move.name + "!",
-                            "Your next attack does -" + move.dmgReduction + "% damage!",
-                            opponent.getId() + " healed for " + heal + " health points."
+                            opponent.getId() + " đã sử dụng " + move.name + "!",
+                            "Đòn tấn công tiếp theo của bạn -" + move.dmgReduction + "% sát thương!",
+                            opponent.getId() + " được hồi " + heal + " máu."
                     };
                 }
             }
         }
         else {
-            dialog = new String[] { opponent.getId() + "'s move missed!"};
+            dialog = new String[] { opponent.getId() + " hụt chiêu"};
         }
 
         // only reset buffs that don't affect enemy's turn
@@ -420,44 +420,44 @@ public class Battle {
         switch (index) {
             case Util.DISTRACT:
                 return new String[] {
-                        "You kicked some dirt into the enemy's face.",
-                        "The enemy's next attack has " + Util.P_DISTRACT + "% reduced accuracy!"
+                        "Hất bụi vào mặt địch.",
+                        "Đòn tiếp theo của địch -" + Util.P_DISTRACT + "% độ chính xác!"
                 };
             case Util.FOCUS:
                 return new String[] {
-                        "You begin concentrating on your next attack.",
-                        "Your next move has 100% accuracy and critical strike chance is increased by " + Util.P_FOCUS_CRIT + "%!"
+                        "Vận sức!",
+                        "Đòn tiếp theo chắc chắn trúng, tỉ lệ chí mạng tăng " + Util.P_FOCUS_CRIT + "%!"
                 };
             case Util.INTIMIDATE:
                 return new String[] {
-                        "You intimidate the enemy causing it to lower its defense.",
-                        "Your next attack has " + Util.P_INTIMIDATE + "% increased damage."
+                        "Đe dọa kẻ địch!",
+                        "Giảm phòng thủ của địch. Đòn tiếp theo +" + Util.P_INTIMIDATE + "% sát thương."
                 };
             case Util.REFLECT:
                 return new String[] {
-                        "You intensely prepare for the enemy's next attack.",
-                        "The enemy's next move will be reflected back at itself!"
+                        "Tập trung đối phó!",
+                        "Đòn tiếp theo của địch phản lại chính nó!"
                 };
             case Util.STUN:
                 return new String[] {
-                        "You attempt to immobilize the enemy by hypnotizing it!",
-                        "The enemy may be stunned and miss its turn."
+                        "Thôi miên kẻ địch!",
+                        "Địch có thể bị choáng"
                 };
             case Util.INVERT:
                 return new String[] {
-                        "You manipulate the powers of your moveset.",
-                        "Heal moves do damage and damage moves heal for one turn!"
+                        "Thao túng sức mạnh!",
+                        "Trong 1 lượt: chiêu hồi máu sẽ gây sát thương, chiêu gây sát thương sẽ hồi máu!"
                 };
             case Util.SACRIFICE:
                 return new String[] {
-                        "You sacrifice all but 1 HP!",
-                        "Your next attack has " + (int) Math.ceil(((player.getHp() - 1) / (float) player.getMaxHp()) * 100) +
-                                "% increased damage!"
+                        "Hiến tế toàn bộ!",
+                        "Đòn tấn công tiếp theo +" + (int) Math.ceil(((player.getHp() - 1) / (float) player.getMaxHp()) * 100) +
+                                "% sát thương!"
                 };
             case Util.SHIELD:
                 return new String[] {
-                        "You channel your defenses for the enemy's next attack.",
-                        "You summon a shield that absorbs " + (int) ((Util.P_SHIELD / 100f) * (float) player.getMaxHp()) + " damage!"
+                        "Dồn sức phòng thủ.",
+                        "Tạo lá chắn hấp thụ " + (int) ((Util.P_SHIELD / 100f) * (float) player.getMaxHp()) + " sát thương của kẻ địch!"
                 };
         }
         return null;
@@ -550,16 +550,16 @@ public class Battle {
 
         // enemy didn't drop an item
         if (item == null) {
-            ret = "The enemy didn't drop an item.";
+            ret = "Kẻ địch không rơi vật phẩm nào.";
         }
         else {
             // if the player's inventory is full then he cannot obtain the item
             if (player.inventory.isFull()) {
-                ret = "The enemy couldn't drop an item since your inventory was full.";
+                ret = "Kẻ địch không thể rơi vật phẩm vì túi đồ của bạn đã đầy.";
             }
             else {
-                ret = "The enemy dropped a " + item.getDialogName() + "! " +
-                        "The item was added to your inventory.";
+                ret = "Kẻ địch rơi " + item.getDialogName() + "! " +
+                        "Vật phẩm đã thêm vào túi";
                 // scale item stats to match enemy level
                 item.adjust(opponent.getLevel());
                 player.inventory.addItem(item);

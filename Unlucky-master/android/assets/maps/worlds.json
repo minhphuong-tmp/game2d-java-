@@ -1,51 +1,51 @@
 {
 "worlds": [
 	{
-		"name":"SLIME FOREST",
-		"shortDesc":"LV. 1-11\nBOSS: SLIME KING",
-		"longDesc":"A long time ago, this forest was inhabited by regular animals. A mad scientist also lived here, conducting strange experiments on the creatures. One day, something went wrong and he turned the animals into hostile slimes. The slimes killed him and have ruled this forest ever since...",
+		"name":"RỪNG SLIME",
+		"shortDesc":"LV. 1-11\nBOSS: VUA SLIME",
+		"longDesc":"Từ xa xưa… khu rừng này từng là nơi muông thú sinh sống. Cho đến khi một kẻ điên thực hiện những thí nghiệm cấm kỵ. Thí nghiệm thất bại… bầy thú hóa thành slime hung hãn, nổi loạn giết chết chủ nhân. Và từ đó, khu rừng này chìm dưới ách thống trị của slime…",
 		"numLevels":11,
 		"levels": [
-			{ "name": "Forest Entrance", "avgLevel": 1 },
-			{ "name": "A Slimy Path", "avgLevel": 2 },
-			{ "name": "All Green Everywhere", "avgLevel": 3 },
-			{ "name": "One Two Tree", "avgLevel": 4 },
-			{ "name": "A Hint of Blue", "avgLevel": 5 },
-			{ "name": "The Slime Lake", "avgLevel": 6 },
-			{ "name": "Beyond the Waters", "avgLevel": 7 },
-			{ "name": "Trees atop a Hill", "avgLevel": 8 },
-			{ "name": "Follow the Trail", "avgLevel": 9 },
-			{ "name": "Big Red Spiral", "avgLevel": 10 },
-			{ "name": "Face the King", "avgLevel": 11 }
+			{ "name":"Lối vào khu rừng", "avgLevel":1 },
+			{ "name":"Con đường nhớp nháp", "avgLevel":2 },
+			{ "name":"Xanh ngập lối", "avgLevel":3 },
+			{ "name":"One Two Tree", "avgLevel":4 },
+			{ "name":"Sắc xanh thấp thoáng", "avgLevel":5 },
+			{ "name":"Hồ Slime", "avgLevel":6 },
+			{ "name":"Bên kia làn nước", "avgLevel":7 },
+			{ "name":"Rừng trên đồi", "avgLevel":8 },
+			{ "name":"Theo dấu vết", "avgLevel":9 },
+			{ "name":"Xoáy đỏ khổng lồ", "avgLevel":10 },
+			{ "name":"Đối mặt nhà vua", "avgLevel":11 }
 		]
 	},
 	{
-		"name":"SPOOKY GRAVEYARD",
-		"shortDesc":"LV. 12-18\nBOSS: RED REAPER",
-		"longDesc":"The entities that haunt this graveyard were created by a powerful necromancer thousands of years ago. In the darkness, evil spirits and spooky skeletons guard the graves of the deceased. Deep in this terrority is said to reside Death himself...",
-		"numLevels": 7,
+		"name":"NGHĨA ĐỊA MA ÁM",
+		"shortDesc":"LV. 12-24\nBOSS: LƯỠI HÁI ĐỎ",
+		"longDesc":"Ngàn năm trước, một pháp sư hắc ám đã tạo nên những linh hồn vĩnh viễn lang thang ở nghĩa địa này. Trong bóng tối, ma quỷ và bộ xương gớm ghiếc canh giữ phần mộ người đã khuất. Người ta đồn rằng, sâu thẳm nơi đây… chính Tử Thần đang ngự trị",
+		"numLevels":7,
 		"levels": [
-			{ "name": "Ghastly Gate", "avgLevel": 12 },
-			{ "name": "Scattered Tombs", "avgLevel": 13 },
-			{ "name": "The Undead", "avgLevel": 14 },
-			{ "name": "Spooky Skeletons", "avgLevel": 15 },
-			{ "name": "Bones and Spirits", "avgLevel": 16 },
-			{ "name": "Skull Sanctuary", "avgLevel": 17 },
-			{ "name": "The ReFd Reaper", "avgLevel": 18 }
+			{ "name":"Cổng âm hồn", "avgLevel":12 },
+			{ "name":"Mộ hoang rải rác", "avgLevel":13 },
+			{ "name":"Lũ xác sống", "avgLevel":14 },
+			{ "name":"Bộ xương rùng rợn", "avgLevel":15 },
+			{ "name":"Xương trắng hồn ma", "avgLevel":16 },
+			{ "name":"Thánh đường sọ người", "avgLevel":17 },
+			{ "name":"Tử thần lưỡi đỏ", "avgLevel":18 }
 		]
 	},
 	{
-		"name": "FROSTY CAVE",
-		"shortDesc": "LV. 19-24\nBOSS: ICE GOLEM",
-		"longDesc": "Hidden deep in a snowy mountain is an icy cave that held monsters frozen in a dormant state for thousands of years. The creatures have since defrosted and have been running rampant throughout the cave. They assume the forms of deadly and durable beasts...",
-		"numLevels": 6,
+		"name":"HANG BĂNG GIÁ",
+		"shortDesc":"LV. 25-38\nBOSS: NGƯỜI ĐÁ BĂNG",
+		"longDesc":"Ẩn sâu trong dãy núi tuyết là một hang động băng giá, nơi quái vật từng bị phong ấn trong lớp băng suốt ngàn năm. Nhưng giờ đây, băng tan… lũ quái vật tỉnh giấc và gieo rắc hỗn loạn khắp hang động. Chúng mang hình dạng của những mãnh thú chết chóc và bất khả xâm phạm…",
+		"numLevels":6,
 		"levels": [
-			{ "name": "Tundra Trails", "avgLevel": 19 },
-			{ "name": "Lake Glacier", "avgLevel": 20 },
-			{ "name": "Blizzard Mayham", "avgLevel": 21 },
-			{ "name": "Frozen Gems", "avgLevel": 22 },
-			{ "name": "Coldest Cavern", "avgLevel": 23 },
-			{ "name": "Ice Golem's Lair", "avgLevel": 24 }
+			{ "name":"Lối mòn tuyết trắng", "avgLevel":19 },
+			{ "name":"Hồ băng vĩnh cửu", "avgLevel":20 },
+			{ "name":"Cuồng phong bão tuyết", "avgLevel":21 },
+			{ "name":"Ngọc băng giá", "avgLevel":22 },
+			{ "name":"Hang động lạnh nhất", "avgLevel":23 },
+			{ "name":"Hang người tuyết", "avgLevel":24 }
 		]
 	}
 

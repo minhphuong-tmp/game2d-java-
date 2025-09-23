@@ -51,7 +51,7 @@ public class VictoryScreen extends AbstractScreen {
         bannerBg.setPosition(Unlucky.V_WIDTH / 2 - 70, 96);
         stage.addActor(bannerBg);
 
-        bannerText = new Label("VICTORY", new Label.LabelStyle(rm.pixel10, new Color(0, 215 / 255.f, 0, 1)));
+        bannerText = new Label("CHIẾN THẮNG", new Label.LabelStyle(rm.pixel10, new Color(0, 215 / 255.f, 0, 1)));
         bannerText.setFontScale(1.5f);
         bannerText.setSize(120, 18);
         bannerText.setPosition(Unlucky.V_WIDTH / 2 - 70, 96);
@@ -96,7 +96,7 @@ public class VictoryScreen extends AbstractScreen {
         nextButton.setPosition(157, 8);
         stage.addActor(nextButton);
 
-        nextLabel = new Label("NEXT", new Label.LabelStyle(rm.pixel10, Color.WHITE));
+        nextLabel = new Label("TIẾP", new Label.LabelStyle(rm.pixel10, Color.WHITE));
         nextLabel.setFontScale(0.5f);
         nextLabel.setTouchable(Touchable.disabled);
         nextLabel.setSize(38, 18);
@@ -141,11 +141,11 @@ public class VictoryScreen extends AbstractScreen {
         }), Actions.fadeIn(0.5f)));
 
         String infoText = rm.worlds.get(gameMap.worldIndex).name + ": " +
-            rm.worlds.get(gameMap.worldIndex).levels[gameMap.levelIndex].name + " completed!\n\n" +
-            "Time: " + gameMap.time + " seconds\n\n" +
-            "Total gold obtained: " + gameMap.goldObtained + "\n" +
-            "Total experience obtained: " + gameMap.expObtained + "\n\n" +
-            "Items obtained: ";
+                rm.worlds.get(gameMap.worldIndex).levels[gameMap.levelIndex].name + " hoàn thành!\n\n" +
+                "Thời gian: " + gameMap.time + " giây\n\n" +
+                "Tổng vàng thu được: " + gameMap.goldObtained + "\n" +
+                "Tổng kinh nghiệm thu được: " + gameMap.expObtained + "\n\n" +
+                "Vật phẩm thu được: ";
         info.setText(infoText);
 
         // show items obtained's image actors in a grid
