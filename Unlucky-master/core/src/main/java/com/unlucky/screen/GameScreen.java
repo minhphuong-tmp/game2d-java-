@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -73,6 +74,13 @@ public class GameScreen extends AbstractScreen {
     // NEW: === Toggle Buttons for Teacher Requirements ===
     private ImageButton musicToggleButton;
     private ImageButton sfxToggleButton;
+
+    // NEW: === Moving Objects System for Teacher Requirements ===
+    private Array<MovingObject> movingObjects;
+    private final int MAX_OBJECTS = 3; // Maximum 3 objects as per requirements
+
+    // NEW: Sound arrays for random collision sounds
+    private Sound[] collisionSounds;
 
     // --- Inner Bullet Class ---
     private class Bullet {
@@ -221,6 +229,101 @@ public class GameScreen extends AbstractScreen {
         }
     }
 
+    // NEW: --- Inner MovingObject Class for Teacher Requirements ---
+    private class MovingObject {
+        float x, y;
+        float speed = 60f; // Speed toward player
+        float size = 20f; // Size for collision detection
+        TextureRegion sprite; // The sprite texture
+        
+        MovingObject(float x, float y) {
+            this.x = x;
+            this.y = y;
+            // Safely select a random sprite from [0][1] to [0][3] with bounds checking
+            try {
+                if (rm.items20x20 != null && rm.items20x20.length > 0 && rm.items20x20[0] != null && rm.items20x20[0].length > 3) {
+                    // Random selection from [0][1], [0][2], [0][3]
+                    int randomIndex = 1 + (int)(Math.random() * 3); // Random number between 1-3
+                    this.sprite = rm.items20x20[1][randomIndex];
+                    Gdx.app.log("MovingObject", "Using random item sprite [0][" + randomIndex + "]");
+                } else {
+                    // Fallback to raindrop sprite if items array is not available
+                    this.sprite = rm.raindrop;
+                    Gdx.app.log("MovingObject", "Using fallback sprite (raindrop)");
+                }
+            } catch (Exception e) {
+                this.sprite = rm.raindrop; // Safe fallback
+                Gdx.app.log("MovingObject", "Error accessing items20x20, using fallback: " + e.getMessage());
+            }
+        }
+        
+        void update(float dt) {
+            // Move toward player position with null safety checks
+            try {
+                if (gameMap != null && gameMap.player != null && gameMap.player.getPosition() != null) {
+                    float playerX = gameMap.player.getPosition().x;
+                    float playerY = gameMap.player.getPosition().y;
+                    
+                    // Calculate direction to player
+                    float deltaX = playerX - x;
+                    float deltaY = playerY - y;
+                    float distance = (float) Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+                    
+                    // Move toward player if not already there
+                    if (distance > speed * dt) {
+                        x += (deltaX / distance) * speed * dt;
+                        y += (deltaY / distance) * speed * dt;
+                    }
+                }
+            } catch (Exception e) {
+                Gdx.app.log("MovingObject", "Error in update: " + e.getMessage());
+                // Don't crash, just stop moving
+            }
+        }
+        
+        void render(SpriteBatch batch) {
+            try {
+                if (sprite != null && batch != null) {
+                    batch.draw(sprite, x - size / 2, y - size / 2, size, size);
+                }
+            } catch (Exception e) {
+                Gdx.app.log("MovingObject", "Error rendering sprite: " + e.getMessage());
+            }
+        }
+        
+        // Rectangle collision detection
+        Rectangle getRectangle() {
+            return new Rectangle(x - size / 2, y - size / 2, size, size);
+        }
+        
+        // Check collision with another MovingObject
+        boolean collidesWith(MovingObject other) {
+            return this.getRectangle().overlaps(other.getRectangle());
+        }
+        
+        // Check collision with player
+        boolean collidesWithPlayer() {
+            try {
+                if (gameMap == null || gameMap.player == null || gameMap.player.getPosition() == null) {
+                    return false; // No collision if player data is not available
+                }
+                
+                // Player position and approximate size
+                float playerX = gameMap.player.getPosition().x;
+                float playerY = gameMap.player.getPosition().y;
+                float playerSize = 16f; // Approximate player size
+                
+                Rectangle playerRect = new Rectangle(
+                    playerX - playerSize / 2, playerY - playerSize / 2, playerSize, playerSize);
+                
+                return this.getRectangle().overlaps(playerRect);
+            } catch (Exception e) {
+                Gdx.app.log("MovingObject", "Error in collidesWithPlayer: " + e.getMessage());
+                return false; // Safe fallback - no collision
+            }
+        }
+    }
+
     public GameScreen(final Unlucky game, final ResourceManager rm) {
         super(game, rm);
 
@@ -263,6 +366,12 @@ public class GameScreen extends AbstractScreen {
 
         // NEW: === Explosion init ===
         explosions = new Array<>();
+
+        // NEW: === MovingObjects init for Teacher Requirements ===
+        movingObjects = new Array<>();
+
+        // NEW: === Collision Sounds init ===
+        collisionSounds = new Sound[]{rm.hit};
 
         // NEW: === Button init ===
         initToggleButtons();
@@ -482,6 +591,15 @@ public class GameScreen extends AbstractScreen {
             float topY = cam.position.y + cam.viewportHeight / 2 + 16f / 2; // Top of screen
             raindrops.add(new Raindrop(centerX - 40f, topY)); // Raindrop 1, left
             raindrops.add(new Raindrop(centerX + 40f, topY)); // Raindrop 2, right
+
+            // NEW: Initialize moving objects system with 3 objects immediately
+            movingObjects.clear();
+            
+            // Spawn 3 objects immediately to meet teacher requirements
+            for (int i = 0; i < MAX_OBJECTS; i++) {
+                spawnRandomObject();
+            }
+            Gdx.app.log("MovingObjects", "Initialized with " + MAX_OBJECTS + " objects");
         }
     }
 
@@ -594,6 +712,129 @@ public class GameScreen extends AbstractScreen {
                 Gdx.app.log("Raindrop", "Raindrop reset to top: " + r.y);
             }
         }
+
+        // NEW: === Moving Objects System Update for Teacher Requirements ===
+        updateMovingObjects(dt);
+    }
+
+    // NEW: Update method for moving objects system
+    private void updateMovingObjects(float dt) {
+        try {
+            // Ensure we always have exactly 3 objects - spawn immediately if needed
+            while (movingObjects.size < MAX_OBJECTS) {
+                spawnRandomObject();
+            }
+
+            // Update all moving objects with safe iteration
+            for (int i = movingObjects.size - 1; i >= 0; i--) {
+                if (i >= movingObjects.size) continue; // Safety check in case array changed
+                
+                MovingObject obj = movingObjects.get(i);
+                if (obj == null) continue; // Safety check for null objects
+                
+                obj.update(dt);
+
+                // Check collision with player
+                if (obj.collidesWithPlayer()) {
+                    playRandomCollisionSound();
+                    movingObjects.removeIndex(i);
+                    Gdx.app.log("Collision", "Object collided with player! Objects remaining: " + movingObjects.size);
+                    continue; // Skip to next object since this one is removed
+                }
+
+                // Check collision with other objects (safer iteration)
+                boolean objRemoved = false;
+                for (int j = i - 1; j >= 0; j--) {
+                    if (j >= movingObjects.size || i >= movingObjects.size) break; // Safety check
+                    
+                    MovingObject other = movingObjects.get(j);
+                    if (other == null) continue;
+                    
+                    if (obj.collidesWith(other)) {
+                        playRandomCollisionSound();
+                        // Remove objects safely (remove higher index first)
+                        if (i < movingObjects.size) movingObjects.removeIndex(i);
+                        if (j < movingObjects.size) movingObjects.removeIndex(j);
+                        Gdx.app.log("Collision", "Two objects collided! Objects remaining: " + movingObjects.size);
+                        objRemoved = true;
+                        break; // Exit inner loop since object is removed
+                    }
+                }
+                if (objRemoved) continue; // Skip to next iteration if object was removed
+            }
+        } catch (Exception e) {
+            Gdx.app.log("GameScreen", "Error in updateMovingObjects: " + e.getMessage());
+            // Try to recover by clearing and respawning objects
+            movingObjects.clear();
+        }
+    }
+
+    // NEW: Spawn a random object at random position
+    private void spawnRandomObject() {
+        // Spawn objects around the camera view, but not too close to player
+        float camX = cam.position.x;
+        float camY = cam.position.y;
+        float spawnRadius = 80f; // Distance from camera center
+        float minDistFromPlayer = 30f; // Minimum distance from player
+        // float minDistFromOtherObjects = 25f; // Minimum distance from other objects
+
+        int attempts = 0;
+        float spawnX, spawnY;
+        
+        do {
+            float angle = (float) (Math.random() * 2 * Math.PI);
+            spawnX = camX + (float) Math.cos(angle) * spawnRadius;
+            spawnY = camY + (float) Math.sin(angle) * spawnRadius;
+            attempts++;
+        } while (attempts < 10 && (tooCloseToPlayer(spawnX, spawnY, minDistFromPlayer) || 
+                                   tooCloseToOtherObjects(spawnX, spawnY, 10f)));
+
+        MovingObject newObject = new MovingObject(spawnX, spawnY);
+        movingObjects.add(newObject);
+        Gdx.app.log("MovingObject", "New object spawned at: " + spawnX + ", " + spawnY + " (attempt " + attempts + ")");
+    }
+
+    // NEW: Check if position is too close to player
+    private boolean tooCloseToPlayer(float x, float y, float minDistance) {
+        try {
+            if (gameMap == null || gameMap.player == null || gameMap.player.getPosition() == null) {
+                return false; // Safe default if player is not available
+            }
+            
+            float playerX = gameMap.player.getPosition().x;
+            float playerY = gameMap.player.getPosition().y;
+            float distance = (float) Math.sqrt((x - playerX) * (x - playerX) + (y - playerY) * (y - playerY));
+            return distance < minDistance;
+        } catch (Exception e) {
+            Gdx.app.log("GameScreen", "Error in tooCloseToPlayer: " + e.getMessage());
+            return false;
+        }
+    }
+
+    // NEW: Check if position is too close to other objects
+    private boolean tooCloseToOtherObjects(float x, float y, float minDistance) {
+        for (MovingObject obj : movingObjects) {
+            float distance = (float) Math.sqrt((x - obj.x) * (x - obj.x) + (y - obj.y) * (y - obj.y));
+            if (distance < minDistance) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // NEW: Play random collision sound
+    private void playRandomCollisionSound() {
+        try {
+            if (collisionSounds != null && collisionSounds.length > 0 && !game.player.settings.muteSfx) {
+                Sound randomSound = collisionSounds[0]; // Use the first (and only) sound for now
+                if (randomSound != null) {
+                    randomSound.play(game.player.settings.sfxVolume);
+                }
+            }
+        } catch (Exception e) {
+            Gdx.app.log("GameScreen", "Error playing collision sound: " + e.getMessage());
+            // Don't crash on audio errors
+        }
     }
 
     public void render(float dt) {
@@ -627,6 +868,17 @@ public class GameScreen extends AbstractScreen {
             // NEW: render explosions - spectacular blast effects! 💥
             for (Explosion e : explosions)
                 e.render(game.batch);
+
+            // NEW: render moving objects - teacher requirements system
+            try {
+                for (MovingObject obj : movingObjects) {
+                    if (obj != null && obj.sprite != null) {
+                        obj.render(game.batch);
+                    }
+                }
+            } catch (Exception e) {
+                Gdx.app.log("GameScreen", "Error rendering moving objects: " + e.getMessage());
+            }
 
             game.batch.end();
         }
