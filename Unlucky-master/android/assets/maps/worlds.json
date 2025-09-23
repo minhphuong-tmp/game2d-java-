@@ -4,20 +4,17 @@
 		"name":"RỪNG SLIME",
 		"shortDesc":"LV. 1-11\nBOSS: VUA SLIME",
 		"longDesc":"Từ xa xưa… khu rừng này từng là nơi muông thú sinh sống. Cho đến khi một kẻ điên thực hiện những thí nghiệm cấm kỵ. Thí nghiệm thất bại… bầy thú hóa thành slime hung hãn, nổi loạn giết chết chủ nhân. Và từ đó, khu rừng này chìm dưới ách thống trị của slime…",
-		"numLevels":14,
+		"numLevels":11,
 		"levels": [
 			{ "name":"Lối vào khu rừng", "avgLevel":1 },
-			{ "name":"Lạc giữa tán cây", "avgLevel":1 },
 			{ "name":"Con đường nhớp nháp", "avgLevel":2 },
 			{ "name":"Xanh ngập lối", "avgLevel":3 },
-			{ "name":"Khu rừng mưa", "avgLevel":4 },
 			{ "name":"One Two Tree", "avgLevel":4 },
 			{ "name":"Sắc xanh thấp thoáng", "avgLevel":5 },
 			{ "name":"Hồ Slime", "avgLevel":6 },
 			{ "name":"Bên kia làn nước", "avgLevel":7 },
 			{ "name":"Rừng trên đồi", "avgLevel":8 },
 			{ "name":"Theo dấu vết", "avgLevel":9 },
-			{ "name":"Bốn ngả đường", "avgLevel":9 },
 			{ "name":"Xoáy đỏ khổng lồ", "avgLevel":10 },
 			{ "name":"Đối mặt nhà vua", "avgLevel":11 }
 		]
@@ -26,41 +23,31 @@
 		"name":"NGHĨA ĐỊA MA ÁM",
 		"shortDesc":"LV. 12-24\nBOSS: LƯỠI HÁI ĐỎ",
 		"longDesc":"Ngàn năm trước, một pháp sư hắc ám đã tạo nên những linh hồn vĩnh viễn lang thang ở nghĩa địa này. Trong bóng tối, ma quỷ và bộ xương gớm ghiếc canh giữ phần mộ người đã khuất. Người ta đồn rằng, sâu thẳm nơi đây… chính Tử Thần đang ngự trị",
-		"numLevels":11,
+		"numLevels":7,
 		"levels": [
 			{ "name":"Cổng âm hồn", "avgLevel":12 },
 			{ "name":"Mộ hoang rải rác", "avgLevel":13 },
-			{ "name":"Đồi ma ám", "avgLevel":14 },
-			{ "name":"Lũ xác sống", "avgLevel":15 },
-			{ "name":"Trỗi dậy từ mồ", "avgLevel":16 },
-			{ "name":"Bộ xương rùng rợn", "avgLevel":18 },
-			{ "name":"Lạc vào đêm tối", "avgLevel":19 },
-			{ "name":"Xương trắng hồn ma", "avgLevel":20 },
-			{ "name":"Ma thuật bí hiểm", "avgLevel":21 },
-			{ "name":"Thánh đường sọ người", "avgLevel":23 },
-			{ "name":"Tử thần lưỡi đỏ", "avgLevel":24 }
+			{ "name":"Lũ xác sống", "avgLevel":14 },
+			{ "name":"Bộ xương rùng rợn", "avgLevel":15 },
+			{ "name":"Xương trắng hồn ma", "avgLevel":16 },
+			{ "name":"Thánh đường sọ người", "avgLevel":17 },
+			{ "name":"Tử thần lưỡi đỏ", "avgLevel":18 }
 		]
 	},
 	{
 		"name":"HANG BĂNG GIÁ",
 		"shortDesc":"LV. 25-38\nBOSS: NGƯỜI ĐÁ BĂNG",
 		"longDesc":"Ẩn sâu trong dãy núi tuyết là một hang động băng giá, nơi quái vật từng bị phong ấn trong lớp băng suốt ngàn năm. Nhưng giờ đây, băng tan… lũ quái vật tỉnh giấc và gieo rắc hỗn loạn khắp hang động. Chúng mang hình dạng của những mãnh thú chết chóc và bất khả xâm phạm…",
-		"numLevels":13,
+		"numLevels":6,
 		"levels": [
-			{ "name":"Lối mòn tuyết trắng", "avgLevel":25 },
-			{ "name":"Thông băng cực", "avgLevel":26 },
-			{ "name":"Khu rừng băng giá", "avgLevel":26 },
-			{ "name":"Hồ băng vĩnh cửu", "avgLevel":27 },
-			{ "name":"Đỉnh đồi phủ sương", "avgLevel":28 },
-			{ "name":"Cuồng phong bão tuyết", "avgLevel":29 },
-			{ "name":"Cửa hang băng", "avgLevel":30 },
-			{ "name":"Vách đá băng cứng", "avgLevel":33 },
-			{ "name":"Ngọc băng giá", "avgLevel":34 },
-			{ "name":"Mũi băng chồng chất", "avgLevel":35 },
-			{ "name":"Trượt dài trên băng", "avgLevel":36 },
-			{ "name":"Hang động lạnh nhất", "avgLevel":37 },
-			{ "name":"Tảng đá băng", "avgLevel":38 }
+			{ "name":"Lối mòn tuyết trắng", "avgLevel":19 },
+			{ "name":"Hồ băng vĩnh cửu", "avgLevel":20 },
+			{ "name":"Cuồng phong bão tuyết", "avgLevel":21 },
+			{ "name":"Ngọc băng giá", "avgLevel":22 },
+			{ "name":"Hang động lạnh nhất", "avgLevel":23 },
+			{ "name":"Hang người tuyết", "avgLevel":24 }
 		]
 	}
+
 ]
 }

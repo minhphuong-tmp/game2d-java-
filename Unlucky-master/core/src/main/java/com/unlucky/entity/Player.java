@@ -88,7 +88,21 @@ public class Player extends Entity {
 
     // the player's custom game settings
     public Settings settings = new Settings();
+    public void fullLevel() {
+        level = 10;              // max level
+        maxHp = hp = 9999;       // full HP
+        minDamage = maxDamage = 999; // full damage
+        accuracy = 100;           // full accuracy
+        gold = 999999;            // max gold
+        exp = maxExp = 0;         // exp không cần nữa
+    }
+    public int getLevel() {
+        return level;
+    }
 
+    public void setLevel(int lvl) {
+        this.level = lvl;
+    }
     public Player(String id, ResourceManager rm) {
         super(id, rm);
 
@@ -101,7 +115,7 @@ public class Player extends Entity {
         minDamage = Util.PLAYER_INIT_MIN_DMG;
         maxDamage = Util.PLAYER_INIT_MAX_DMG;
 
-        level = 1;
+//        level = 1;
         speed = 50.f;
 
         exp = 0;
@@ -120,8 +134,10 @@ public class Player extends Entity {
         statusEffects = new StatusSet(true, rm);
         smoveset = new SpecialMoveset();
         this.gold = 999999;
+        fullLevel();
 
     }
+
 
     public void update(float dt) {
         super.update(dt);
