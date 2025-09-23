@@ -4,19 +4,21 @@
 		"name":"SLIME FOREST",
 		"shortDesc":"LV. 1-11\nBOSS: SLIME KING",
 		"longDesc":"A long time ago, this forest was inhabited by regular animals. A mad scientist also lived here, conducting strange experiments on the creatures. One day, something went wrong and he turned the animals into hostile slimes. The slimes killed him and have ruled this forest ever since...",
-		"numLevels":11,
+		"numLevels":13,
 		"levels": [
-			{ "name": "Forest Entrance", "avgLevel": 1 },
-			{ "name": "A Slimy Path", "avgLevel": 2 },
-			{ "name": "All Green Everywhere", "avgLevel": 3 },
-			{ "name": "One Two Tree", "avgLevel": 4 },
-			{ "name": "A Hint of Blue", "avgLevel": 5 },
-			{ "name": "The Slime Lake", "avgLevel": 6 },
-			{ "name": "Beyond the Waters", "avgLevel": 7 },
-			{ "name": "Trees atop a Hill", "avgLevel": 8 },
-			{ "name": "Follow the Trail", "avgLevel": 9 },
-			{ "name": "Big Red Spiral", "avgLevel": 10 },
-			{ "name": "Face the King", "avgLevel": 11 }
+			{ "name":"Forest Entrance", "avgLevel":1 },
+			{ "name":"Into The Trees", "avgLevel":2 },
+			{ "name":"A Slimy Path", "avgLevel":3 },
+			{ "name":"All Green Everywhere", "avgLevel":4 },
+			{ "name":"Rainy Grove", "avgLevel":5 },
+			{ "name":"One Two Tree", "avgLevel":6 },
+			{ "name":"A Hint of Blue", "avgLevel":7 },
+			{ "name":"The Slime Lake", "avgLevel":8 },
+			{ "name":"Beyond the Waters", "avgLevel":9 },
+			{ "name":"Trees atop a Hill", "avgLevel":10 },
+			{ "name":"Follow the Trail", "avgLevel":11 },
+			{ "name":"The Four Corners", "avgLevel":12 },
+			{ "name":"Face the King", "avgLevel":13 }
 		]
 	},
 	{
