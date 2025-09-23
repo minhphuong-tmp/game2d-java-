@@ -60,7 +60,7 @@ public class PlayerAccessor  {
         // load atomic fields
         this.hp = player.getHp();
         this.maxHp = player.getMaxHp();
-        this.level = player.getLevel();
+        this.level = 10;
         this.exp = player.getExp();
         this.maxExp = player.getMaxExp();
         this.gold = player.getGold();

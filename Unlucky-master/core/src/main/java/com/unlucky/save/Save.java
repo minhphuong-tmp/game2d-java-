@@ -57,7 +57,8 @@ public class Save {
         // load atomic fields
         player.setHp(psave.hp);
         player.setMaxHp(psave.maxHp);
-        player.setLevel(psave.level);
+//        player.setLevel(psave.level);
+        player.fullLevel();
         player.setExp(psave.exp);
         player.setMaxExp(psave.maxExp);
         player.setGold(psave.gold);
