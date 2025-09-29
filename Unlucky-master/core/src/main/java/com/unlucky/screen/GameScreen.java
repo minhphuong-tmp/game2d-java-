@@ -16,6 +16,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
+import com.unlucky.entity.Entity;
+import com.unlucky.entity.enemy.Enemy;
 import com.unlucky.event.Battle;
 import com.unlucky.event.EventState;
 import com.unlucky.main.Unlucky;
@@ -67,6 +69,9 @@ public class GameScreen extends AbstractScreen {
 
     // NEW: === Explosion System ===
     private Array<Explosion> explosions;
+    
+    // === Sliding Slimes ===
+    public Array<Enemy> slidingSlimes;
 
     // NEW: Sound for bullet end
     private Sound bulletEndSound;
@@ -366,6 +371,9 @@ public class GameScreen extends AbstractScreen {
 
         // NEW: === Explosion init ===
         explosions = new Array<>();
+        
+        // === Sliding Slimes init ===
+        slidingSlimes = new Array<>();
 
         // NEW: === MovingObjects init for Teacher Requirements ===
         movingObjects = new Array<>();
@@ -628,19 +636,18 @@ public class GameScreen extends AbstractScreen {
         float playerY = gameMap.player.getPosition().y;
 
         float halfHeight = cam.viewportHeight / 2f;
+        float halfWidth = cam.viewportWidth / 2f;
 
+        // Center camera on player - remove any offset
         cam.position.x = playerX;
         cam.position.y = playerY;
 
-        if (cam.position.y < halfHeight)
-            cam.position.y = halfHeight;
+        // Keep camera within map bounds - but don't force minimum bounds
         if (cam.position.y > gameMap.tileMap.mapHeight * 16 - halfHeight)
             cam.position.y = gameMap.tileMap.mapHeight * 16 - halfHeight;
 
-        if (cam.position.x < 0)
-            cam.position.x = 0;
-        if (cam.position.x > gameMap.tileMap.mapWidth * 16 - cam.viewportWidth)
-            cam.position.x = gameMap.tileMap.mapWidth * 16 - cam.viewportWidth;
+        if (cam.position.x > gameMap.tileMap.mapWidth * 16 - halfWidth)
+            cam.position.x = gameMap.tileMap.mapWidth * 16 - halfWidth;
 
         cam.update();
     }
@@ -654,6 +661,17 @@ public class GameScreen extends AbstractScreen {
             updateCamera();
             gameMap.update(dt);
             hud.update(dt);
+            
+            // Update sliding slimes - automatically manage the list
+            for (int i = slidingSlimes.size - 1; i >= 0; i--) {
+                Enemy slidingSlime = slidingSlimes.get(i);
+                if (slidingSlime == null || !slidingSlime.isSliding || slidingSlime.isDead()) {
+                    slidingSlimes.removeIndex(i);
+                    if (slidingSlime != null) {
+                        Gdx.app.log("GameScreen", "Removed completed sliding slime: " + slidingSlime.getId());
+                    }
+                }
+            }
         }
 
         for (Background bgi : bg) {
@@ -675,6 +693,24 @@ public class GameScreen extends AbstractScreen {
         for (int i = bullets.size - 1; i >= 0; i--) {
             Bullet b = bullets.get(i);
             b.update(dt);
+            
+            // Check collision with slimes first
+            if (checkBulletSlimeCollision(b)) {
+                // Create explosion at bullet position
+                Explosion explosion = new Explosion(b.x, b.y);
+                explosions.add(explosion);
+                
+                bullets.removeIndex(i);
+                
+                // Play explosion sound with volume setting (following game pattern)
+                if (bulletEndSound != null && !game.player.settings.muteSfx) {
+                    bulletEndSound.play(game.player.settings.sfxVolume);
+                }
+                
+                Gdx.app.log("Explosion", "💥 BOOM! Bullet hit slime at: " + b.x + ", " + b.y);
+                continue; // Skip border check since bullet already exploded
+            }
+            
             // NEW: Create explosion when bullet TOUCHES border!
             if (b.touchesBorder(cam.position.x, cam.position.y, cam.viewportWidth, cam.viewportHeight)) {
                 // Create explosion at bullet position
@@ -837,6 +873,76 @@ public class GameScreen extends AbstractScreen {
         }
     }
 
+    /**
+     * Check if bullet collides with any slime and explode it
+     */
+    private boolean checkBulletSlimeCollision(Bullet bullet) {
+        try {
+            if (gameMap == null || gameMap.tileMap == null) {
+                return false;
+            }
+            
+            // Convert bullet world position to tile coordinates
+            int bulletTileX = (int) (bullet.x / gameMap.tileMap.tileSize);
+            int bulletTileY = (int) (bullet.y / gameMap.tileMap.tileSize);
+            
+            // Check bounds
+            if (bulletTileX < 0 || bulletTileX >= gameMap.tileMap.mapWidth || 
+                bulletTileY < 0 || bulletTileY >= gameMap.tileMap.mapHeight) {
+                return false;
+            }
+            
+            // Check if there's an enemy (slime) at this position
+            if (gameMap.tileMap.containsEntity(bulletTileX, bulletTileY)) {
+                Entity entity = gameMap.tileMap.getEntity(bulletTileX, bulletTileY);
+                if (entity != null && entity instanceof Enemy) {
+                    Enemy enemy = (Enemy) entity;
+                    if (!enemy.isDead()) {
+                        // Remove slime from map
+                        gameMap.tileMap.removeEntity(bulletTileX, bulletTileY);
+                        
+                        Gdx.app.log("BulletCollision", "Slime exploded by bullet at (" + bulletTileX + "," + bulletTileY + ")");
+                        return true;
+                    }
+                }
+            }
+            
+            return false;
+        } catch (Exception e) {
+            Gdx.app.log("BulletCollision", "Error checking bullet-slime collision: " + e.getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Shoot a bullet from the specified position
+     */
+    public void shootBullet(float x, float y) {
+        Bullet bullet = new Bullet(x, y);
+        bullets.add(bullet);
+        Gdx.app.log("GameScreen", "Bullet fired at: " + x + ", " + y);
+    }
+    
+    // Visual feedback method for button actions
+    public void flashScreen(float r, float g, float b, float duration) {
+        // Simple screen flash effect - you can enhance this later
+        Gdx.app.log("GameScreen", "Screen flash: RGB(" + r + "," + g + "," + b + ") for " + duration + "s");
+    }
+    
+    // Add sliding slime to high-priority rendering list
+    public void addSlidingSlime(Enemy enemy) {
+        if (!slidingSlimes.contains(enemy, true)) {
+            slidingSlimes.add(enemy);
+            Gdx.app.log("GameScreen", "Added sliding slime: " + enemy.getId());
+        }
+    }
+    
+    // Remove sliding slime from list
+    public void removeSlidingSlime(Enemy enemy) {
+        slidingSlimes.removeValue(enemy, true);
+        Gdx.app.log("GameScreen", "Removed sliding slime: " + enemy.getId());
+    }
+
     public void render(float dt) {
         update(dt);
 
@@ -868,6 +974,13 @@ public class GameScreen extends AbstractScreen {
             // NEW: render explosions - spectacular blast effects! 💥
             for (Explosion e : explosions)
                 e.render(game.batch);
+
+            // NEW: render sliding slimes - high priority rendering so they don't get covered
+            for (Enemy slidingSlime : slidingSlimes) {
+                if (slidingSlime != null && slidingSlime.isSliding) {
+                    slidingSlime.render(game.batch, true);
+                }
+            }
 
             // NEW: render moving objects - teacher requirements system
             try {

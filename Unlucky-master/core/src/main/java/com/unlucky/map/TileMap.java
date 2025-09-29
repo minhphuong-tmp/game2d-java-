@@ -266,6 +266,8 @@ public class TileMap {
                 // drawing an entity on a Tile
                 if (tileMap[i].containsEntity()) {
                     tileMap[i].getEntity().render(batch, true);
+                    // render enemy health bar
+                    renderEnemyHealthBar(batch, tileMap[i].getEntity(), origin.x + c * tileSize, origin.y + r * tileSize);
                 }
             }
         }
@@ -331,6 +333,49 @@ public class TileMap {
         if (ret == 79) return "a13|6|4";
         if (ret == 94 || ret == 95) return "a14|2|2";
         return id;
+    }
+
+    /**
+     * Renders enemy health bar above the enemy
+     */
+    private void renderEnemyHealthBar(SpriteBatch batch, Entity entity, float x, float y) {
+        // Only render health bar for enemies (not player)
+        if (entity instanceof com.unlucky.entity.enemy.Enemy) {
+            com.unlucky.entity.enemy.Enemy enemy = (com.unlucky.entity.enemy.Enemy) entity;
+            
+            // Always show health bar for debugging
+            float barWidth = 12f;
+            float barHeight = 2f;
+            float barX = x + (tileSize - barWidth) / 2f;
+            float barY = y + tileSize + 2f; // Above the enemy
+            
+            // Calculate health percentage
+            float healthPercent = (float) enemy.getHp() / enemy.getMaxHp();
+            
+            // Draw background (black) - use a simple rectangle
+            batch.setColor(0, 0, 0, 1f);
+            batch.draw(rm.tiles16x16[0][0], barX, barY, barWidth, barHeight);
+            
+            // Draw health bar (red to green based on health)
+            if (healthPercent > 0.5f) {
+                // Green when healthy
+                batch.setColor(0, 1, 0, 1f);
+            } else if (healthPercent > 0.25f) {
+                // Yellow when wounded
+                batch.setColor(1, 1, 0, 1f);
+            } else {
+                // Red when critical
+                batch.setColor(1, 0, 0, 1f);
+            }
+            
+            batch.draw(rm.tiles16x16[0][0], barX, barY, barWidth * healthPercent, barHeight);
+            
+            // Reset color
+            batch.setColor(1, 1, 1, 1);
+            
+            // Debug log
+            com.badlogic.gdx.Gdx.app.log("HealthBar", "Enemy HP: " + enemy.getHp() + "/" + enemy.getMaxHp() + " (" + healthPercent + ")");
+        }
     }
 
     /**

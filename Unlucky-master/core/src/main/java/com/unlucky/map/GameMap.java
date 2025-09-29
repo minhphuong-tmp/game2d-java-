@@ -11,6 +11,8 @@ import com.badlogic.gdx.utils.Array;
 import com.unlucky.effects.Particle;
 import com.unlucky.effects.ParticleFactory;
 import com.unlucky.entity.Player;
+import com.unlucky.entity.Entity;
+import com.unlucky.entity.enemy.Enemy;
 import com.unlucky.event.EventState;
 import com.unlucky.inventory.Inventory;
 import com.unlucky.inventory.Item;
@@ -204,6 +206,21 @@ public class GameMap {
     public void update(float dt) {
         player.update(dt);
         tileMap.update(dt);
+        
+        // Check for sliding slimes and add them to GameScreen's slidingSlimes list
+        for (int y = 0; y < tileMap.mapHeight; y++) {
+            for (int x = 0; x < tileMap.mapWidth; x++) {
+                if (tileMap.containsEntity(x, y)) {
+                    Entity entity = tileMap.getEntity(x, y);
+                    if (entity instanceof Enemy) {
+                        Enemy enemy = (Enemy) entity;
+                        if (enemy.isSliding && !gameScreen.slidingSlimes.contains(enemy, true)) {
+                            gameScreen.addSlidingSlime(enemy);
+                        }
+                    }
+                }
+            }
+        }
 
         // engage in battle if found
         if (player.isBattling()) {

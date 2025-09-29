@@ -1,5 +1,6 @@
 package com.unlucky.ui;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Group;
@@ -9,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.unlucky.effects.Moving;
 import com.unlucky.entity.Player;
@@ -39,6 +41,11 @@ public class Hud extends UI {
 
     // option buttons: inventoryUI and settings
     private ImageButton[] optionButtons;
+    
+    // shoot button
+    private ImageButton shootButton;
+    private ImageButton leftButton1;
+    private ImageButton leftButton2;
 
     // window that slides on the screen to show the world and level
     private Window levelDescriptor;
@@ -56,12 +63,19 @@ public class Hud extends UI {
 
     public Image shade;
     public Dialog settingsDialog;
+    
+    // Debug text display
+    private String debugText = "";
+    private float debugTextTimer = 0f;
 
     public Hud(final GameScreen gameScreen, TileMap tileMap, final Player player, final ResourceManager rm) {
         super(gameScreen, tileMap, player, rm);
 
         createDirPad();
         createOptionButtons();
+        createShootButton();
+        createLeftButtons();
+        Gdx.app.log("Hud", "Hud created with kick button");
         createLevelDescriptor();
         createDeathPrompt();
 
@@ -168,8 +182,22 @@ public class Hud extends UI {
     }
 
     public void render(float dt) {
+        // Update debug text timer
+        if (debugTextTimer > 0) {
+            debugTextTimer -= dt;
+            if (debugTextTimer <= 0) {
+                debugText = "";
+            }
+        }
+        
         stage.act(dt);
         stage.draw();
+        
+        // Draw debug text on screen
+        if (debugTextTimer > 0 && !debugText.isEmpty()) {
+            // Simple debug text rendering - you can enhance this later
+            Gdx.app.log("HudRender", "DEBUG: " + debugText);
+        }
     }
 
     /**
@@ -253,6 +281,136 @@ public class Hud extends UI {
             stage.addActor(optionButtons[i]);
         }
         handleOptionEvents();
+    }
+
+    /**
+     * Creates the shoot button
+     */
+    private void createShootButton() {
+        // Create shoot button using gun icon (lightning)
+        ImageButton.ImageButtonStyle shootStyle = new ImageButton.ImageButtonStyle();
+        // Use Wooden Bow as shoot icon
+        shootStyle.up = new TextureRegionDrawable(rm.shopitems[3][1]);
+        shootStyle.down = new TextureRegionDrawable(rm.shopitems[3][1]);
+        shootButton = new ImageButton(shootStyle);
+        
+        // Make button smaller
+        shootButton.setSize(24, 24);
+        
+        // Position the shoot button at bottom right corner
+        // Screen width: 200, button size: 24, margin: 5
+        shootButton.setPosition(200 - 24 - 5, 5);
+        
+        // Add click listener
+        shootButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                    // Only shoot when in MOVING or BATTLING state
+                    if (gameScreen.currentEvent == EventState.MOVING ||
+                        gameScreen.currentEvent == EventState.BATTLING) {
+
+                        // Get player position
+                        float playerX = gameScreen.gameMap.player.getPosition().x;
+                        float playerY = gameScreen.gameMap.player.getPosition().y;
+
+                        // Create bullet (same as touch input)
+                        gameScreen.shootBullet(playerX, playerY + 8);
+
+                        Gdx.app.log("ShootButton", "Bullet fired from button at: " + playerX + ", " + playerY);
+                    }
+            }
+        });
+        
+        stage.addActor(shootButton);
+    }
+
+    /**
+     * Creates the left buttons
+     */
+    private void createLeftButtons() {
+        Gdx.app.log("Hud", "Creating left buttons...");
+        // Create left button 1 (Inferno Chestplate - type 3, imgIndex 8)
+        ImageButton.ImageButtonStyle leftStyle1 = new ImageButton.ImageButtonStyle();
+        leftStyle1.up = new TextureRegionDrawable(rm.shopitems[3][8]);
+        leftStyle1.down = new TextureRegionDrawable(rm.shopitems[3][8]);
+        leftButton1 = new ImageButton(leftStyle1);
+        leftButton1.setSize(24, 24);
+        leftButton1.setPosition(200 - 24 - 5 - 24 - 5, 5);
+        
+        // Create left button 2 (Inferno Greaves - type 6, imgIndex 6)
+        ImageButton.ImageButtonStyle leftStyle2 = new ImageButton.ImageButtonStyle();
+        leftStyle2.up = new TextureRegionDrawable(rm.shopitems[5][6]);
+        leftStyle2.down = new TextureRegionDrawable(rm.shopitems[5][6]);
+        leftButton2 = new ImageButton(leftStyle2);
+        leftButton2.setSize(24, 24);
+        leftButton2.setPosition(200 - 24 - 5 - 24 - 5 - 24 - 5, 5);
+        
+        // Add click listeners - Sword flash effect
+        leftButton1.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Gdx.app.log("TEST", "=== SWORD BUTTON CLICKED ===");
+                Gdx.app.log("Sword", "Sword button clicked - creating flash effect");
+                Gdx.app.log("Sword", "Current event: " + gameScreen.currentEvent);
+                
+                // Show debug text
+                showDebugText("SWORD BUTTON CLICKED!");
+                
+                // Always try to create flash effect (remove state check for testing)
+                Gdx.app.log("Sword", "Calling player.createSwordFlash()");
+                Gdx.app.log("Sword", "gameScreen: " + (gameScreen != null ? "OK" : "NULL"));
+                Gdx.app.log("Sword", "gameMap: " + (gameScreen != null && gameScreen.gameMap != null ? "OK" : "NULL"));
+                Gdx.app.log("Sword", "player: " + (gameScreen != null && gameScreen.gameMap != null && gameScreen.gameMap.player != null ? "OK" : "NULL"));
+                
+                if (gameScreen != null && gameScreen.gameMap != null && gameScreen.gameMap.player != null) {
+                    gameScreen.gameMap.player.createSwordFlash();
+                    Gdx.app.log("Sword", "Player sword flash created!");
+                } else {
+                    Gdx.app.log("Sword", "ERROR: Player is null!");
+                }
+            }
+        });
+        
+        leftButton2.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Gdx.app.log("TEST", "=== KICK BUTTON CLICKED ===");
+                Gdx.app.log("Hud", "LeftButton2 (kick button) clicked!");
+                Gdx.app.log("Hud", "Current event: " + gameScreen.currentEvent);
+                
+                // Show debug text
+                showDebugText("KICK BUTTON CLICKED!");
+                
+                // Always try to kick (remove state check for testing)
+                Gdx.app.log("Hud", "Calling player.kickEnemy()");
+                Gdx.app.log("Hud", "gameScreen: " + (gameScreen != null ? "OK" : "NULL"));
+                Gdx.app.log("Hud", "gameMap: " + (gameScreen != null && gameScreen.gameMap != null ? "OK" : "NULL"));
+                Gdx.app.log("Hud", "player: " + (gameScreen != null && gameScreen.gameMap != null && gameScreen.gameMap.player != null ? "OK" : "NULL"));
+                
+                if (gameScreen != null && gameScreen.gameMap != null && gameScreen.gameMap.player != null) {
+                    gameScreen.gameMap.player.kickEnemy();
+                    Gdx.app.log("KickButton", "Player kicked enemy off screen!");
+                } else {
+                    Gdx.app.log("KickButton", "ERROR: Player is null!");
+                }
+            }
+        });
+        
+        stage.addActor(leftButton1);
+        stage.addActor(leftButton2);
+        
+        Gdx.app.log("Hud", "Left buttons created and added to stage");
+        Gdx.app.log("Hud", "LeftButton1 position: " + leftButton1.getX() + ", " + leftButton1.getY());
+        Gdx.app.log("Hud", "LeftButton2 position: " + leftButton2.getX() + ", " + leftButton2.getY());
+        Gdx.app.log("Hud", "LeftButton1 visible: " + leftButton1.isVisible());
+        Gdx.app.log("Hud", "LeftButton2 visible: " + leftButton2.isVisible());
+    }
+    
+    // Show debug text on screen
+    public void showDebugText(String text) {
+        debugText = text;
+        debugTextTimer = 3f; // Show for 3 seconds
+        Gdx.app.log("HudDebug", text);
     }
 
     /**

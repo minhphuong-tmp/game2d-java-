@@ -1,5 +1,6 @@
 package com.unlucky.entity;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
@@ -13,6 +14,7 @@ import com.unlucky.inventory.Inventory;
 import com.unlucky.inventory.Item;
 import com.unlucky.map.GameMap;
 import com.unlucky.map.Tile;
+import com.unlucky.map.TileMap;
 import com.unlucky.resource.ResourceManager;
 import com.unlucky.resource.Statistics;
 import com.unlucky.resource.Util;
@@ -82,6 +84,22 @@ public class Player extends Entity {
     // whether or not the player is currently in a map
     public boolean inMap = false;
 
+    // kick animation state
+    public boolean isKicking = false;
+    private float kickTimer = 0f;
+    private final float KICK_DURATION = 0.8f; // Duration of kick animation
+    private float kickPower = 0f; // For kick effect animation
+    
+    // sword flash effect
+    public boolean isSwordFlashing = false;
+    private float swordFlashTimer = 0f;
+    private final float SWORD_FLASH_DURATION = 1.0f; // Duration of flash effect
+    
+    // slime respawn system
+    private float respawnTimer = 0f;
+    private final float RESPAWN_INTERVAL = 3.0f; // Respawn every 3 seconds
+    private java.util.List<int[]> originalSlimePositions = new java.util.ArrayList<>();
+
     // player's level progress stored as a (world, level) key
     public int maxWorld = 0;
     public int maxLevel = 0;
@@ -124,6 +142,44 @@ public class Player extends Entity {
     public void update(float dt) {
         super.update(dt);
 
+        // Update kick animation
+        if (isKicking) {
+            kickTimer += dt;
+            
+            // Create kick power effect (0 to 1 and back)
+            kickPower = (float) Math.sin(kickTimer * 8) * 0.5f + 0.5f;
+            
+            if (kickTimer >= KICK_DURATION) {
+                isKicking = false;
+                kickTimer = 0f;
+                kickPower = 0f;
+            }
+        }
+        
+        // Update sword flash animation
+        if (isSwordFlashing) {
+            swordFlashTimer += dt;
+            if (swordFlashTimer >= SWORD_FLASH_DURATION) {
+                isSwordFlashing = false;
+                swordFlashTimer = 0f;
+            }
+        }
+        
+        // Update slime respawn timer
+        respawnTimer += dt;
+        if (respawnTimer >= RESPAWN_INTERVAL) {
+            respawnSlimes();
+            respawnTimer = 0f;
+        }
+        
+        // Update debug text timer
+        if (debugTextTimer > 0) {
+            debugTextTimer -= dt;
+            if (debugTextTimer <= 0) {
+                debugText = "";
+            }
+        }
+
         // movement
         handleMovement(dt);
         // special tile handling
@@ -139,7 +195,71 @@ public class Player extends Entity {
     public void render(SpriteBatch batch) {
         // draw shadow
         batch.draw(rm.shadow11x6, position.x + 3, position.y - 3);
+        
+        // Draw kick effect if kicking
+        if (isKicking) {
+            // Draw the boot icon at the front of the player with power effect
+            float kickX = position.x + 1; // Same as sword position
+            float kickY = position.y; // Same as sword position
+            
+            // Adjust position based on direction - make it more visible
+            if (prevDir == 0) kickY -= 20; // down
+            else if (prevDir == 1) kickY += 20; // up
+            else if (prevDir == 2) kickX += 20; // right
+            else if (prevDir == 3) kickX -= 20; // left
+            
+            // Scale based on kick power for dramatic effect
+            float scale = 1.0f + kickPower * 0.5f; // Scale from 1.0 to 1.5
+            float size = 20 * scale;
+            
+            // Draw boot icon (shopitems[5][6] - Inferno Greaves) with scaling
+            batch.draw(rm.shopitems[5][6], kickX - size/2, kickY - size/2, size, size);
+            
+            // Add kick trail effect
+            if (kickPower > 0.7f) {
+                // Draw additional boot icons for trail effect
+                float trailOffset = kickPower * 10f;
+                if (prevDir == 0) kickY -= trailOffset; // down
+                else if (prevDir == 1) kickY += trailOffset; // up
+                else if (prevDir == 2) kickX += trailOffset; // right
+                else if (prevDir == 3) kickX -= trailOffset; // left
+                
+                batch.setColor(1, 1, 1, kickPower * 0.5f); // Semi-transparent trail
+                batch.draw(rm.shopitems[5][6], kickX - size/2, kickY - size/2, size * 0.7f, size * 0.7f);
+                batch.setColor(1, 1, 1, 1); // Reset color
+            }
+        }
+        
+        // Draw sword flash effect if flashing
+        if (isSwordFlashing) {
+            // Calculate flash position (in front of player)
+            float flashX = position.x + 1;
+            float flashY = position.y;
+            
+            if (prevDir == 0) flashY -= 20; // down
+            else if (prevDir == 1) flashY += 20; // up
+            else if (prevDir == 2) flashX += 20; // right
+            else if (prevDir == 3) flashX -= 20; // left
+            
+            // Create flashing effect with color change
+            float flashIntensity = (float) Math.sin(swordFlashTimer * 20) * 0.5f + 0.5f;
+            batch.setColor(1, 1, 1, flashIntensity);
+            
+            // Draw sword icon (shopitems[3][8] - Inferno Chestplate) as flash
+            batch.draw(rm.shopitems[3][8], flashX, flashY, 20, 20);
+            
+            // Reset color
+            batch.setColor(1, 1, 1, 1);
+        }
+        
         batch.draw(am.getKeyFrame(true), position.x + 1, position.y);
+        
+        // Draw debug text if active
+        if (debugTextTimer > 0) {
+            // Simple text rendering - you can enhance this later
+            // For now, just log it so you can see in console
+            Gdx.app.log("DebugText", debugText);
+        }
     }
 
     /**
@@ -321,6 +441,420 @@ public class Player extends Entity {
         move(dir);
         prevDir = dir;
         am.setAnimation(dir);
+    }
+
+    /**
+     * Performs a kick attack
+     */
+    public void kick() {
+        Gdx.app.log("TEST", "=== KICK METHOD CALLED ===");
+        Gdx.app.log("Kick", "Kick method called! isKicking: " + isKicking + ", canMove: " + canMove());
+        Gdx.app.log("Kick", "Player position: (" + currentTileX + "," + currentTileY + "), prevDir: " + prevDir);
+        
+        if (!isKicking && canMove()) {
+            isKicking = true;
+            kickTimer = 0f;
+            
+            Gdx.app.log("Kick", "Starting kick animation");
+            
+            // Play kick sound effect
+            if (!settings.muteSfx) rm.hit.play(settings.sfxVolume);
+            
+            // Check for enemies in front of player and deal damage
+            checkKickDamage();
+        } else {
+            Gdx.app.log("Kick", "Cannot kick - isKicking: " + isKicking + ", canMove: " + canMove());
+        }
+    }
+
+    /**
+     * Checks for enemies in front of player and pushes them away
+     */
+    private void checkKickDamage() {
+        Gdx.app.log("Kick", "=== CHECKING KICK DAMAGE ===");
+        
+        // Get player's current tile position
+        int playerX = currentTileX;
+        int playerY = currentTileY;
+        
+        Gdx.app.log("Kick", "Player at: (" + playerX + "," + playerY + "), prevDir: " + prevDir);
+        
+        // Calculate front position based on current direction
+        int frontX = playerX;
+        int frontY = playerY;
+        
+        if (prevDir == 0) frontY--; // down
+        else if (prevDir == 1) frontY++; // up
+        else if (prevDir == 2) frontX++; // right
+        else if (prevDir == 3) frontX--; // left
+        
+        Gdx.app.log("Kick", "Checking front position: (" + frontX + "," + frontY + ")");
+        
+        // Check if there's an enemy at the front position
+        if (tileMap.containsEntity(frontX, frontY)) {
+            Enemy enemy = (Enemy) tileMap.getEntity(frontX, frontY);
+            if (enemy != null && !enemy.isDead()) {
+                Gdx.app.log("Kick", "Found enemy at (" + frontX + "," + frontY + ")");
+                
+                // Simple push: move enemy 1 tile in the same direction
+                int pushX = frontX;
+                int pushY = frontY;
+                
+                if (prevDir == 0) pushY--; // down
+                else if (prevDir == 1) pushY++; // up
+                else if (prevDir == 2) pushX++; // right
+                else if (prevDir == 3) pushX--; // left
+                
+                Gdx.app.log("Kick", "Trying to push enemy to (" + pushX + "," + pushY + ")");
+                
+                // Check bounds
+                if (pushX >= 0 && pushX < tileMap.mapWidth && 
+                    pushY >= 0 && pushY < tileMap.mapHeight) {
+                    
+                    // Check if push position is empty
+                    if (!tileMap.containsEntity(pushX, pushY)) {
+                        // Move enemy
+                        tileMap.removeEntity(frontX, frontY);
+                        tileMap.addEntity(enemy, pushX, pushY);
+                        enemy.getPosition().set(pushX * tileMap.tileSize, pushY * tileMap.tileSize);
+                        
+                        Gdx.app.log("Kick", "SUCCESS: Enemy pushed!");
+                    } else {
+                        Gdx.app.log("Kick", "Push position blocked, dealing damage instead");
+                        // Deal damage if can't push
+                        int damage = MathUtils.random(minDamage, maxDamage);
+                        enemy.hit(damage);
+                        enemy.applyDamage();
+                    }
+                } else {
+                    Gdx.app.log("Kick", "Push position out of bounds, dealing damage instead");
+                    // Deal damage if out of bounds
+                    int damage = MathUtils.random(minDamage, maxDamage);
+                    enemy.hit(damage);
+                    enemy.applyDamage();
+                }
+            } else {
+                Gdx.app.log("Kick", "Enemy is null or dead");
+            }
+        } else {
+            Gdx.app.log("Kick", "No enemy found at front position");
+        }
+    }
+
+    /**
+     * Kicks enemy in front of player - kicks them off screen (kills them)
+     */
+    public void kickEnemy() {
+        Gdx.app.log("Kick", "=== KICK STARTED ===");
+        Gdx.app.log("Kick", "isKicking: " + isKicking + ", canMove: " + canMove());
+        Gdx.app.log("Kick", "tileMap: " + (tileMap != null ? "OK" : "NULL"));
+        
+        // Always try to kick (remove isKicking check for testing)
+        isKicking = true;
+        kickTimer = 0f;
+        
+        Gdx.app.log("Kick", "Kicking enemy off screen");
+            
+            // Use bullet collision logic - convert world position to tile coordinates
+            float playerWorldX = position.x;
+            float playerWorldY = position.y;
+            int playerTileX = (int) (playerWorldX / tileMap.tileSize);
+            int playerTileY = (int) (playerWorldY / tileMap.tileSize);
+            
+            Gdx.app.log("Kick", "Player world pos: (" + playerWorldX + "," + playerWorldY + ")");
+            Gdx.app.log("Kick", "Player tile pos: (" + playerTileX + "," + playerTileY + "), prevDir: " + prevDir);
+            
+            // Debug: Check all entities on map
+            Gdx.app.log("Kick", "=== SCANNING ALL ENTITIES ===");
+            for (int y = 0; y < tileMap.mapHeight; y++) {
+                for (int x = 0; x < tileMap.mapWidth; x++) {
+                    if (tileMap.containsEntity(x, y)) {
+                        Entity entity = tileMap.getEntity(x, y);
+                        if (entity instanceof Enemy) {
+                            Enemy enemy = (Enemy) entity;
+                            Gdx.app.log("Kick", "Enemy at (" + x + "," + y + "): " + entity.getClass().getSimpleName() + 
+                                      " - HP: " + enemy.hp + "/" + enemy.maxHp + " - Dead: " + enemy.isDead());
+                        } else {
+                            Gdx.app.log("Kick", "Entity at (" + x + "," + y + "): " + entity.getClass().getSimpleName());
+                        }
+                    }
+                }
+            }
+            Gdx.app.log("Kick", "=== END SCAN ===");
+            
+            // Check only the tile in front of player based on direction
+            int frontTileX = playerTileX;
+            int frontTileY = playerTileY;
+            
+            // Calculate front position based on direction
+            if (prevDir == 0) frontTileY--; // down
+            else if (prevDir == 1) frontTileY++; // up
+            else if (prevDir == 2) frontTileX++; // right
+            else if (prevDir == 3) frontTileX--; // left
+            
+            Gdx.app.log("Kick", "Front tile pos: (" + frontTileX + "," + frontTileY + ")");
+            
+            // Check bounds
+            if (frontTileX >= 0 && frontTileX < tileMap.mapWidth && 
+                frontTileY >= 0 && frontTileY < tileMap.mapHeight) {
+                
+                // Check if there's an enemy at the front position
+                if (tileMap.containsEntity(frontTileX, frontTileY)) {
+                    Entity entity = tileMap.getEntity(frontTileX, frontTileY);
+                    if (entity != null && entity instanceof Enemy) {
+                        Enemy enemy = (Enemy) entity;
+                        Gdx.app.log("Kick", "Found enemy at front position (" + frontTileX + "," + frontTileY + ")");
+                        Gdx.app.log("Kick", "Enemy HP: " + enemy.hp + "/" + enemy.maxHp + ", Dead: " + enemy.isDead());
+                        
+                        // Create sliding effect - move enemy off screen instead of removing immediately
+                        Gdx.app.log("Kick", "Creating sliding effect for enemy at (" + frontTileX + "," + frontTileY + ")");
+                        
+                        // Start sliding animation first
+                        enemy.startSlidingEffect(prevDir);
+                        
+                        // Add to sliding slimes list for high-priority rendering
+                        // Note: We'll handle this in GameScreen update loop instead
+                        
+                        // Don't remove from map immediately - let it slide first
+                        // tileMap.removeEntity(frontTileX, frontTileY);
+                        Gdx.app.log("Kick", "Enemy will slide before being removed");
+                        
+                        Gdx.app.log("Kick", "SUCCESS: Enemy kicked off screen!");
+                        
+                        // Visual feedback - show text on screen
+                        showDebugText("KICK SUCCESS!");
+                        
+                        // Play sound effect
+                        if (!settings.muteSfx) rm.hit.play(settings.sfxVolume);
+                    } else {
+                        Gdx.app.log("Kick", "Entity is not an enemy: " + entity.getClass().getSimpleName());
+                    }
+                } else {
+                    Gdx.app.log("Kick", "No entity at front position (" + frontTileX + "," + frontTileY + ")");
+                }
+            } else {
+                Gdx.app.log("Kick", "Front position out of bounds");
+            }
+        
+        Gdx.app.log("Kick", "=== KICK COMPLETED ===");
+    }
+
+    /**
+     * Creates sword flash effect on slime in front of player
+     * Slime will flash 3 times then die
+     */
+    public void createSwordFlash() {
+        Gdx.app.log("SwordFlash", "=== SWORD FLASH STARTED ===");
+        Gdx.app.log("SwordFlash", "isSwordFlashing: " + isSwordFlashing + ", canMove: " + canMove());
+        Gdx.app.log("SwordFlash", "tileMap: " + (tileMap != null ? "OK" : "NULL"));
+        
+        // Always try to flash (remove isSwordFlashing check for testing)
+        isSwordFlashing = true;
+        swordFlashTimer = 0f;
+        
+        Gdx.app.log("SwordFlash", "Creating sword flash effect");
+            
+            // Use bullet collision logic - convert world position to tile coordinates
+            float playerWorldX = position.x;
+            float playerWorldY = position.y;
+            int playerTileX = (int) (playerWorldX / tileMap.tileSize);
+            int playerTileY = (int) (playerWorldY / tileMap.tileSize);
+            
+            Gdx.app.log("SwordFlash", "Player world pos: (" + playerWorldX + "," + playerWorldY + ")");
+            Gdx.app.log("SwordFlash", "Player tile pos: (" + playerTileX + "," + playerTileY + "), prevDir: " + prevDir);
+            
+            // Check only the tile in front of player based on direction
+            int frontTileX = playerTileX;
+            int frontTileY = playerTileY;
+            
+            // Calculate front position based on direction
+            if (prevDir == 0) frontTileY--; // down
+            else if (prevDir == 1) frontTileY++; // up
+            else if (prevDir == 2) frontTileX++; // right
+            else if (prevDir == 3) frontTileX--; // left
+            
+            Gdx.app.log("SwordFlash", "Front tile pos: (" + frontTileX + "," + frontTileY + ")");
+            
+            // Check bounds
+            if (frontTileX >= 0 && frontTileX < tileMap.mapWidth && 
+                frontTileY >= 0 && frontTileY < tileMap.mapHeight) {
+                
+                // Check if there's an enemy at the front position
+                if (tileMap.containsEntity(frontTileX, frontTileY)) {
+                    Entity entity = tileMap.getEntity(frontTileX, frontTileY);
+                    if (entity != null && entity instanceof Enemy) {
+                        Enemy enemy = (Enemy) entity;
+                        Gdx.app.log("SwordFlash", "Found enemy at front position (" + frontTileX + "," + frontTileY + ")");
+                        Gdx.app.log("SwordFlash", "Enemy HP: " + enemy.hp + "/" + enemy.maxHp + ", Dead: " + enemy.isDead());
+                        
+                        // Always flash regardless of dead status (for testing)
+                        Gdx.app.log("SwordFlash", "Starting sword flash effect on enemy");
+                        enemy.startSwordFlash();
+                        
+                        Gdx.app.log("SwordFlash", "SUCCESS: Sword flash started on slime!");
+                        
+                        // Visual feedback - show text on screen
+                        showDebugText("SWORD FLASH!");
+                    } else {
+                        Gdx.app.log("SwordFlash", "Entity is not an enemy: " + entity.getClass().getSimpleName());
+                    }
+                } else {
+                    Gdx.app.log("SwordFlash", "No entity at front position (" + frontTileX + "," + frontTileY + ")");
+                }
+            } else {
+                Gdx.app.log("SwordFlash", "Front position out of bounds");
+            }
+            
+            // Play sound effect
+            if (!settings.muteSfx) rm.hit.play(settings.sfxVolume);
+        
+        Gdx.app.log("SwordFlash", "=== SWORD FLASH COMPLETED ===");
+    }
+
+    // Debug text variables
+    private String debugText = "";
+    private float debugTextTimer = 0f;
+    private static final float DEBUG_TEXT_DURATION = 2f;
+    
+    // Show debug text on screen
+    private void showDebugText(String text) {
+        debugText = text;
+        debugTextTimer = DEBUG_TEXT_DURATION;
+        Gdx.app.log("Debug", text);
+    }
+    
+    /**
+     * Explodes slime in front of player
+     */
+    public void explodeSlime() {
+        try {
+            Gdx.app.log("Explode", "Exploding slime in front of player");
+            
+            // Check if tileMap is available
+            if (tileMap == null) {
+                Gdx.app.log("Explode", "tileMap is null, cannot explode slime");
+                return;
+            }
+            
+            // Get the tile in front of the player
+            int frontX = currentTileX;
+            int frontY = currentTileY;
+            
+            if (prevDir == 0) frontY--; // down
+            else if (prevDir == 1) frontY++; // up
+            else if (prevDir == 2) frontX++; // right
+            else if (prevDir == 3) frontX--; // left
+            
+            // Check bounds
+            if (frontX < 0 || frontX >= tileMap.mapWidth || frontY < 0 || frontY >= tileMap.mapHeight) {
+                Gdx.app.log("Explode", "Front position out of bounds: (" + frontX + "," + frontY + ")");
+                return;
+            }
+            
+            // Check if there's an enemy at the front position
+            if (tileMap.containsEntity(frontX, frontY)) {
+                Entity entity = tileMap.getEntity(frontX, frontY);
+                if (entity != null && entity instanceof Enemy) {
+                    Enemy enemy = (Enemy) entity;
+                    if (!enemy.isDead()) {
+                        // Remove enemy from map
+                        tileMap.removeEntity(frontX, frontY);
+                        
+                        Gdx.app.log("Explode", "Slime exploded and removed from (" + frontX + "," + frontY + ")");
+                        
+                        // Play explosion sound
+                        if (!settings.muteSfx) rm.hit.play(settings.sfxVolume);
+                    }
+                }
+            } else {
+                Gdx.app.log("Explode", "No entity found at front position (" + frontX + "," + frontY + ")");
+            }
+        } catch (Exception e) {
+            Gdx.app.log("Explode", "Error exploding slime: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public void setMap(TileMap map) {
+        this.tileMap = map;
+        this.position.set(map.toMapCoords(map.playerSpawn));
+        
+        // Save original slime positions for respawn
+        saveOriginalSlimePositions();
+    }
+
+    /**
+     * Save original slime positions when map is loaded
+     */
+    public void saveOriginalSlimePositions() {
+        originalSlimePositions.clear();
+        
+        if (tileMap == null) return;
+        
+        Gdx.app.log("Respawn", "Saving original slime positions...");
+        
+        // Scan entire map for slimes
+        for (int y = 0; y < tileMap.mapHeight; y++) {
+            for (int x = 0; x < tileMap.mapWidth; x++) {
+                if (tileMap.containsEntity(x, y)) {
+                    Entity entity = tileMap.getEntity(x, y);
+                    if (entity instanceof Enemy) {
+                        Enemy enemy = (Enemy) entity;
+                        if (!enemy.isDead()) {
+                            originalSlimePositions.add(new int[]{x, y});
+                            Gdx.app.log("Respawn", "Saved slime position: (" + x + "," + y + ")");
+                        }
+                    }
+                }
+            }
+        }
+        
+        Gdx.app.log("Respawn", "Total original slime positions saved: " + originalSlimePositions.size());
+    }
+
+    /**
+     * Respawns slimes that were removed at their original positions
+     */
+    private void respawnSlimes() {
+        try {
+            // Check if tileMap is available
+            if (tileMap == null) {
+                Gdx.app.log("Respawn", "tileMap is null, cannot respawn slimes");
+                return;
+            }
+            
+            Gdx.app.log("Respawn", "=== RESPAWN CHECK STARTED ===");
+            Gdx.app.log("Respawn", "Original positions saved: " + originalSlimePositions.size());
+            
+            int respawnedCount = 0;
+            
+            // Respawn slimes at their original positions if empty
+            for (int[] pos : originalSlimePositions) {
+                int x = pos[0];
+                int y = pos[1];
+                
+                // Check if position is empty
+                if (!tileMap.containsEntity(x, y)) {
+                    try {
+                        // Create slime using the same method as original map loading
+                        Enemy slime = (Enemy) Util.getEntity(2, tileMap.toMapCoords(x, y), tileMap, rm);
+                        if (slime != null) {
+                            tileMap.addEntity(slime, x, y);
+                            respawnedCount++;
+                            Gdx.app.log("Respawn", "SUCCESS: Slime respawned at original position (" + x + "," + y + ")");
+                        }
+                    } catch (Exception e) {
+                        Gdx.app.log("Respawn", "Error creating slime at (" + x + "," + y + "): " + e.getMessage());
+                    }
+                }
+            }
+            
+            Gdx.app.log("Respawn", "=== RESPAWN CHECK COMPLETED ===");
+            Gdx.app.log("Respawn", "Total slimes respawned: " + respawnedCount);
+        } catch (Exception e) {
+            Gdx.app.log("Respawn", "Error respawning slimes: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     /**
