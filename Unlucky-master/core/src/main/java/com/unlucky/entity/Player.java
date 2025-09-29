@@ -1,6 +1,7 @@
 package com.unlucky.entity;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
@@ -27,6 +28,7 @@ import com.unlucky.save.Settings;
  */
 public class Player extends Entity {
 
+
     /**
      * -1 - stop
      * 0 - down
@@ -44,10 +46,16 @@ public class Player extends Entity {
     // tile causing a dialog event
     private boolean tileInteraction = false;
     // teleportation tiles
+    private boolean shieldActive = false;
     private boolean teleporting = false;
     // end tiles
+    private float shieldTimer = 0f;
+
     public boolean completedMap = false;
 
+    public boolean isShieldActive() {
+        return shieldActive;
+    }
     // Statistics
     public Statistics stats = new Statistics();
 
@@ -56,9 +64,18 @@ public class Player extends Entity {
     private boolean battling = false;
 
     // exp and level up
+    public void deactivateShield() {
+        // Tắt trạng thái shield
+        this.shieldActive = false;
+
+        // Nếu
+    }
     private int exp;
     private int maxExp;
 
+    private boolean shieldVisible = true;    // để tạm ẩn khiên khi va chạm
+    private float shieldCooldown = 0f;       // thời gian tạm ẩn khiên
+    private final float SHIELD_HIDE_TIME = 0.5f; // 0.5 giây
     private int hpIncrease = 0;
     private int minDmgIncrease = 0;
     private int maxDmgIncrease = 0;
@@ -107,6 +124,20 @@ public class Player extends Entity {
     // the player's custom game settings
     public Settings settings = new Settings();
 
+    public void activateShield(float duration) {
+        shieldActive = true;
+        shieldTimer = duration;
+    }
+
+    public void updateShield(float dt) {
+        if (!shieldVisible) {
+            shieldCooldown -= dt;
+            if (shieldCooldown <= 0f) {
+                shieldVisible = true;
+            }
+        }
+    }
+
     public Player(String id, ResourceManager rm) {
         super(id, rm);
 
@@ -138,8 +169,18 @@ public class Player extends Entity {
         statusEffects = new StatusSet(true, rm);
         smoveset = new SpecialMoveset();
     }
+    public void toggleShield() {
+        shieldActive = !shieldActive;
+        Gdx.app.log("Player", "🛡️ Shield toggled to: " + shieldActive);
 
-    public void update(float dt) {
+        if (shieldActive) {
+            showDebugText("SHIELD ACTIVATED!");
+            Gdx.app.log("Player", "🛡️ Shield ON - will stay active until toggled off");
+        } else {
+            showDebugText("SHIELD DEACTIVATED!");
+            Gdx.app.log("Player", "🛡️ Shield OFF");
+        }
+    }    public void update(float dt) {
         super.update(dt);
 
         // Update kick animation
@@ -190,31 +231,48 @@ public class Player extends Entity {
             opponent = (com.unlucky.entity.enemy.Enemy) tileMap.getEntity(tileMap.toTileCoords(position));
             battling = true;
         }
+//        updateShield(dt);
     }
 
     public void render(SpriteBatch batch) {
+        Gdx.app.log("PlayerRender", "🎬 RENDER METHOD CALLED - shieldActive: " + shieldActive);
         // draw shadow
         batch.draw(rm.shadow11x6, position.x + 3, position.y - 3);
-        
+
+        // VẼ NHÂN VẬT TRƯỚC
+        batch.draw(am.getKeyFrame(true), position.x + 1, position.y);
+
+
+        // === HIỆU ỨNG KHIEN - VẼ SAU NHÂN VẬT ===
+        if (shieldActive) {
+            Gdx.app.log("PlayerRender", "🔴 🛡️ DRAWING RED SHIELD - Active: " + shieldActive);
+
+            // Vẽ khiên màu đỏ lớn để dễ nhìn
+            float shieldSize = 28f;
+            batch.setColor(1.0f, 0.0f, 0.0f, 0.8f); // Màu đỏ
+            batch.draw(rm.shopitems[7][0], position.x - 6, position.y - 6, shieldSize, shieldSize);
+            batch.setColor(Color.WHITE); // Reset màu
+        }
+
         // Draw kick effect if kicking
         if (isKicking) {
             // Draw the boot icon at the front of the player with power effect
             float kickX = position.x + 1; // Same as sword position
             float kickY = position.y; // Same as sword position
-            
+
             // Adjust position based on direction - make it more visible
             if (prevDir == 0) kickY -= 20; // down
             else if (prevDir == 1) kickY += 20; // up
             else if (prevDir == 2) kickX += 20; // right
             else if (prevDir == 3) kickX -= 20; // left
-            
+
             // Scale based on kick power for dramatic effect
             float scale = 1.0f + kickPower * 0.5f; // Scale from 1.0 to 1.5
             float size = 20 * scale;
-            
+
             // Draw boot icon (shopitems[5][6] - Inferno Greaves) with scaling
             batch.draw(rm.shopitems[5][6], kickX - size/2, kickY - size/2, size, size);
-            
+
             // Add kick trail effect
             if (kickPower > 0.7f) {
                 // Draw additional boot icons for trail effect
@@ -223,37 +281,35 @@ public class Player extends Entity {
                 else if (prevDir == 1) kickY += trailOffset; // up
                 else if (prevDir == 2) kickX += trailOffset; // right
                 else if (prevDir == 3) kickX -= trailOffset; // left
-                
+
                 batch.setColor(1, 1, 1, kickPower * 0.5f); // Semi-transparent trail
                 batch.draw(rm.shopitems[5][6], kickX - size/2, kickY - size/2, size * 0.7f, size * 0.7f);
                 batch.setColor(1, 1, 1, 1); // Reset color
             }
         }
-        
+
         // Draw sword flash effect if flashing
         if (isSwordFlashing) {
             // Calculate flash position (in front of player)
             float flashX = position.x + 1;
             float flashY = position.y;
-            
+
             if (prevDir == 0) flashY -= 20; // down
             else if (prevDir == 1) flashY += 20; // up
             else if (prevDir == 2) flashX += 20; // right
             else if (prevDir == 3) flashX -= 20; // left
-            
+
             // Create flashing effect with color change
             float flashIntensity = (float) Math.sin(swordFlashTimer * 20) * 0.5f + 0.5f;
             batch.setColor(1, 1, 1, flashIntensity);
-            
+
             // Draw sword icon (shopitems[3][8] - Inferno Chestplate) as flash
             batch.draw(rm.shopitems[3][8], flashX, flashY, 20, 20);
-            
+
             // Reset color
             batch.setColor(1, 1, 1, 1);
         }
-        
-        batch.draw(am.getKeyFrame(true), position.x + 1, position.y);
-        
+
         // Draw debug text if active
         if (debugTextTimer > 0) {
             // Simple text rendering - you can enhance this later
@@ -261,7 +317,6 @@ public class Player extends Entity {
             Gdx.app.log("DebugText", debugText);
         }
     }
-
     /**
      * Moves an entity to a target position with a given magnitude.
      * Player movement triggered by input

@@ -38,14 +38,22 @@ public class Hud extends UI {
     public int dirIndex = -1;
     // for changing the player's facing direction with a short tap like in pokemon
     private float dirTime = 0;
+    private ImageButton shieldButton;
+
+    private ImageButton spawnSlowObjectsButton;
 
     // option buttons: inventoryUI and settings
     private ImageButton[] optionButtons;
-    
+    private ImageButton slowObjectsButton; // nút mới
+    public boolean slowMotion = false; // trạng thái slow motion, public để GameScreen truy cập
     // shoot button
     private ImageButton shootButton;
     private ImageButton leftButton1;
     private ImageButton leftButton2;
+
+    private ImageButton spawnWindWallButton;
+
+    private Image windWallImage;
 
     // window that slides on the screen to show the world and level
     private Window levelDescriptor;
@@ -70,11 +78,35 @@ public class Hud extends UI {
 
     public Hud(final GameScreen gameScreen, TileMap tileMap, final Player player, final ResourceManager rm) {
         super(gameScreen, tileMap, player, rm);
+        // Dùng hình icon wind wall từ rm.shopitems[9][0] hoặc texture riêng
+        windWallImage = new Image(rm.shopitems[9][0]);
+
+// Kích thước giống tường gió (tùy chỉnh theo map)
+        windWallImage.setSize(32, 32);
+
+// Vị trí cố định trên map (không theo player)
+        windWallImage.setPosition(100, 150); // chỉnh theo map
+
+// Ban đầu ẩn
+        windWallImage.setVisible(false);
+
+// Thêm animation nhấp nháy (giống tường gió động)
+        windWallImage.addAction(Actions.forever(Actions.sequence(
+                Actions.fadeOut(0.5f),
+                Actions.fadeIn(0.5f)
+        )));
+
+// Thêm vào stage
+        stage.addActor(windWallImage);
 
         createDirPad();
         createOptionButtons();
         createShootButton();
         createLeftButtons();
+        createShieldButton();
+        createSlowMotionButton();
+        createWindWallButton();
+
         Gdx.app.log("Hud", "Hud created with kick button");
         createLevelDescriptor();
         createDeathPrompt();
@@ -147,7 +179,101 @@ public class Hud extends UI {
         settingsDialog.getTitleLabel().setAlignment(Align.center);
         settingsDialog.getBackground().setMinWidth(70);
     }
+    private void createWindWallButton() {
+        ImageButton.ImageButtonStyle style = new ImageButton.ImageButtonStyle();
+        style.up = new TextureRegionDrawable(rm.shopitems[9][0]); // icon wind wall
+        style.down = new TextureRegionDrawable(rm.shopitems[9][0]);
 
+        spawnWindWallButton = new ImageButton(style);
+        spawnWindWallButton.setSize(24, 24);
+
+        // Đặt **trên shieldButton**: cùng X, Y + shieldButton.height + khoảng cách
+        float x = shieldButton.getX();
+        float y = shieldButton.getY() + shieldButton.getHeight() + 5; // cách shield 5px
+        spawnWindWallButton.setPosition(x, y);
+
+        spawnWindWallButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Gdx.app.log("Hud", "Wind Wall button clicked!");
+
+                // Hiển thị wind wall tại vị trí cố định trên map
+                float mapX = 50;
+                float mapY = 50;
+                windWallImage.setPosition(mapX, mapY);
+                windWallImage.setVisible(true);
+
+                // Tự ẩn sau 5 giây
+                windWallImage.addAction(Actions.sequence(
+                        Actions.delay(5f),
+                        Actions.hide()
+                ));
+            }
+        });
+
+        stage.addActor(spawnWindWallButton);
+    }
+
+    private void createSlowMotionButton() {
+        ImageButton.ImageButtonStyle style = new ImageButton.ImageButtonStyle();
+        style.up = new TextureRegionDrawable(rm.shopitems[8][0]); // icon slow
+        style.down = new TextureRegionDrawable(rm.shopitems[8][0]);
+
+        spawnSlowObjectsButton = new ImageButton(style);
+        spawnSlowObjectsButton.setSize(24, 24);
+
+        // Đặt bên trái nút Shield
+        float x = shieldButton.getX() - spawnSlowObjectsButton.getWidth() - 5;
+        float y = shieldButton.getY();
+        spawnSlowObjectsButton.setPosition(x, y);
+
+        spawnSlowObjectsButton.setPosition(x, y);
+
+        spawnSlowObjectsButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                slowMotion = !slowMotion; // toggle trạng thái chậm
+                Gdx.app.log("Hud", "Slow Motion toggled: " + slowMotion);
+            }
+        });
+
+        stage.addActor(spawnSlowObjectsButton);
+    }
+
+
+    private void createShieldButton() {
+        ImageButton.ImageButtonStyle shieldStyle = new ImageButton.ImageButtonStyle();
+        shieldStyle.up = new TextureRegionDrawable(rm.shopitems[7][0]);
+        shieldStyle.down = new TextureRegionDrawable(rm.shopitems[7][0]);
+
+        shieldButton = new ImageButton(shieldStyle);
+        shieldButton.setSize(24, 24);
+
+        // THÊM DEBUG VỊ TRÍ
+        float shieldX = leftButton2.getX() - shieldButton.getWidth() - 5;
+        float shieldY = leftButton2.getY();
+        shieldButton.setPosition(shieldX, shieldY);
+
+        Gdx.app.log("ShieldButton", "Position: " + shieldX + ", " + shieldY);
+        Gdx.app.log("ShieldButton", "leftButton2 position: " + leftButton2.getX() + ", " + leftButton2.getY());
+
+        shieldButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Gdx.app.log("ShieldButton", "=== SHIELD BUTTON CLICKED ===");
+                if (gameScreen != null && gameScreen.gameMap != null && gameScreen.gameMap.player != null) {
+                    boolean before = gameScreen.gameMap.player.isShieldActive();
+                    gameScreen.gameMap.player.toggleShield();
+                    boolean after = gameScreen.gameMap.player.isShieldActive();
+                    Gdx.app.log("ShieldButton", "Shield state: " + before + " -> " + after);
+                } else {
+                    Gdx.app.log("ShieldButton", "ERROR: Player is null!");
+                }
+            }
+        });
+
+        stage.addActor(shieldButton);
+    }
     public void update(float dt) {
         if (touchDown) {
             dirTime += dt;

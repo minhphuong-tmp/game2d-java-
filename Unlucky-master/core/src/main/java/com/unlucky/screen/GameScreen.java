@@ -17,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.unlucky.entity.Entity;
+import com.unlucky.entity.Player;
 import com.unlucky.entity.enemy.Enemy;
 import com.unlucky.event.Battle;
 import com.unlucky.event.EventState;
@@ -37,6 +38,7 @@ public class GameScreen extends AbstractScreen {
 
     public EventState currentEvent;
 
+    private Player player;
     public GameMap gameMap;
     public Hud hud;
     public BattleUIHandler battleUIHandler;
@@ -69,7 +71,7 @@ public class GameScreen extends AbstractScreen {
 
     // NEW: === Explosion System ===
     private Array<Explosion> explosions;
-    
+
     // === Sliding Slimes ===
     public Array<Enemy> slidingSlimes;
 
@@ -121,7 +123,7 @@ public class GameScreen extends AbstractScreen {
             y += velocityY * dt;
         }
         */
-        
+
         // NEW: Simple one-direction bullet system (upward only) for teacher requirement
         float speed = 180f;
         float size = 12f; // Size for sword item
@@ -146,9 +148,9 @@ public class GameScreen extends AbstractScreen {
             float rightBorder = camX + viewWidth/2;
             float topBorder = camY + viewHeight/2;
             float bottomBorder = camY - viewHeight/2;
-            
+
             // Check if bullet position is at or beyond any border
-            return x <= leftBorder || x >= rightBorder || 
+            return x <= leftBorder || x >= rightBorder ||
                    y <= bottomBorder || y >= topBorder;
         }
 
@@ -191,11 +193,11 @@ public class GameScreen extends AbstractScreen {
                 // Calculate which frame to show based on animation time
                 int frameIndex = (int) (animationTime / frameDuration);
                 if (frameIndex >= 3) frameIndex = 2; // Clamp to last frame
-                
+
                 // Use battleSprites96x96[0][0] to [0][2] for explosion animation
                 TextureRegion explosionFrame = rm.battleAttacks64x64[2][frameIndex];
                 batch.draw(explosionFrame, x - size / 2, y - size, size, size);
-                
+
                 // Optional: Add some screen shake effect or particle sparkles here later!
             }
         }
@@ -240,7 +242,7 @@ public class GameScreen extends AbstractScreen {
         float speed = 60f; // Speed toward player
         float size = 20f; // Size for collision detection
         TextureRegion sprite; // The sprite texture
-        
+
         MovingObject(float x, float y) {
             this.x = x;
             this.y = y;
@@ -261,19 +263,19 @@ public class GameScreen extends AbstractScreen {
                 Gdx.app.log("MovingObject", "Error accessing items20x20, using fallback: " + e.getMessage());
             }
         }
-        
+
         void update(float dt) {
             // Move toward player position with null safety checks
             try {
                 if (gameMap != null && gameMap.player != null && gameMap.player.getPosition() != null) {
                     float playerX = gameMap.player.getPosition().x;
                     float playerY = gameMap.player.getPosition().y;
-                    
+
                     // Calculate direction to player
                     float deltaX = playerX - x;
                     float deltaY = playerY - y;
                     float distance = (float) Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-                    
+
                     // Move toward player if not already there
                     if (distance > speed * dt) {
                         x += (deltaX / distance) * speed * dt;
@@ -285,7 +287,7 @@ public class GameScreen extends AbstractScreen {
                 // Don't crash, just stop moving
             }
         }
-        
+
         void render(SpriteBatch batch) {
             try {
                 if (sprite != null && batch != null) {
@@ -295,32 +297,32 @@ public class GameScreen extends AbstractScreen {
                 Gdx.app.log("MovingObject", "Error rendering sprite: " + e.getMessage());
             }
         }
-        
+
         // Rectangle collision detection
         Rectangle getRectangle() {
             return new Rectangle(x - size / 2, y - size / 2, size, size);
         }
-        
+
         // Check collision with another MovingObject
         boolean collidesWith(MovingObject other) {
             return this.getRectangle().overlaps(other.getRectangle());
         }
-        
+
         // Check collision with player
         boolean collidesWithPlayer() {
             try {
                 if (gameMap == null || gameMap.player == null || gameMap.player.getPosition() == null) {
                     return false; // No collision if player data is not available
                 }
-                
+
                 // Player position and approximate size
                 float playerX = gameMap.player.getPosition().x;
                 float playerY = gameMap.player.getPosition().y;
                 float playerSize = 16f; // Approximate player size
-                
+
                 Rectangle playerRect = new Rectangle(
                     playerX - playerSize / 2, playerY - playerSize / 2, playerSize, playerSize);
-                
+
                 return this.getRectangle().overlaps(playerRect);
             } catch (Exception e) {
                 Gdx.app.log("MovingObject", "Error in collidesWithPlayer: " + e.getMessage());
@@ -371,7 +373,7 @@ public class GameScreen extends AbstractScreen {
 
         // NEW: === Explosion init ===
         explosions = new Array<>();
-        
+
         // === Sliding Slimes init ===
         slidingSlimes = new Array<>();
 
@@ -437,7 +439,7 @@ public class GameScreen extends AbstractScreen {
                     bullets.add(bullet);
 
                     Gdx.app.log("Bullet",
-                            "Sword bullet fired upward from: " + playerX + ", " + playerY + 
+                            "Sword bullet fired upward from: " + playerX + ", " + playerY +
                             " | total bullets: " + bullets.size);
                     return true;
                 }
@@ -460,20 +462,20 @@ public class GameScreen extends AbstractScreen {
         ImageButton.ImageButtonStyle defaultStyle = new ImageButton.ImageButtonStyle();
         defaultStyle.up = new TextureRegionDrawable(rm.musicOnButton);
         defaultStyle.down = new TextureRegionDrawable(rm.musicOnButton);
-        
+
         musicToggleButton = new ImageButton(defaultStyle);
         sfxToggleButton = new ImageButton(defaultStyle);
-        
+
         // Set button positions (top-left corner using virtual coordinates)
         float buttonSize = 24f;
         float padding = 10f; // Distance from edges
-        
+
         musicToggleButton.setSize(buttonSize, buttonSize);
         musicToggleButton.setPosition(padding, Unlucky.V_HEIGHT - buttonSize - padding);
-        
+
         sfxToggleButton.setSize(buttonSize, buttonSize);
         sfxToggleButton.setPosition(padding + buttonSize + 5f, Unlucky.V_HEIGHT - buttonSize - padding);
-        
+
         // Set initial button styles based on current volume settings
         if (game.player.settings.muteMusic || game.player.settings.musicVolume <= 0) {
             // Music is OFF - show OFF icon
@@ -488,7 +490,7 @@ public class GameScreen extends AbstractScreen {
             musicOnStyle.down = new TextureRegionDrawable(rm.musicOnButton);
             musicToggleButton.setStyle(musicOnStyle);
         }
-        
+
         if (game.player.settings.muteSfx || game.player.settings.sfxVolume <= 0) {
             // SFX is OFF - show OFF icon
             ImageButton.ImageButtonStyle sfxOffStyle = new ImageButton.ImageButtonStyle();
@@ -531,7 +533,7 @@ public class GameScreen extends AbstractScreen {
                 }
             }
         });
-        
+
         sfxToggleButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -557,7 +559,7 @@ public class GameScreen extends AbstractScreen {
                 }
             }
         });
-        
+
         // Add buttons to HUD stage (same as movement buttons)
         hud.getStage().addActor(musicToggleButton);
         hud.getStage().addActor(sfxToggleButton);
@@ -602,7 +604,7 @@ public class GameScreen extends AbstractScreen {
 
             // NEW: Initialize moving objects system with 3 objects immediately
             movingObjects.clear();
-            
+
             // Spawn 3 objects immediately to meet teacher requirements
             for (int i = 0; i < MAX_OBJECTS; i++) {
                 spawnRandomObject();
@@ -661,7 +663,7 @@ public class GameScreen extends AbstractScreen {
             updateCamera();
             gameMap.update(dt);
             hud.update(dt);
-            
+
             // Update sliding slimes - automatically manage the list
             for (int i = slidingSlimes.size - 1; i >= 0; i--) {
                 Enemy slidingSlime = slidingSlimes.get(i);
@@ -693,37 +695,37 @@ public class GameScreen extends AbstractScreen {
         for (int i = bullets.size - 1; i >= 0; i--) {
             Bullet b = bullets.get(i);
             b.update(dt);
-            
+
             // Check collision with slimes first
             if (checkBulletSlimeCollision(b)) {
                 // Create explosion at bullet position
                 Explosion explosion = new Explosion(b.x, b.y);
                 explosions.add(explosion);
-                
+
                 bullets.removeIndex(i);
-                
+
                 // Play explosion sound with volume setting (following game pattern)
                 if (bulletEndSound != null && !game.player.settings.muteSfx) {
                     bulletEndSound.play(game.player.settings.sfxVolume);
                 }
-                
+
                 Gdx.app.log("Explosion", "💥 BOOM! Bullet hit slime at: " + b.x + ", " + b.y);
                 continue; // Skip border check since bullet already exploded
             }
-            
+
             // NEW: Create explosion when bullet TOUCHES border!
             if (b.touchesBorder(cam.position.x, cam.position.y, cam.viewportWidth, cam.viewportHeight)) {
                 // Create explosion at bullet position
                 Explosion explosion = new Explosion(b.x, b.y);
                 explosions.add(explosion);
-                
+
                 bullets.removeIndex(i);
-                
+
                 // Play explosion sound with volume setting (following game pattern)
                 if (bulletEndSound != null && !game.player.settings.muteSfx) {
                     bulletEndSound.play(game.player.settings.sfxVolume);
                 }
-                
+
                 Gdx.app.log("Explosion", "💥 BOOM! Explosion created at: " + b.x + ", " + b.y);
             }
         }
@@ -756,6 +758,9 @@ public class GameScreen extends AbstractScreen {
     // NEW: Update method for moving objects system
     private void updateMovingObjects(float dt) {
         try {
+            // Slow motion factor: 1 = normal, 0.1 = slow
+            float factor = hud.slowMotion ? 0.1f : 1f; // <-- sửa ở đây
+
             // Ensure we always have exactly 3 objects - spawn immediately if needed
             while (movingObjects.size < MAX_OBJECTS) {
                 spawnRandomObject();
@@ -763,44 +768,47 @@ public class GameScreen extends AbstractScreen {
 
             // Update all moving objects with safe iteration
             for (int i = movingObjects.size - 1; i >= 0; i--) {
-                if (i >= movingObjects.size) continue; // Safety check in case array changed
-                
+                if (i >= movingObjects.size) continue; // Safety check
+
                 MovingObject obj = movingObjects.get(i);
-                if (obj == null) continue; // Safety check for null objects
-                
-                obj.update(dt);
+                if (obj == null) continue;
+
+                obj.update(dt * factor);  // apply slow motion
 
                 // Check collision with player
                 if (obj.collidesWithPlayer()) {
                     playRandomCollisionSound();
+
+                    // Tắt shield khi va chạm
+                    player.deactivateShield();
+
                     movingObjects.removeIndex(i);
                     Gdx.app.log("Collision", "Object collided with player! Objects remaining: " + movingObjects.size);
-                    continue; // Skip to next object since this one is removed
+                    continue;
                 }
 
-                // Check collision with other objects (safer iteration)
+                // Check collision with other objects
                 boolean objRemoved = false;
                 for (int j = i - 1; j >= 0; j--) {
-                    if (j >= movingObjects.size || i >= movingObjects.size) break; // Safety check
-                    
+                    if (j >= movingObjects.size || i >= movingObjects.size) break;
+
                     MovingObject other = movingObjects.get(j);
                     if (other == null) continue;
-                    
+
                     if (obj.collidesWith(other)) {
+                        player.deactivateShield();
                         playRandomCollisionSound();
-                        // Remove objects safely (remove higher index first)
                         if (i < movingObjects.size) movingObjects.removeIndex(i);
                         if (j < movingObjects.size) movingObjects.removeIndex(j);
                         Gdx.app.log("Collision", "Two objects collided! Objects remaining: " + movingObjects.size);
                         objRemoved = true;
-                        break; // Exit inner loop since object is removed
+                        break;
                     }
                 }
-                if (objRemoved) continue; // Skip to next iteration if object was removed
+                if (objRemoved) continue;
             }
         } catch (Exception e) {
             Gdx.app.log("GameScreen", "Error in updateMovingObjects: " + e.getMessage());
-            // Try to recover by clearing and respawning objects
             movingObjects.clear();
         }
     }
@@ -872,6 +880,7 @@ public class GameScreen extends AbstractScreen {
             // Don't crash on audio errors
         }
     }
+
 
     /**
      * Check if bullet collides with any slime and explode it
