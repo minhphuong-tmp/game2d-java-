@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Texture;
+// import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -104,7 +104,7 @@ public class ResourceManager {
     // misc
     public TextureRegion shadow11x6;
     public TextureRegion redarrow10x9;
-    public TextureRegion gunIcon;
+    // public TextureRegion gunIcon;
 
     // Music
     public Music menuTheme;
@@ -240,7 +240,7 @@ public class ResourceManager {
         titleScreenBackground = atlas.findRegion("title_bg").split(200, 120)[0];
         playButton = atlas.findRegion("play_button").split(80, 40);
         // Use play button as gun icon (circular, looks better)
-        gunIcon = playButton[0][0];
+        // gunIcon = playButton[0][0];
         menuButtons = atlas.findRegion("menu_buttons").split(16, 16);
         worldSelectBackgrounds = atlas.findRegion("stage_select_bg").split(200, 120)[0];
         menuExitButton = atlas.findRegion("menu_exit_button").split(14, 14);

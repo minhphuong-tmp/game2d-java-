@@ -23,6 +23,7 @@ import com.unlucky.map.WeatherType;
 import com.unlucky.resource.ResourceManager;
 import com.unlucky.resource.Util;
 import com.unlucky.screen.GameScreen;
+import com.unlucky.screen.homework.DefenseSystemsManager;
 
 /**
  * Handles button input and everything not in the game camera
@@ -42,8 +43,6 @@ public class Hud extends UI {
 
     private ImageButton spawnSlowObjectsButton;
 
-    // option buttons: inventoryUI and settings
-    private ImageButton[] optionButtons;
     // private ImageButton slowObjectsButton; // nút mới - không dùng nữa
     public boolean slowMotion = false; // trạng thái slow motion, public để GameScreen truy cập
     // shoot button
@@ -75,6 +74,9 @@ public class Hud extends UI {
     // Debug text display
     private String debugText = "";
     private float debugTextTimer = 0f;
+
+    // NEW: Reference to DefenseSystemsManager for modular defense controls
+    private DefenseSystemsManager defenseSystems;
 
     public Hud(final GameScreen gameScreen, TileMap tileMap, final Player player, final ResourceManager rm) {
         super(gameScreen, tileMap, player, rm);
@@ -197,11 +199,16 @@ public class Hud extends UI {
             public void clicked(InputEvent event, float x, float y) {
                 Gdx.app.log("Hud", "=== WIND WALL BUTTON CLICKED - PUSHING OBJECTS AWAY ===");
 
-                // Gọi method trong GameScreen để đẩy objects
-                if (gameScreen != null) {
-                    gameScreen.pushAllObjectsAway();
+                // NEW: Use DefenseSystemsManager if available
+                if (defenseSystems != null) {
+                    defenseSystems.activateWindWall();
                 } else {
-                    Gdx.app.log("Hud", "ERROR: gameScreen is null!");
+                    // Fallback to old method
+                    if (gameScreen != null) {
+                        gameScreen.pushAllObjectsAway();
+                    } else {
+                        Gdx.app.log("Hud", "ERROR: gameScreen is null!");
+                    }
                 }
             }
         });
@@ -227,8 +234,14 @@ public class Hud extends UI {
         spawnSlowObjectsButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                slowMotion = !slowMotion; // toggle trạng thái chậm
-                Gdx.app.log("Hud", "Slow Motion toggled: " + slowMotion);
+                // NEW: Use DefenseSystemsManager if available
+                if (defenseSystems != null) {
+                    defenseSystems.activateSlowMotion();
+                } else {
+                    // Fallback to old method
+                    slowMotion = !slowMotion; // toggle trạng thái chậm
+                    Gdx.app.log("Hud", "Slow Motion toggled: " + slowMotion);
+                }
             }
         });
 
@@ -255,13 +268,20 @@ public class Hud extends UI {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Gdx.app.log("ShieldButton", "=== SHIELD BUTTON CLICKED ===");
-                if (gameScreen != null && gameScreen.gameMap != null && gameScreen.gameMap.player != null) {
-                    boolean before = gameScreen.gameMap.player.isShieldActive();
-                    gameScreen.gameMap.player.toggleShield();
-                    boolean after = gameScreen.gameMap.player.isShieldActive();
-                    Gdx.app.log("ShieldButton", "Shield state: " + before + " -> " + after);
+                
+                // NEW: Use DefenseSystemsManager if available
+                if (defenseSystems != null) {
+                    defenseSystems.activateShield();
                 } else {
-                    Gdx.app.log("ShieldButton", "ERROR: Player is null!");
+                    // Fallback to old method
+                    if (gameScreen != null && gameScreen.gameMap != null && gameScreen.gameMap.player != null) {
+                        boolean before = gameScreen.gameMap.player.isShieldActive();
+                        gameScreen.gameMap.player.toggleShield();
+                        boolean after = gameScreen.gameMap.player.isShieldActive();
+                        Gdx.app.log("ShieldButton", "Shield state: " + before + " -> " + after);
+                    } else {
+                        Gdx.app.log("ShieldButton", "ERROR: Player is null!");
+                    }
                 }
             }
         });
@@ -393,7 +413,7 @@ public class Hud extends UI {
      */
     private void createOptionButtons() {
         // Bỏ luôn cả inventory và settings buttons để có chỗ cho 3 nút mới
-        optionButtons = new ImageButton[0]; // Không tạo button nào
+        // No buttons created anymore
         
         // Không cần handleOptionEvents() nữa vì không có button
     }
@@ -428,10 +448,13 @@ public class Hud extends UI {
                         float playerX = gameScreen.gameMap.player.getPosition().x;
                         float playerY = gameScreen.gameMap.player.getPosition().y;
 
-                        // Create bullet (same as touch input)
-                        gameScreen.shootBullet(playerX, playerY + 8);
-
-                        Gdx.app.log("ShootButton", "Bullet fired from button at: " + playerX + ", " + playerY);
+                        // NEW: Use AttackSystemsManager if available
+                        if (gameScreen.attackSystems != null) {
+                            gameScreen.attackSystems.fireBullet(playerX, playerY + 8);
+                            Gdx.app.log("ShootButton", "Bullet fired via AttackSystemsManager at: " + playerX + ", " + playerY);
+                        } else {
+                            Gdx.app.log("ShootButton", "ERROR: AttackSystemsManager is null!");
+                        }
                     }
             }
         });
@@ -603,6 +626,13 @@ public class Hud extends UI {
      */
     public void setDeathText(String text) {
         loss.setText(text);
+    }
+
+    /**
+     * Set reference to DefenseSystemsManager for modular defense controls
+     */
+    public void setDefenseSystemsManager(DefenseSystemsManager defenseSystems) {
+        this.defenseSystems = defenseSystems;
     }
 
     private void backToMenu() {

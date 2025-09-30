@@ -17,7 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.unlucky.entity.Entity;
-import com.unlucky.entity.Player;
+// import com.unlucky.entity.Player;
 import com.unlucky.entity.enemy.Enemy;
 import com.unlucky.event.Battle;
 import com.unlucky.event.EventState;
@@ -34,11 +34,17 @@ import com.unlucky.ui.battleui.BattleUIHandler;
 // NEW: Thêm thư viện âm thanh
 import com.badlogic.gdx.audio.Sound;
 
+// NEW: Import homework managers for modular architecture
+import com.unlucky.screen.homework.AttackSystemsManager;
+import com.unlucky.screen.homework.DefenseSystemsManager;
+import com.unlucky.screen.homework.WeatherEffectsManager;
+import com.unlucky.screen.homework.HomeworkInputHandler;
+
 public class GameScreen extends AbstractScreen {
 
     public EventState currentEvent;
 
-    private Player player;
+    // private Player player;
     public GameMap gameMap;
     public Hud hud;
     public BattleUIHandler battleUIHandler;
@@ -49,6 +55,12 @@ public class GameScreen extends AbstractScreen {
 
     // input
     public InputMultiplexer multiplexer;
+
+    // NEW: Homework manager instances for modular architecture
+    public AttackSystemsManager attackSystems;
+    public DefenseSystemsManager defenseSystems;
+    public WeatherEffectsManager weatherEffects;
+    public HomeworkInputHandler homeworkInput;
 
     // battle background
     private Background[] bg;
@@ -63,14 +75,9 @@ public class GameScreen extends AbstractScreen {
     // Camera and batch variables (khôi phục cách dùng camera ban đầu)
     private OrthographicCamera cam;
 
-    // === Bullet System ===
-    private Array<Bullet> bullets;
+    // OLD: Bullet System moved to AttackSystemsManager
 
-    // NEW: === Raindrop System (replaces Cloud system) ===
-    private Array<Raindrop> raindrops;
-
-    // NEW: === Explosion System ===
-    private Array<Explosion> explosions;
+    // OLD: Raindrop and Explosion systems moved to homework managers
 
     // === Sliding Slimes ===
     public Array<Enemy> slidingSlimes;
@@ -91,152 +98,9 @@ public class GameScreen extends AbstractScreen {
     // NEW: Sound arrays for random collision sounds
     private Sound[] collisionSounds;
 
-    // --- Inner Bullet Class ---
-    private class Bullet {
-        float x, y;
-        // COMMENTED: Directional bullet system for teacher requirement - one direction only
-        /*
-        float velocityX, velocityY; // Direction vector
-        float speed = 180f; // Increased speed for better visibility
-        float size = 12f; // Slightly larger for sword
+    // OLD: Inner classes moved to AttackSystemsManager and other homework managers
 
-        Bullet(float startX, float startY, float targetX, float targetY) {
-            this.x = startX;
-            this.y = startY;
-            
-            // Calculate direction vector to target
-            float deltaX = targetX - startX;
-            float deltaY = targetY - startY;
-            float distance = (float) Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-            
-            // Normalize and apply speed
-            if (distance > 0) {
-                this.velocityX = (deltaX / distance) * speed;
-                this.velocityY = (deltaY / distance) * speed;
-            } else {
-                // Default upward if no direction
-                this.velocityX = 0;
-                this.velocityY = speed;
-            }
-        }
 
-        void update(float dt) {
-            x += velocityX * dt;
-            y += velocityY * dt;
-        }
-        */
-
-        // NEW: Simple one-direction bullet system (upward only) for teacher requirement
-        float speed = 180f;
-        float size = 12f; // Size for sword item
-
-        Bullet(float x, float y) {
-            this.x = x;
-            this.y = y;
-        }
-
-        void update(float dt) {
-            y += speed * dt; // Only move upward
-        }
-
-        void render(SpriteBatch batch) {
-            // Use sword/weapon item from atlas instead of red arrow - much cooler!
-            batch.draw(rm.items20x20[1][0], x - size / 2, y - size / 2, size, size);
-        }
-
-        // NEW: Check if bullet touches screen borders (not outside them) - ready for explosion effect!
-        boolean touchesBorder(float camX, float camY, float viewWidth, float viewHeight) {
-            float leftBorder = camX - viewWidth/2;
-            float rightBorder = camX + viewWidth/2;
-            float topBorder = camY + viewHeight/2;
-            float bottomBorder = camY - viewHeight/2;
-
-            // Check if bullet position is at or beyond any border
-            return x <= leftBorder || x >= rightBorder ||
-                   y <= bottomBorder || y >= topBorder;
-        }
-
-        // COMMENTED: Old out-of-screen method
-        /*
-        boolean isOutOfScreen(float camX, float camY, float viewWidth, float viewHeight) {
-            // Check if bullet is outside camera bounds with some margin
-            float margin = 32f;
-            return x < camX - viewWidth/2 - margin || 
-                   x > camX + viewWidth/2 + margin ||
-                   y < camY - viewHeight/2 - margin || 
-                   y > camY + viewHeight/2 + margin;
-        }
-        */
-    }
-
-    // NEW: --- Inner Explosion Class ---
-    private class Explosion {
-        float x, y;
-        float animationTime = 0f;
-        float frameDuration = 0.15f; // Duration per frame (150ms)
-        float totalDuration = frameDuration * 3; // 3 frames total
-        float size = 24f; // Larger than bullet for dramatic effect
-        boolean isFinished = false;
-
-        Explosion(float x, float y) {
-            this.x = x;
-            this.y = y;
-        }
-
-        void update(float dt) {
-            animationTime += dt;
-            if (animationTime >= totalDuration) {
-                isFinished = true;
-            }
-        }
-
-        void render(SpriteBatch batch) {
-            if (!isFinished) {
-                // Calculate which frame to show based on animation time
-                int frameIndex = (int) (animationTime / frameDuration);
-                if (frameIndex >= 3) frameIndex = 2; // Clamp to last frame
-
-                // Use battleSprites96x96[0][0] to [0][2] for explosion animation
-                TextureRegion explosionFrame = rm.battleAttacks64x64[2][frameIndex];
-                batch.draw(explosionFrame, x - size / 2, y - size, size, size);
-
-                // Optional: Add some screen shake effect or particle sparkles here later!
-            }
-        }
-
-        boolean isFinished() {
-            return isFinished;
-        }
-    }
-
-    // NEW: --- Inner Raindrop Class (renamed from Cloud) ---
-    private class Raindrop {
-        float x, y;
-        float speed = -50f; // Moving downward
-        float size = 16f;
-
-        Raindrop(float x, float y) {
-            this.x = x;
-            this.y = y;
-        }
-
-        void update(float dt) {
-            y += speed * dt; // Move downward
-        }
-
-        void render(SpriteBatch batch) {
-            // Use raindrop from atlas - perfect for falling weather effect
-            batch.draw(rm.raindrop, x - size / 2, y - size / 2, size, size);
-        }
-
-        boolean isOutOfScreen(float screenBottom) {
-            return y + size / 2 < screenBottom; // Off bottom of screen
-        }
-
-        void resetPosition(float screenTop) {
-            y = screenTop + size / 2; // Reset to top
-        }
-    }
 
     // NEW: --- Inner MovingObject Class for Teacher Requirements ---
     private class MovingObject {
@@ -421,6 +285,12 @@ public class GameScreen extends AbstractScreen {
         levelUp = new LevelUpScreen(this, gameMap.tileMap, gameMap.player, rm);
         dialog = new DialogScreen(this, gameMap.tileMap, gameMap.player, rm);
 
+        // NEW: Initialize homework managers for modular architecture
+        // Note: Camera initialization will be fixed after battleUIHandler creates the camera
+        attackSystems = null; // Will be initialized later
+        defenseSystems = null; // Will be initialized later  
+        weatherEffects = null; // Will be initialized later
+
         // NEW: load bullet end sound with error handling
         try {
             bulletEndSound = Gdx.audio.newSound(Gdx.files.internal("sfx/hit.ogg"));
@@ -437,19 +307,23 @@ public class GameScreen extends AbstractScreen {
         // Khôi phục cách dùng camera ban đầu từ battleUIHandler
         cam = (OrthographicCamera) battleUIHandler.getStage().getCamera();
 
+        // NEW: Initialize homework managers now that camera is available
+        attackSystems = new AttackSystemsManager(game, rm, gameMap, cam);
+        defenseSystems = new DefenseSystemsManager(game, rm, gameMap.player);
+        weatherEffects = new WeatherEffectsManager(rm, cam);
+        homeworkInput = new HomeworkInputHandler(this, hud, attackSystems, defenseSystems);
+
+        // NEW: Link DefenseSystemsManager to Hud for integrated button controls
+        hud.setDefenseSystemsManager(defenseSystems);
+
         // create bg
         bg = new Background[2];
         bg[0] = new Background(cam, new Vector2(0.3f, 0));
         bg[1] = new Background(cam, new Vector2(0, 0));
 
-        // === Bullet init ===
-        bullets = new Array<>();
+        // OLD: Bullet init moved to AttackSystemsManager
 
-        // NEW: === Raindrop init (replaces clouds) ===
-        raindrops = new Array<>();
-
-        // NEW: === Explosion init ===
-        explosions = new Array<>();
+        // OLD: Raindrop and Explosion init moved to homework managers
 
         // === Sliding Slimes init ===
         slidingSlimes = new Array<>();
@@ -465,6 +339,9 @@ public class GameScreen extends AbstractScreen {
 
         // input multiplexer
         multiplexer = new InputMultiplexer();
+
+        // NEW: Add homework input handler first (higher priority)
+        multiplexer.addProcessor(homeworkInput);
 
         // Bullet input
         multiplexer.addProcessor(new InputAdapter() {
@@ -493,33 +370,8 @@ public class GameScreen extends AbstractScreen {
                     hitUI = true;
                 }
 
-                if (!hitUI && (currentEvent == EventState.MOVING || currentEvent == EventState.BATTLING)) {
-                    float playerX = gameMap.player.getPosition().x;
-                    float playerY = gameMap.player.getPosition().y;
-
-                    // COMMENTED: Directional bullet code - kept for reference
-                    /*
-                    // Convert screen coordinates to world coordinates for target
-                    Vector2 targetCoords = new Vector2(screenX, screenY);
-                    Vector2 targetStageCoords = hud.getStage().screenToStageCoordinates(targetCoords);
-                    
-                    // Convert stage coordinates to world coordinates
-                    float targetX = cam.position.x + (targetStageCoords.x - cam.viewportWidth / 2);
-                    float targetY = cam.position.y + (targetStageCoords.y - cam.viewportHeight / 2);
-
-                    // Create bullet that flies toward the tapped location
-                    Bullet bullet = new Bullet(playerX, playerY + 8, targetX, targetY);
-                    */
-
-                    // NEW: Simple one-direction bullet for teacher requirement
-                    Bullet bullet = new Bullet(playerX, playerY + 8);
-                    bullets.add(bullet);
-
-                    Gdx.app.log("Bullet",
-                            "Sword bullet fired upward from: " + playerX + ", " + playerY +
-                            " | total bullets: " + bullets.size);
-                    return true;
-                }
+                // OLD: Bullet firing moved to HomeworkInputHandler
+                // (HomeworkInputHandler now handles this with higher priority)
 
                 return false;
             }
@@ -544,8 +396,8 @@ public class GameScreen extends AbstractScreen {
         sfxToggleButton = new ImageButton(defaultStyle);
 
         // Set button positions (top-left corner using virtual coordinates)
-        float buttonSize = 24f;
-        float padding = 10f; // Distance from edges
+        float buttonSize = 16f;
+        float padding = 5f; // Distance from edges
 
         musicToggleButton.setSize(buttonSize, buttonSize);
         musicToggleButton.setPosition(padding, Unlucky.V_HEIGHT - buttonSize - padding);
@@ -672,12 +524,10 @@ public class GameScreen extends AbstractScreen {
             hud.shade.setVisible(false);
             hud.startLevelDescriptor();
 
-            // NEW: Initialize 2 raindrops at the top of screen
-            raindrops.clear();
-            float centerX = cam.position.x;
-            float topY = cam.position.y + cam.viewportHeight / 2 + 16f / 2; // Top of screen
-            raindrops.add(new Raindrop(centerX - 40f, topY)); // Raindrop 1, left
-            raindrops.add(new Raindrop(centerX + 40f, topY)); // Raindrop 2, right
+            // NEW: Initialize weather effects manager for level
+            if (weatherEffects != null) {
+                weatherEffects.initializeLevel();
+            }
 
             // NEW: Initialize moving objects system with 3 objects immediately
             movingObjects.clear();
@@ -768,65 +618,20 @@ public class GameScreen extends AbstractScreen {
         if (currentEvent == EventState.INVENTORY)
             game.inventoryUI.update(dt);
 
-        // update bullets
-        for (int i = bullets.size - 1; i >= 0; i--) {
-            Bullet b = bullets.get(i);
-            b.update(dt);
-
-            // Check collision with slimes first
-            if (checkBulletSlimeCollision(b)) {
-                // Create explosion at bullet position
-                Explosion explosion = new Explosion(b.x, b.y);
-                explosions.add(explosion);
-
-                bullets.removeIndex(i);
-
-                // Play explosion sound with volume setting (following game pattern)
-                if (bulletEndSound != null && !game.player.settings.muteSfx) {
-                    bulletEndSound.play(game.player.settings.sfxVolume);
-                }
-
-                Gdx.app.log("Explosion", "💥 BOOM! Bullet hit slime at: " + b.x + ", " + b.y);
-                continue; // Skip border check since bullet already exploded
-            }
-
-            // NEW: Create explosion when bullet TOUCHES border!
-            if (b.touchesBorder(cam.position.x, cam.position.y, cam.viewportWidth, cam.viewportHeight)) {
-                // Create explosion at bullet position
-                Explosion explosion = new Explosion(b.x, b.y);
-                explosions.add(explosion);
-
-                bullets.removeIndex(i);
-
-                // Play explosion sound with volume setting (following game pattern)
-                if (bulletEndSound != null && !game.player.settings.muteSfx) {
-                    bulletEndSound.play(game.player.settings.sfxVolume);
-                }
-
-                Gdx.app.log("Explosion", "💥 BOOM! Explosion created at: " + b.x + ", " + b.y);
-            }
+        // NEW: Update homework manager systems
+        if (attackSystems != null) {
+            attackSystems.update(dt);
+        }
+        if (defenseSystems != null) {
+            defenseSystems.update(dt);
+        }
+        if (weatherEffects != null) {
+            weatherEffects.update(dt);
         }
 
-        // NEW: update explosions
-        for (int i = explosions.size - 1; i >= 0; i--) {
-            Explosion e = explosions.get(i);
-            e.update(dt);
-            if (e.isFinished()) {
-                explosions.removeIndex(i);
-                Gdx.app.log("Explosion", "Explosion animation finished and removed");
-            }
-        }
+        // OLD: Bullet updates moved to AttackSystemsManager
 
-        // NEW: update raindrops - falling weather effect
-        float screenBottom = cam.position.y - cam.viewportHeight / 2;
-        float screenTop = cam.position.y + cam.viewportHeight / 2;
-        for (Raindrop r : raindrops) {
-            r.update(dt);
-            if (r.isOutOfScreen(screenBottom)) {
-                r.resetPosition(screenTop);
-                Gdx.app.log("Raindrop", "Raindrop reset to top: " + r.y);
-            }
-        }
+        // OLD: Explosion and raindrop updates moved to homework managers
 
         // NEW: === Moving Objects System Update for Teacher Requirements ===
         updateMovingObjects(dt);
@@ -1023,55 +828,7 @@ public class GameScreen extends AbstractScreen {
         }
     }
 
-    /**
-     * Check if bullet collides with any slime and explode it
-     */
-    private boolean checkBulletSlimeCollision(Bullet bullet) {
-        try {
-            if (gameMap == null || gameMap.tileMap == null) {
-                return false;
-            }
-            
-            // Convert bullet world position to tile coordinates
-            int bulletTileX = (int) (bullet.x / gameMap.tileMap.tileSize);
-            int bulletTileY = (int) (bullet.y / gameMap.tileMap.tileSize);
-            
-            // Check bounds
-            if (bulletTileX < 0 || bulletTileX >= gameMap.tileMap.mapWidth || 
-                bulletTileY < 0 || bulletTileY >= gameMap.tileMap.mapHeight) {
-                return false;
-            }
-            
-            // Check if there's an enemy (slime) at this position
-            if (gameMap.tileMap.containsEntity(bulletTileX, bulletTileY)) {
-                Entity entity = gameMap.tileMap.getEntity(bulletTileX, bulletTileY);
-                if (entity != null && entity instanceof Enemy) {
-                    Enemy enemy = (Enemy) entity;
-                    if (!enemy.isDead()) {
-                        // Remove slime from map
-                        gameMap.tileMap.removeEntity(bulletTileX, bulletTileY);
-                        
-                        Gdx.app.log("BulletCollision", "Slime exploded by bullet at (" + bulletTileX + "," + bulletTileY + ")");
-                        return true;
-                    }
-                }
-            }
-            
-            return false;
-        } catch (Exception e) {
-            Gdx.app.log("BulletCollision", "Error checking bullet-slime collision: " + e.getMessage());
-            return false;
-        }
-    }
-
-    /**
-     * Shoot a bullet from the specified position
-     */
-    public void shootBullet(float x, float y) {
-        Bullet bullet = new Bullet(x, y);
-        bullets.add(bullet);
-        Gdx.app.log("GameScreen", "Bullet fired at: " + x + ", " + y);
-    }
+    // OLD: Bullet collision and shooting methods moved to AttackSystemsManager
     
     // Visual feedback method for button actions
     public void flashScreen(float r, float g, float b, float duration) {
@@ -1114,17 +871,18 @@ public class GameScreen extends AbstractScreen {
                 gameMap.render(dt, game.batch, cam);
             }
 
-            // render bullets
-            for (Bullet b : bullets)
-                b.render(game.batch);
+            // NEW: Render homework manager systems
+            if (attackSystems != null) {
+                attackSystems.render(game.batch);
+            }
+            if (defenseSystems != null) {
+                defenseSystems.render(game.batch);
+            }
+            if (weatherEffects != null) {
+                weatherEffects.render(game.batch);
+            }
 
-            // NEW: render raindrops - beautiful falling weather effect
-            for (Raindrop r : raindrops)
-                r.render(game.batch);
-
-            // NEW: render explosions - spectacular blast effects! 💥
-            for (Explosion e : explosions)
-                e.render(game.batch);
+            // OLD: Bullet, raindrop, explosion rendering moved to homework managers
 
             // NEW: render sliding slimes - high priority rendering so they don't get covered
             for (Enemy slidingSlime : slidingSlimes) {
