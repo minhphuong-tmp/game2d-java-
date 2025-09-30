@@ -720,17 +720,18 @@ public class Player extends Entity {
                         // Create sliding effect - move enemy off screen instead of removing immediately
                         Gdx.app.log("Kick", "Creating sliding effect for enemy at (" + frontTileX + "," + frontTileY + ")");
                         
-                        // Start sliding animation first
+                        // Don't kill enemy immediately - let animation handle it
+                        // Score will be added when sliding animation completes
+                        Gdx.app.log("Kick", "=== KICKING ENEMY ===");
+                        Gdx.app.log("Kick", "Enemy ID: " + enemy.getId());
+                        Gdx.app.log("Kick", "Enemy HP before: " + enemy.getHp());
+                        Gdx.app.log("Kick", "Enemy Dead before: " + enemy.isDead());
+                        Gdx.app.log("Kick", "Starting kick animation - score will be added when complete");
+                        
+                        // Start sliding animation
                         enemy.startSlidingEffect(prevDir);
                         
-                        // Add to sliding slimes list for high-priority rendering
-                        // Note: We'll handle this in GameScreen update loop instead
-                        
-                        // Don't remove from map immediately - let it slide first
-                        // tileMap.removeEntity(frontTileX, frontTileY);
-                        Gdx.app.log("Kick", "Enemy will slide before being removed");
-                        
-                        Gdx.app.log("Kick", "SUCCESS: Enemy kicked off screen!");
+                        Gdx.app.log("Kick", "SUCCESS: Enemy killed and kicked off screen!");
                         
                         // Visual feedback - show text on screen
                         showDebugText("KICK SUCCESS!");
@@ -798,11 +799,14 @@ public class Player extends Entity {
                         Gdx.app.log("SwordFlash", "Found enemy at front position (" + frontTileX + "," + frontTileY + ")");
                         Gdx.app.log("SwordFlash", "Enemy HP: " + enemy.hp + "/" + enemy.maxHp + ", Dead: " + enemy.isDead());
                         
-                        // Always flash regardless of dead status (for testing)
-                        Gdx.app.log("SwordFlash", "Starting sword flash effect on enemy");
+                        // Don't kill enemy immediately - let animation handle it
+                        // Score will be added when flash animation completes
+                        Gdx.app.log("SwordFlash", "Starting sword flash animation - score will be added when complete");
+                        
+                        // Start sword flash effect
                         enemy.startSwordFlash();
                         
-                        Gdx.app.log("SwordFlash", "SUCCESS: Sword flash started on slime!");
+                        Gdx.app.log("SwordFlash", "SUCCESS: Enemy killed with sword flash!");
                         
                         // Visual feedback - show text on screen
                         showDebugText("SWORD FLASH!");
@@ -868,6 +872,26 @@ public class Player extends Entity {
                 if (entity != null && entity instanceof Enemy) {
                     Enemy enemy = (Enemy) entity;
                     if (!enemy.isDead()) {
+                        Gdx.app.log("Explode", "=== EXPLODING ENEMY ===");
+                        Gdx.app.log("Explode", "Enemy ID: " + enemy.getId());
+                        Gdx.app.log("Explode", "Enemy HP before: " + enemy.getHp());
+                        
+                        // Kill enemy and add score immediately
+                        enemy.setDead(true);
+                        enemy.setHp(0);
+                        
+                        // Try to add score immediately using static reference
+                        try {
+                            com.unlucky.screen.GameScreen gameScreen = com.unlucky.screen.GameScreen.getInstance();
+                            if (gameScreen != null) {
+                                gameScreen.addScore(1);
+                                enemy.hasScoreBeenAdded = true;
+                                Gdx.app.log("Explode", "Score added directly! +1 for " + enemy.getId());
+                            }
+                        } catch (Exception e) {
+                            Gdx.app.log("Explode", "Could not add score directly: " + e.getMessage());
+                        }
+                        
                         // Remove enemy from map
                         tileMap.removeEntity(frontX, frontY);
                         

@@ -47,6 +47,9 @@ public abstract class Enemy extends Entity {
     private float slideRotation = 0f; // Rotation angle for sliding effect
     private int originalSlideTileX = -1; // Store original tile position for removal
     private int originalSlideTileY = -1;
+    
+    // === Score Tracking ===
+    public boolean hasScoreBeenAdded = false; // Prevent duplicate score addition
 
     public Enemy(String id, Vector2 position, TileMap tileMap, ResourceManager rm) {
         super(id, position, tileMap, rm);
@@ -54,6 +57,7 @@ public abstract class Enemy extends Entity {
         statusEffects = new StatusSet(false, rm);
         battleSize = 48;
         numRespawn = 0;
+        hasScoreBeenAdded = false; // Reset score tracking for new enemy
     }
 
     public abstract boolean isElite();
@@ -124,9 +128,28 @@ public abstract class Enemy extends Entity {
                 
                 // After 20 flashes, kill the enemy
                 if (flashCount >= MAX_FLASHES) {
+                    Gdx.app.log("Enemy", "=== SWORD FLASH COMPLETED ===");
+                    Gdx.app.log("Enemy", "Enemy ID: " + id);
+                    Gdx.app.log("Enemy", "Flash count: " + flashCount + "/" + MAX_FLASHES);
+                    
                     isSwordFlashing = false;
                     isVisible = true; // Make sure enemy is visible when dying
                     setDead(true);
+                    setHp(0); // Ensure HP is 0 for score calculation
+                    
+                    Gdx.app.log("Enemy", "Enemy marked as dead, HP set to 0");
+                    
+                    // Try to add score immediately using static reference
+                    try {
+                        com.unlucky.screen.GameScreen gameScreen = com.unlucky.screen.GameScreen.getInstance();
+                        if (gameScreen != null) {
+                            gameScreen.addScore(1);
+                            hasScoreBeenAdded = true;
+                            Gdx.app.log("Enemy", "Score added directly! +1 for " + id);
+                        }
+                    } catch (Exception e) {
+                        Gdx.app.log("Enemy", "Could not add score directly: " + e.getMessage());
+                    }
                     
                     // Remove from map so it can respawn
                     if (tileMap != null) {
@@ -163,8 +186,32 @@ public abstract class Enemy extends Entity {
             
             // Check if slide duration is over
             if (slideTimer >= SLIDE_DURATION) {
+                Gdx.app.log("Enemy", "=== SLIDE ANIMATION COMPLETED ===");
+                Gdx.app.log("Enemy", "Enemy ID: " + id);
+                Gdx.app.log("Enemy", "Slide timer: " + slideTimer + "/" + SLIDE_DURATION);
+                
                 isSliding = false;
                 setDead(true);
+                setHp(0); // Ensure HP is 0 for score calculation
+                
+                Gdx.app.log("Enemy", "Enemy marked as dead, HP set to 0");
+                
+                // Mark that this enemy should get score (handled by GameMap.update())
+                hasScoreBeenAdded = false; // Reset flag so GameMap can add score
+                
+                Gdx.app.log("Enemy", "hasScoreBeenAdded reset to false");
+                
+                // Try to add score immediately using static reference
+                try {
+                    com.unlucky.screen.GameScreen gameScreen = com.unlucky.screen.GameScreen.getInstance();
+                    if (gameScreen != null) {
+                        gameScreen.addScore(1);
+                        hasScoreBeenAdded = true;
+                        Gdx.app.log("Enemy", "Score added directly! +1 for " + id);
+                    }
+                } catch (Exception e) {
+                    Gdx.app.log("Enemy", "Could not add score directly: " + e.getMessage());
+                }
                 
                 // Remove from map after sliding is complete
                 if (tileMap != null && originalSlideTileX >= 0 && originalSlideTileY >= 0) {
@@ -176,10 +223,6 @@ public abstract class Enemy extends Entity {
                         Gdx.app.log("Enemy", "Could not find entity at original position (" + originalSlideTileX + "," + originalSlideTileY + ")");
                     }
                 }
-                
-                // Remove from sliding slimes list
-                // Note: We can't access gameScreen directly from Enemy, so we'll handle this differently
-                Gdx.app.log("Enemy", "Sliding completed for " + id);
                 
                 Gdx.app.log("Enemy", id + " finished sliding and died!");
             }

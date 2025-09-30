@@ -55,6 +55,10 @@ public class Hud extends UI {
 
     private Image windWallImage;
 
+    // === Score System ===
+    private Label scoreLabel;
+    private int score = 0;
+
     // window that slides on the screen to show the world and level
     private Window levelDescriptor;
     private Label levelDesc;
@@ -106,6 +110,7 @@ public class Hud extends UI {
         createShieldButton(); // Phải tạo trước
         createSlowMotionButton();
         createWindWallButton();
+        createScoreLabel();
 
         Gdx.app.log("Hud", "Hud created with kick button");
         createLevelDescriptor();
@@ -207,6 +212,65 @@ public class Hud extends UI {
         });
 
         stage.addActor(spawnWindWallButton);
+    }
+
+    private void createScoreLabel() {
+        // Tạo label hiển thị điểm số
+        Label.LabelStyle labelStyle = new Label.LabelStyle();
+        labelStyle.font = rm.pixel10; // Sử dụng font pixel10 (có sẵn)
+        labelStyle.fontColor = Color.WHITE; // Màu trắng
+        
+        scoreLabel = new Label("Score: " + score, labelStyle);
+        scoreLabel.setSize(80, 16); // Nhỏ hơn
+        
+        // Đặt ở bên trái các nút khiên (phía trên một chút)
+        float scoreX = 67; // Bên trái màn hình
+        float scoreY = shieldButton.getY() + 7; // Phía trên nút khiên
+        scoreLabel.setPosition(scoreX, scoreY);
+        
+        Gdx.app.log("ScoreLabel", "Score label created at: " + scoreX + ", " + scoreY);
+        
+        stage.addActor(scoreLabel);
+    }
+    
+    /**
+     * Tăng điểm số khi giết slime (chỉ gọi khi thực sự giết được slime)
+     */
+    public void addScore(int points) {
+        Gdx.app.log("Hud", "=== HUD ADDING SCORE ===");
+        Gdx.app.log("Hud", "Current score: " + score);
+        Gdx.app.log("Hud", "Adding points: +" + points);
+        
+        score += points;
+        updateScoreLabel();
+        
+        Gdx.app.log("Hud", "New score: " + score);
+        Gdx.app.log("Hud", "Slime killed! Score increased by " + points + ", total: " + score);
+    }
+    
+    /**
+     * Cập nhật hiển thị điểm số
+     */
+    private void updateScoreLabel() {
+        if (scoreLabel != null) {
+            scoreLabel.setText("Score: " + score);
+        }
+    }
+    
+    /**
+     * Lấy điểm số hiện tại
+     */
+    public int getScore() {
+        return score;
+    }
+    
+    /**
+     * Reset điểm số về 0
+     */
+    public void resetScore() {
+        score = 0;
+        updateScoreLabel();
+        Gdx.app.log("Hud", "Score reset to 0");
     }
 
     private void createSlowMotionButton() {
