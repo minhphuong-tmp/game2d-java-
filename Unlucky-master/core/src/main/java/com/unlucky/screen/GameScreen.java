@@ -74,6 +74,9 @@ public class GameScreen extends AbstractScreen {
 
     // === Sliding Slimes ===
     public Array<Enemy> slidingSlimes;
+    
+    // === Moving Objects (public for Hud access) ===
+    public Array<MovingObject> movingObjects;
 
     // NEW: Sound for bullet end
     private Sound bulletEndSound;
@@ -83,7 +86,6 @@ public class GameScreen extends AbstractScreen {
     private ImageButton sfxToggleButton;
 
     // NEW: === Moving Objects System for Teacher Requirements ===
-    private Array<MovingObject> movingObjects;
     private final int MAX_OBJECTS = 3; // Maximum 3 objects as per requirements
 
     // NEW: Sound arrays for random collision sounds
@@ -242,6 +244,15 @@ public class GameScreen extends AbstractScreen {
         float speed = 60f; // Speed toward player
         float size = 20f; // Size for collision detection
         TextureRegion sprite; // The sprite texture
+        
+        // === Sliding Animation Properties ===
+        boolean isSliding = false;
+        float slideTimer = 0f;
+        float slideDuration = 1.5f; // Duration of sliding animation
+        float slideSpeed = 120f; // Speed when sliding away
+        float slideDirectionX = 0f; // Direction X when sliding
+        float slideDirectionY = 0f; // Direction Y when sliding
+        float slideRotation = 0f; // Rotation during slide
 
         MovingObject(float x, float y) {
             this.x = x;
@@ -263,9 +274,56 @@ public class GameScreen extends AbstractScreen {
                 Gdx.app.log("MovingObject", "Error accessing items20x20, using fallback: " + e.getMessage());
             }
         }
+        
+        /**
+         * Start sliding animation away from player
+         */
+        void startSlidingAway(float playerX, float playerY) {
+            Gdx.app.log("MovingObject", "=== STARTING SLIDE ANIMATION ===");
+            
+            // Calculate direction away from player
+            float deltaX = x - playerX;
+            float deltaY = y - playerY;
+            float distance = (float) Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+            
+            if (distance > 0) {
+                // Normalize direction
+                slideDirectionX = deltaX / distance;
+                slideDirectionY = deltaY / distance;
+                
+                // Start sliding animation
+                isSliding = true;
+                slideTimer = 0f;
+                slideRotation = 0f;
+                
+                Gdx.app.log("MovingObject", "Slide direction: " + slideDirectionX + ", " + slideDirectionY);
+                Gdx.app.log("MovingObject", "Starting slide from: " + x + ", " + y);
+            }
+        }
 
         void update(float dt) {
-            // Move toward player position with null safety checks
+            // Handle sliding animation first
+            if (isSliding) {
+                slideTimer += dt;
+                
+                // Update position during slide
+                x += slideDirectionX * slideSpeed * dt;
+                y += slideDirectionY * slideSpeed * dt;
+                
+                // Add rotation for visual effect
+                slideRotation += 360f * dt; // Rotate 360 degrees per second
+                
+                // Check if slide animation is complete
+                if (slideTimer >= slideDuration) {
+                    Gdx.app.log("MovingObject", "Slide animation complete, removing object");
+                    // Mark for removal (will be handled by GameScreen)
+                    isSliding = false;
+                }
+                
+                return; // Don't do normal movement during slide
+            }
+            
+            // Normal movement toward player (only when not sliding)
             try {
                 if (gameMap != null && gameMap.player != null && gameMap.player.getPosition() != null) {
                     float playerX = gameMap.player.getPosition().x;
@@ -278,8 +336,16 @@ public class GameScreen extends AbstractScreen {
 
                     // Move toward player if not already there
                     if (distance > speed * dt) {
+                        float oldX = x;
+                        float oldY = y;
                         x += (deltaX / distance) * speed * dt;
                         y += (deltaY / distance) * speed * dt;
+                        
+                        // Debug log every 60 frames (1 second at 60fps)
+                        if (Math.random() < 0.016f) { // ~1% chance per frame
+                            Gdx.app.log("MovingObject", "Moving from (" + oldX + "," + oldY + ") to (" + x + "," + y + ")");
+                            Gdx.app.log("MovingObject", "Player at: (" + playerX + "," + playerY + "), Distance: " + distance);
+                        }
                     }
                 }
             } catch (Exception e) {
@@ -291,7 +357,18 @@ public class GameScreen extends AbstractScreen {
         void render(SpriteBatch batch) {
             try {
                 if (sprite != null && batch != null) {
-                    batch.draw(sprite, x - size / 2, y - size / 2, size, size);
+                    if (isSliding) {
+                        // Render with rotation during slide animation
+                        batch.draw(sprite, 
+                            x - size / 2, y - size / 2,  // Position
+                            size / 2, size / 2,         // Origin for rotation
+                            size, size,                 // Size
+                            1f, 1f,                     // Scale
+                            slideRotation);              // Rotation in degrees
+                    } else {
+                        // Normal rendering without rotation
+                        batch.draw(sprite, x - size / 2, y - size / 2, size, size);
+                    }
                 }
             } catch (Exception e) {
                 Gdx.app.log("MovingObject", "Error rendering sprite: " + e.getMessage());
@@ -757,6 +834,7 @@ public class GameScreen extends AbstractScreen {
 
     // NEW: Update method for moving objects system
     private void updateMovingObjects(float dt) {
+        Gdx.app.log("MovingObjects", "=== UPDATE MOVING OBJECTS CALLED ===");
         try {
             // Slow motion factor: 1 = normal, 0.1 = slow
             float factor = hud.slowMotion ? 0.1f : 1f; // <-- sửa ở đây
@@ -764,6 +842,18 @@ public class GameScreen extends AbstractScreen {
             // Ensure we always have exactly 3 objects - spawn immediately if needed
             while (movingObjects.size < MAX_OBJECTS) {
                 spawnRandomObject();
+            }
+            
+            // Debug log để kiểm tra moving objects
+            Gdx.app.log("MovingObjects", "=== UPDATE MOVING OBJECTS ===");
+            Gdx.app.log("MovingObjects", "Count: " + movingObjects.size);
+            
+            // Safe player access
+            if (gameMap != null && gameMap.player != null) {
+                Gdx.app.log("MovingObjects", "Player position: " + gameMap.player.getPosition().x + ", " + gameMap.player.getPosition().y);
+                Gdx.app.log("MovingObjects", "Player shield active: " + gameMap.player.isShieldActive());
+            } else {
+                Gdx.app.log("MovingObjects", "ERROR: gameMap or player is null!");
             }
 
             // Update all moving objects with safe iteration
@@ -774,16 +864,31 @@ public class GameScreen extends AbstractScreen {
                 if (obj == null) continue;
 
                 obj.update(dt * factor);  // apply slow motion
+                
+                // Remove objects that finished sliding animation
+                if (obj.isSliding && obj.slideTimer >= obj.slideDuration) {
+                    Gdx.app.log("MovingObjects", "Removing object after slide animation");
+                    movingObjects.removeIndex(i);
+                    continue;
+                }
 
                 // Check collision with player
                 if (obj.collidesWithPlayer()) {
+                    Gdx.app.log("Collision", "=== OBJECT COLLIDED WITH PLAYER! ===");
                     playRandomCollisionSound();
 
-                    // Tắt shield khi va chạm
-                    player.deactivateShield();
+                    // Xử lý va chạm với khiên (nếu có)
+                    if (gameMap.player.isShieldActive()) {
+                        Gdx.app.log("Collision", "Player has shield - calling handleShieldCollision()");
+                        gameMap.player.handleShieldCollision();
+                    } else {
+                        Gdx.app.log("Collision", "Player has no shield - calling deactivateShield()");
+                        // Không có khiên thì tắt shield
+                        gameMap.player.deactivateShield();
+                    }
 
                     movingObjects.removeIndex(i);
-                    Gdx.app.log("Collision", "Object collided with player! Objects remaining: " + movingObjects.size);
+                    Gdx.app.log("Collision", "Object removed! Objects remaining: " + movingObjects.size);
                     continue;
                 }
 
@@ -796,7 +901,12 @@ public class GameScreen extends AbstractScreen {
                     if (other == null) continue;
 
                     if (obj.collidesWith(other)) {
-                        player.deactivateShield();
+                        // Xử lý va chạm với khiên (nếu có)
+                        if (gameMap.player.isShieldActive()) {
+                            gameMap.player.handleShieldCollision();
+                        } else {
+                            gameMap.player.deactivateShield();
+                        }
                         playRandomCollisionSound();
                         if (i < movingObjects.size) movingObjects.removeIndex(i);
                         if (j < movingObjects.size) movingObjects.removeIndex(j);
@@ -815,6 +925,8 @@ public class GameScreen extends AbstractScreen {
 
     // NEW: Spawn a random object at random position
     private void spawnRandomObject() {
+        Gdx.app.log("MovingObject", "=== SPAWNING NEW OBJECT ===");
+        
         // Spawn objects around the camera view, but not too close to player
         float camX = cam.position.x;
         float camY = cam.position.y;
@@ -835,7 +947,9 @@ public class GameScreen extends AbstractScreen {
 
         MovingObject newObject = new MovingObject(spawnX, spawnY);
         movingObjects.add(newObject);
-        Gdx.app.log("MovingObject", "New object spawned at: " + spawnX + ", " + spawnY + " (attempt " + attempts + ")");
+        Gdx.app.log("MovingObject", "=== OBJECT SPAWNED SUCCESSFULLY ===");
+        Gdx.app.log("MovingObject", "Position: " + spawnX + ", " + spawnY + " (attempt " + attempts + ")");
+        Gdx.app.log("MovingObject", "Total objects: " + movingObjects.size);
     }
 
     // NEW: Check if position is too close to player
@@ -881,6 +995,33 @@ public class GameScreen extends AbstractScreen {
         }
     }
 
+
+    /**
+     * Push all moving objects away from player (called by Hud)
+     */
+    public void pushAllObjectsAway() {
+        Gdx.app.log("GameScreen", "=== PUSHING ALL OBJECTS AWAY ===");
+        
+        if (movingObjects != null && gameMap != null && gameMap.player != null) {
+            Gdx.app.log("GameScreen", "Found " + movingObjects.size + " moving objects to push away");
+            
+            float playerX = gameMap.player.getPosition().x;
+            float playerY = gameMap.player.getPosition().y;
+            
+            for (int i = movingObjects.size - 1; i >= 0; i--) {
+                MovingObject obj = movingObjects.get(i);
+                if (obj != null && !obj.isSliding) { // Only push objects that aren't already sliding
+                    // Start sliding animation instead of immediate push
+                    obj.startSlidingAway(playerX, playerY);
+                    Gdx.app.log("GameScreen", "Started slide animation for object " + i);
+                }
+            }
+            
+            Gdx.app.log("GameScreen", "All objects started sliding away!");
+        } else {
+            Gdx.app.log("GameScreen", "ERROR: movingObjects, gameMap, or player is null!");
+        }
+    }
 
     /**
      * Check if bullet collides with any slime and explode it
@@ -956,6 +1097,7 @@ public class GameScreen extends AbstractScreen {
         update(dt);
 
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        Gdx.app.log("Render", "=== RENDER METHOD CALLED ===");
         
         if (game.batch != null) {
             game.batch.begin();
@@ -993,9 +1135,13 @@ public class GameScreen extends AbstractScreen {
 
             // NEW: render moving objects - teacher requirements system
             try {
+                Gdx.app.log("Render", "Rendering " + movingObjects.size + " moving objects");
                 for (MovingObject obj : movingObjects) {
                     if (obj != null && obj.sprite != null) {
+                        Gdx.app.log("Render", "Rendering object at: " + obj.x + ", " + obj.y);
                         obj.render(game.batch);
+                    } else {
+                        Gdx.app.log("Render", "Object is null or sprite is null!");
                     }
                 }
             } catch (Exception e) {

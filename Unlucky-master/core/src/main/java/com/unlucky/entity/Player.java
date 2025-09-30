@@ -67,8 +67,45 @@ public class Player extends Entity {
     public void deactivateShield() {
         // Tắt trạng thái shield
         this.shieldActive = false;
-
-        // Nếu
+    }
+    
+    /**
+     * Xử lý va chạm với moving objects khi có khiên
+     */
+    public void handleShieldCollision() {
+        if (!shieldActive) return; // Không có khiên thì không xử lý
+        
+        shieldHitCount++;
+        shieldFlashing = true;
+        shieldFlashTimer = 0f;
+        
+        Gdx.app.log("Shield", "=== SHIELD HIT! ===");
+        Gdx.app.log("Shield", "Count: " + shieldHitCount + "/" + MAX_SHIELD_HITS);
+        Gdx.app.log("Shield", "Flashing: " + shieldFlashing);
+        
+        // Nếu đã va chạm đủ 5 lần thì tắt khiên
+        if (shieldHitCount >= MAX_SHIELD_HITS) {
+            shieldActive = false;
+            shieldHitCount = 0; // Reset counter
+            Gdx.app.log("Shield", "=== SHIELD DESTROYED! ===");
+        }
+    }
+    
+    /**
+     * Kiểm tra khiên có đang nháy không
+     */
+    public boolean isShieldFlashing() {
+        return shieldFlashing;
+    }
+    
+    /**
+     * Kiểm tra khiên có hiển thị không (cho hiệu ứng nháy)
+     */
+    public boolean shouldShowShield() {
+        if (!shieldFlashing) return true; // Luôn hiển thị khi không nháy
+        
+        // Tính toán nháy nháy - đơn giản hơn
+        return (int)(shieldFlashTimer * 10) % 2 == 0; // Nhấp nháy mỗi 0.1 giây
     }
     private int exp;
     private int maxExp;
@@ -76,6 +113,13 @@ public class Player extends Entity {
     private boolean shieldVisible = true;    // để tạm ẩn khiên khi va chạm
     private float shieldCooldown = 0f;       // thời gian tạm ẩn khiên
     private final float SHIELD_HIDE_TIME = 0.5f; // 0.5 giây
+    
+    // Shield collision system
+    private int shieldHitCount = 0;           // số lần va chạm với khiên
+    private final int MAX_SHIELD_HITS = 10;   // tối đa 10 lần va chạm (tăng từ 5 lên 10)
+    private boolean shieldFlashing = false;  // trạng thái nháy nháy
+    private float shieldFlashTimer = 0f;     // timer cho hiệu ứng nháy
+    private final float SHIELD_FLASH_INTERVAL = 0.1f; // khoảng cách nháy
     private int hpIncrease = 0;
     private int minDmgIncrease = 0;
     private int maxDmgIncrease = 0;
@@ -220,6 +264,16 @@ public class Player extends Entity {
                 debugText = "";
             }
         }
+        
+        // Update shield flashing effect
+        if (shieldFlashing) {
+            shieldFlashTimer += dt;
+            // Stop flashing after 1 second
+            if (shieldFlashTimer >= 1.0f) {
+                shieldFlashing = false;
+                shieldFlashTimer = 0f;
+            }
+        }
 
         // movement
         handleMovement(dt);
@@ -244,14 +298,16 @@ public class Player extends Entity {
 
 
         // === HIỆU ỨNG KHIEN - VẼ SAU NHÂN VẬT ===
-        if (shieldActive) {
-            Gdx.app.log("PlayerRender", "🔴 🛡️ DRAWING RED SHIELD - Active: " + shieldActive);
+        if (shieldActive && shouldShowShield()) {
+            Gdx.app.log("PlayerRender", "🔴 🛡️ DRAWING SHIELD - Active: " + shieldActive + ", Flashing: " + shieldFlashing + ", ShouldShow: " + shouldShowShield());
 
             // Vẽ khiên màu đỏ lớn để dễ nhìn
             float shieldSize = 28f;
             batch.setColor(1.0f, 0.0f, 0.0f, 0.8f); // Màu đỏ
             batch.draw(rm.shopitems[7][0], position.x - 6, position.y - 6, shieldSize, shieldSize);
             batch.setColor(Color.WHITE); // Reset màu
+        } else if (shieldActive) {
+            Gdx.app.log("PlayerRender", "🔴 🛡️ SHIELD HIDDEN - Active: " + shieldActive + ", Flashing: " + shieldFlashing + ", ShouldShow: " + shouldShowShield());
         }
 
         // Draw kick effect if kicking

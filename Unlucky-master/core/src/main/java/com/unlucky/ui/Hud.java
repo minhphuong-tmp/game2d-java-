@@ -44,7 +44,7 @@ public class Hud extends UI {
 
     // option buttons: inventoryUI and settings
     private ImageButton[] optionButtons;
-    private ImageButton slowObjectsButton; // nút mới
+    // private ImageButton slowObjectsButton; // nút mới - không dùng nữa
     public boolean slowMotion = false; // trạng thái slow motion, public để GameScreen truy cập
     // shoot button
     private ImageButton shootButton;
@@ -103,7 +103,7 @@ public class Hud extends UI {
         createOptionButtons();
         createShootButton();
         createLeftButtons();
-        createShieldButton();
+        createShieldButton(); // Phải tạo trước
         createSlowMotionButton();
         createWindWallButton();
 
@@ -187,27 +187,22 @@ public class Hud extends UI {
         spawnWindWallButton = new ImageButton(style);
         spawnWindWallButton.setSize(24, 24);
 
-        // Đặt **trên shieldButton**: cùng X, Y + shieldButton.height + khoảng cách
-        float x = shieldButton.getX();
-        float y = shieldButton.getY() + shieldButton.getHeight() + 5; // cách shield 5px
+        // Đặt bên phải nút Slow Motion
+        float x = spawnSlowObjectsButton.getX() + spawnSlowObjectsButton.getWidth() + 5;
+        float y = spawnSlowObjectsButton.getY();
         spawnWindWallButton.setPosition(x, y);
 
         spawnWindWallButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                Gdx.app.log("Hud", "Wind Wall button clicked!");
+                Gdx.app.log("Hud", "=== WIND WALL BUTTON CLICKED - PUSHING OBJECTS AWAY ===");
 
-                // Hiển thị wind wall tại vị trí cố định trên map
-                float mapX = 50;
-                float mapY = 50;
-                windWallImage.setPosition(mapX, mapY);
-                windWallImage.setVisible(true);
-
-                // Tự ẩn sau 5 giây
-                windWallImage.addAction(Actions.sequence(
-                        Actions.delay(5f),
-                        Actions.hide()
-                ));
+                // Gọi method trong GameScreen để đẩy objects
+                if (gameScreen != null) {
+                    gameScreen.pushAllObjectsAway();
+                } else {
+                    Gdx.app.log("Hud", "ERROR: gameScreen is null!");
+                }
             }
         });
 
@@ -222,8 +217,8 @@ public class Hud extends UI {
         spawnSlowObjectsButton = new ImageButton(style);
         spawnSlowObjectsButton.setSize(24, 24);
 
-        // Đặt bên trái nút Shield
-        float x = shieldButton.getX() - spawnSlowObjectsButton.getWidth() - 5;
+        // Đặt bên phải nút Shield
+        float x = shieldButton.getX() + shieldButton.getWidth() + 5;
         float y = shieldButton.getY();
         spawnSlowObjectsButton.setPosition(x, y);
 
@@ -249,13 +244,12 @@ public class Hud extends UI {
         shieldButton = new ImageButton(shieldStyle);
         shieldButton.setSize(24, 24);
 
-        // THÊM DEBUG VỊ TRÍ
-        float shieldX = leftButton2.getX() - shieldButton.getWidth() - 5;
-        float shieldY = leftButton2.getY();
+        // Đặt ở góc trên phải (dịch sang trái một tí tẹo)
+        float shieldX = 155 - 30 - 20 + 15 - 10; // Dịch sang trái 10px
+        float shieldY = 100 - 15; // Giữ nguyên vị trí Y
         shieldButton.setPosition(shieldX, shieldY);
 
         Gdx.app.log("ShieldButton", "Position: " + shieldX + ", " + shieldY);
-        Gdx.app.log("ShieldButton", "leftButton2 position: " + leftButton2.getX() + ", " + leftButton2.getY());
 
         shieldButton.addListener(new ClickListener() {
             @Override
@@ -360,7 +354,7 @@ public class Hud extends UI {
             stage.addActor(gameScreen.getGame().fps);
         }
         for (int i = 0; i < 4; i++) dirPad[i].setVisible(toggle);
-        for (int i = 0; i < 2; i++) optionButtons[i].setVisible(toggle);
+        // Không cần toggle optionButtons nữa vì đã bỏ
         levelDescriptor.setVisible(toggle);
     }
 
@@ -398,15 +392,10 @@ public class Hud extends UI {
      * Creates the two option buttons: inventoryUI and settings
      */
     private void createOptionButtons() {
-        optionButtons = new ImageButton[2];
-
-        ImageButton.ImageButtonStyle[] styles = rm.loadImageButtonStyles(2, rm.optionbutton32x32);
-        for (int i = 0; i < 2; i++) {
-            optionButtons[i] = new ImageButton(styles[i]);
-            optionButtons[i].setPosition(155 + (i * 25), 100);
-            stage.addActor(optionButtons[i]);
-        }
-        handleOptionEvents();
+        // Bỏ luôn cả inventory và settings buttons để có chỗ cho 3 nút mới
+        optionButtons = new ImageButton[0]; // Không tạo button nào
+        
+        // Không cần handleOptionEvents() nữa vì không có button
     }
 
     /**
@@ -715,39 +704,6 @@ public class Hud extends UI {
         }
     }
 
-    /**
-     * Handles two option button commands
-     */
-    private void handleOptionEvents() {
-        // inventoryUI
-        optionButtons[0].addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                toggle(false);
-                gameScreen.setCurrentEvent(EventState.INVENTORY);
-                gameScreen.getGame().inventoryUI.init(false, null);
-                gameScreen.getGame().inventoryUI.start();
-            }
-        });
-
-        // settings
-        optionButtons[1].addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                shade.setVisible(true);
-                toggle(false);
-
-                // pause music and sfx
-                gameScreen.gameMap.mapTheme.pause();
-                if (gameScreen.gameMap.weather != WeatherType.NORMAL) {
-                    rm.lightrain.stop(gameScreen.gameMap.soundId);
-                    rm.heavyrain.stop(gameScreen.gameMap.soundId);
-                }
-
-                gameScreen.setCurrentEvent(EventState.PAUSE);
-                settingsDialog.show(stage);
-            }
-        });
-    }
+    // Method handleOptionEvents() đã bị xóa vì không còn option buttons
 
 }
