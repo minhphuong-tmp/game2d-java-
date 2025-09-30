@@ -6,6 +6,9 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
@@ -36,13 +39,27 @@ import com.badlogic.gdx.audio.Sound;
 
 public class GameScreen extends AbstractScreen {
 
+    private float manaTestTimer = 0f;
+
+
+    private BitmapFont defaultFont;
+
     public EventState currentEvent;
+    private Texture whitePixel;
 
     private Player player;
     public GameMap gameMap;
     public Hud hud;
     public BattleUIHandler battleUIHandler;
     public Battle battle;
+    private int currentMana = 50;
+    private int maxMana = 100;
+
+    // Thêm vị trí và kích thước thanh mana
+    private float manaBarX = 20f;
+    private float manaBarY = 20f;
+    private float manaBarWidth = 100f;
+    private float manaBarHeight = 10f;
     public TransitionScreen transition;
     public LevelUpScreen levelUp;
     public DialogScreen dialog;
@@ -410,6 +427,12 @@ public class GameScreen extends AbstractScreen {
 
     public GameScreen(final Unlucky game, final ResourceManager rm) {
         super(game, rm);
+// Khởi tạo whitePixel mà không cần file PNG
+        Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
+        pixmap.setColor(Color.WHITE);
+        pixmap.fill();
+        whitePixel = new Texture(pixmap);
+        pixmap.dispose();
 
         currentEvent = EventState.MOVING;
 
@@ -534,6 +557,26 @@ public class GameScreen extends AbstractScreen {
     /**
      * Initialize music and SFX toggle buttons in top-left corner
      */
+//    private void testManaChange(float dt) {
+//        manaTestTimer += dt;
+//
+//        // Mỗi 2 giây giảm 10 mana
+//        if (manaTestTimer >= 2f) {
+//            if (gameMap != null && gameMap.player != null) {
+//                float currentMana = gameMap.player.getMana();
+//
+//                if (currentMana > 0) {
+//                    gameMap.player.reduceMana(10f);
+//                    Gdx.app.log("ManaTest", "Reduced mana to: " + gameMap.player.getMana());
+//                } else {
+//                    // Reset về max khi hết
+//                    gameMap.player.setMana(gameMap.player.getMaxMana());
+//                    Gdx.app.log("ManaTest", "Reset mana to: " + gameMap.player.getMana());
+//                }
+//            }
+//            manaTestTimer = 0f;
+//        }
+//    }
     private void initToggleButtons() {
         // Create buttons with default style (will be updated based on settings)
         ImageButton.ImageButtonStyle defaultStyle = new ImageButton.ImageButtonStyle();
@@ -649,6 +692,9 @@ public class GameScreen extends AbstractScreen {
     public void show() {
         Gdx.input.setInputProcessor(multiplexer);
 
+        defaultFont = new BitmapFont();
+        defaultFont.setColor(Color.WHITE);
+        defaultFont.getData().setScale(0.8f);
         hud.getStage().addAction(Actions.sequence(Actions.alpha(0), Actions.fadeIn(0.5f)));
 
         if (resetGame) {
@@ -829,6 +875,7 @@ public class GameScreen extends AbstractScreen {
         }
 
         // NEW: === Moving Objects System Update for Teacher Requirements ===
+//        testManaChange(dt);
         updateMovingObjects(dt);
     }
 
@@ -1092,80 +1139,151 @@ public class GameScreen extends AbstractScreen {
         slidingSlimes.removeValue(enemy, true);
         Gdx.app.log("GameScreen", "Removed sliding slime: " + enemy.getId());
     }
+    // Trong GameScreen class
+    private void renderManaBar(SpriteBatch batch) {
+        Gdx.app.log("ManaDebug", "=== START RENDER MANA BAR ===");
 
+        if (gameMap == null || gameMap.player == null) return;
+
+        float currentMana = gameMap.player.getMana();
+        float maxMana = gameMap.player.getMaxMana();
+
+        // SỬA: Sử dụng tọa độ camera/viewport thay vì tọa độ màn hình
+        float barX = 20f;  // Góc trái trên
+        float barY = cam.viewportHeight - 40f; // Tính từ camera, không phải màn hình
+        float barWidth = 150f;
+        float barHeight = 20f;
+
+        Gdx.app.log("ManaDebug", "Camera viewport: " + cam.viewportWidth + "x" + cam.viewportHeight);
+        Gdx.app.log("ManaDebug", "Drawing at: " + barX + ", " + barY);
+
+        // Màu sắc
+        Color backgroundColor = new Color(0.1f, 0.1f, 0.1f, 0.9f);
+        Color manaColor = new Color(0.3f, 0.5f, 1.0f, 1.0f);
+        Color borderColor = new Color(1f, 1f, 1f, 0.8f);
+
+        // Vẽ nền mana bar
+        batch.setColor(backgroundColor);
+        batch.draw(whitePixel, barX - 2, barY - 2, barWidth + 4, barHeight + 4);
+
+        // Vẽ mana hiện tại
+        if (currentMana > 0) {
+            float manaRatio = currentMana / maxMana;
+            float currentWidth = barWidth * manaRatio;
+
+            batch.setColor(manaColor);
+            batch.draw(whitePixel, barX, barY, currentWidth, barHeight);
+        }
+
+        // Vẽ viền
+        batch.setColor(borderColor);
+        batch.draw(whitePixel, barX - 2, barY + barHeight + 2, barWidth + 4, 2);
+        batch.draw(whitePixel, barX - 2, barY - 2, barWidth + 4, 2);
+        batch.draw(whitePixel, barX - 2, barY - 2, 2, barHeight + 4);
+        batch.draw(whitePixel, barX + barWidth, barY - 2, 2, barHeight + 4);
+
+        // Hiển thị số mana
+        if (defaultFont != null) {
+            String manaText = "MANA: " + (int)currentMana + "/" + (int)maxMana;
+
+            // Màu chữ
+            if (currentMana < maxMana * 0.3f) {
+                defaultFont.setColor(Color.RED);
+            } else if (currentMana < maxMana * 0.6f) {
+                defaultFont.setColor(Color.YELLOW);
+            } else {
+                defaultFont.setColor(Color.GREEN);
+            }
+
+            defaultFont.draw(batch, manaText, barX + 5f, barY + barHeight/2 + 5f);
+            defaultFont.setColor(Color.WHITE);
+        }
+
+        batch.setColor(Color.WHITE);
+        Gdx.app.log("ManaDebug", "=== END RENDER MANA BAR ===");
+    }
     public void render(float dt) {
         update(dt);
 
+        // Xóa màn hình
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        Gdx.app.log("Render", "=== RENDER METHOD CALLED ===");
-        
+
         if (game.batch != null) {
             game.batch.begin();
-            
+
+            // --- Background ---
             game.batch.setColor(Color.WHITE);
             game.batch.setProjectionMatrix(cam.combined);
             for (Background bgi : bg)
                 bgi.render(game.batch);
 
+            // --- Game Map ---
             if (currentEvent == EventState.MOVING || currentEvent == EventState.INVENTORY ||
                     transition.renderMap || currentEvent == EventState.TILE_EVENT ||
                     currentEvent == EventState.DEATH || currentEvent == EventState.PAUSE) {
-                game.batch.setProjectionMatrix(cam.combined);
                 gameMap.render(dt, game.batch, cam);
             }
 
-            // render bullets
+            // --- Bullets ---
             for (Bullet b : bullets)
                 b.render(game.batch);
 
-            // NEW: render raindrops - beautiful falling weather effect
+            // --- Raindrops ---
             for (Raindrop r : raindrops)
                 r.render(game.batch);
 
-            // NEW: render explosions - spectacular blast effects! 💥
+            // --- Explosions ---
             for (Explosion e : explosions)
                 e.render(game.batch);
 
-            // NEW: render sliding slimes - high priority rendering so they don't get covered
+            // --- Sliding Slimes ---
             for (Enemy slidingSlime : slidingSlimes) {
                 if (slidingSlime != null && slidingSlime.isSliding) {
                     slidingSlime.render(game.batch, true);
                 }
             }
 
-            // NEW: render moving objects - teacher requirements system
+            // --- Moving Objects ---
             try {
-                Gdx.app.log("Render", "Rendering " + movingObjects.size + " moving objects");
                 for (MovingObject obj : movingObjects) {
                     if (obj != null && obj.sprite != null) {
-                        Gdx.app.log("Render", "Rendering object at: " + obj.x + ", " + obj.y);
                         obj.render(game.batch);
-                    } else {
-                        Gdx.app.log("Render", "Object is null or sprite is null!");
                     }
                 }
             } catch (Exception e) {
                 Gdx.app.log("GameScreen", "Error rendering moving objects: " + e.getMessage());
             }
 
+            // --- Hiển thị số mana ---
+                renderManaBar(game.batch);
+
+
+
             game.batch.end();
         }
 
-        // render HUD / UI
-        if (currentEvent == EventState.MOVING)
-            hud.render(dt);
-        else if (currentEvent == EventState.BATTLING)
-            battleUIHandler.render(dt);
-        else if (currentEvent == EventState.TRANSITION)
-            transition.render(dt);
-        else if (currentEvent == EventState.LEVEL_UP)
-            levelUp.render(dt);
-        else if (currentEvent == EventState.TILE_EVENT)
-            dialog.render(dt);
-        else if (currentEvent == EventState.INVENTORY)
-            game.inventoryUI.render(dt);
-        else if (currentEvent == EventState.PAUSE)
-            hud.render(dt);  // Render HUD when paused to show settings dialog
+        // --- Render HUD / UI theo event ---
+        switch (currentEvent) {
+            case MOVING:
+            case PAUSE:
+                hud.render(dt);
+                break;
+            case BATTLING:
+                battleUIHandler.render(dt);
+                break;
+            case TRANSITION:
+                transition.render(dt);
+                break;
+            case LEVEL_UP:
+                levelUp.render(dt);
+                break;
+            case TILE_EVENT:
+                dialog.render(dt);
+                break;
+            case INVENTORY:
+                game.inventoryUI.render(dt);
+                break;
+        }
     }
 
     public void setCurrentEvent(EventState event) {
@@ -1174,9 +1292,8 @@ public class GameScreen extends AbstractScreen {
 
     @Override
     public void dispose() {
-        // NEW: Giải phóng âm thanh khi dispose
-        if (bulletEndSound != null) {
-            bulletEndSound.dispose();
+        if (defaultFont != null) {
+            defaultFont.dispose();
         }
         super.dispose();
     }

@@ -29,6 +29,7 @@ import com.unlucky.save.Settings;
 public class Player extends Entity {
 
 
+
     /**
      * -1 - stop
      * 0 - down
@@ -50,6 +51,30 @@ public class Player extends Entity {
     private boolean teleporting = false;
     // end tiles
     private float shieldTimer = 0f;
+
+    private float mana = 50f;       // Mana hiện tại
+    private float maxMana = 100f;   // Mana tối đa
+
+    public float getMana() {
+        return this.mana;
+    }
+
+    public float getMaxMana() {
+        return this.maxMana;
+    }
+
+    public void setMana(float mana) {
+        this.mana = Math.min(Math.max(mana, 0), maxMana);
+    }
+
+    public void addMana(float amount) {
+        this.mana = Math.min(this.mana + amount, maxMana);
+    }
+
+    public void reduceMana(float amount) {
+        this.mana = Math.max(this.mana - amount, 0);
+    }
+
 
     public boolean completedMap = false;
 
@@ -184,6 +209,8 @@ public class Player extends Entity {
 
     public Player(String id, ResourceManager rm) {
         super(id, rm);
+        maxMana = 100;
+        mana = maxMana;
 
         inventory = new Inventory();
         equips = new Equipment();

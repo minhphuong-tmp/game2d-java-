@@ -256,10 +256,33 @@ public class Hud extends UI {
             public void clicked(InputEvent event, float x, float y) {
                 Gdx.app.log("ShieldButton", "=== SHIELD BUTTON CLICKED ===");
                 if (gameScreen != null && gameScreen.gameMap != null && gameScreen.gameMap.player != null) {
-                    boolean before = gameScreen.gameMap.player.isShieldActive();
-                    gameScreen.gameMap.player.toggleShield();
-                    boolean after = gameScreen.gameMap.player.isShieldActive();
-                    Gdx.app.log("ShieldButton", "Shield state: " + before + " -> " + after);
+                    Player player = gameScreen.gameMap.player;
+
+                    // KIỂM TRA MANA TRƯỚC KHI BẬT KHIÊN
+                    float currentMana = player.getMana();
+                    float manaCost = 20f;
+
+                    if (currentMana >= manaCost) {
+                        // ĐỦ MANA: bật khiên và trừ mana
+                        boolean before = player.isShieldActive();
+                        player.toggleShield();
+                        boolean after = player.isShieldActive();
+
+                        // Trừ mana
+                        player.reduceMana(manaCost);
+
+                        Gdx.app.log("ShieldButton", "Shield activated! Mana cost: " + manaCost);
+                        Gdx.app.log("ShieldButton", "Shield state: " + before + " -> " + after);
+                        Gdx.app.log("ShieldButton", "Remaining mana: " + player.getMana());
+
+                        // Hiển thị thông báo debug
+                        showDebugText("SHIELD ACTIVATED! -" + (int)manaCost + " MP");
+
+                    } else {
+                        // KHÔNG ĐỦ MANA: không bật khiên
+                        Gdx.app.log("ShieldButton", "NOT ENOUGH MANA! Current: " + currentMana + ", Required: " + manaCost);
+                        showDebugText("NOT ENOUGH MANA! Need " + (int)manaCost + " MP");
+                    }
                 } else {
                     Gdx.app.log("ShieldButton", "ERROR: Player is null!");
                 }
@@ -267,8 +290,7 @@ public class Hud extends UI {
         });
 
         stage.addActor(shieldButton);
-    }
-    public void update(float dt) {
+    }    public void update(float dt) {
         if (touchDown) {
             dirTime += dt;
             // quick tap to change direction
