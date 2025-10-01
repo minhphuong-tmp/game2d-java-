@@ -1,6 +1,5 @@
 package com.unlucky.map;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -209,39 +208,14 @@ public class GameMap {
         tileMap.update(dt);
         
         // Check for sliding slimes and add them to GameScreen's slidingSlimes list
-        // Also check for dead enemies to add score
         for (int y = 0; y < tileMap.mapHeight; y++) {
             for (int x = 0; x < tileMap.mapWidth; x++) {
                 if (tileMap.containsEntity(x, y)) {
                     Entity entity = tileMap.getEntity(x, y);
                     if (entity instanceof Enemy) {
                         Enemy enemy = (Enemy) entity;
-                        
-                        // Debug log để kiểm tra enemy
-                        if (Math.random() < 0.01f) { // Log 1% thời gian để không spam
-                            Gdx.app.log("GameMap", "Found enemy: " + enemy.getId() + ", HP: " + enemy.getHp() + ", Dead: " + enemy.isDead());
-                        }
-                        
                         if (enemy.isSliding && !gameScreen.slidingSlimes.contains(enemy, true)) {
                             gameScreen.addSlidingSlime(enemy);
-                        }
-                        
-                        // Add score when enemy dies (from any cause)
-                        if (enemy.isDead() && enemy.getHp() <= 0) {
-                            Gdx.app.log("GameMap", "=== FOUND DEAD ENEMY ===");
-                            Gdx.app.log("GameMap", "Enemy ID: " + enemy.getId());
-                            Gdx.app.log("GameMap", "Enemy HP: " + enemy.getHp());
-                            Gdx.app.log("GameMap", "Enemy Dead: " + enemy.isDead());
-                            Gdx.app.log("GameMap", "HasScoreBeenAdded: " + enemy.hasScoreBeenAdded);
-                            
-                            // Only add score once per enemy death
-                            if (!enemy.hasScoreBeenAdded) {
-                                gameScreen.addScore(1);
-                                enemy.hasScoreBeenAdded = true;
-                                Gdx.app.log("GameMap", "Enemy " + enemy.getId() + " died! Score +1");
-                            } else {
-                                Gdx.app.log("GameMap", "Enemy " + enemy.getId() + " already got score, skipping");
-                            }
                         }
                     }
                 }

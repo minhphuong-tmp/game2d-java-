@@ -58,6 +58,10 @@ public class Hud extends UI {
     // === Score System ===
     private Label scoreLabel;
     private int score = 0;
+    
+    // === Timer System ===
+    private Label timerLabel;
+    private float gameTime = 0f; // Thời gian chơi tính bằng giây
 
     // window that slides on the screen to show the world and level
     private Window levelDescriptor;
@@ -111,6 +115,7 @@ public class Hud extends UI {
         createSlowMotionButton();
         createWindWallButton();
         createScoreLabel();
+        createTimerLabel();
 
         Gdx.app.log("Hud", "Hud created with kick button");
         createLevelDescriptor();
@@ -272,6 +277,55 @@ public class Hud extends UI {
         updateScoreLabel();
         Gdx.app.log("Hud", "Score reset to 0");
     }
+    
+    /**
+     * Tạo label hiển thị thời gian chơi
+     */
+    private void createTimerLabel() {
+        // Tạo label hiển thị thời gian
+        Label.LabelStyle timerStyle = new Label.LabelStyle();
+        timerStyle.font = rm.pixel10; // Sử dụng font pixel10 (có sẵn)
+        timerStyle.fontColor = Color.YELLOW; // Màu vàng để phân biệt với score
+        
+        timerLabel = new Label("Time: 00:00", timerStyle);
+        timerLabel.setSize(80, 16); // Nhỏ hơn
+        
+        // Đặt ngay dưới score label
+        float timerX = scoreLabel.getX(); // Cùng vị trí X với score
+        float timerY = scoreLabel.getY() - 18; // Dưới score 18px
+        timerLabel.setPosition(timerX, timerY);
+        
+        Gdx.app.log("TimerLabel", "Timer label created at: " + timerX + ", " + timerY);
+        
+        stage.addActor(timerLabel);
+    }
+    
+    /**
+     * Cập nhật hiển thị thời gian
+     */
+    private void updateTimerLabel() {
+        if (timerLabel != null) {
+            int minutes = (int) (gameTime / 60);
+            int seconds = (int) (gameTime % 60);
+            timerLabel.setText(String.format("Time: %02d:%02d", minutes, seconds));
+        }
+    }
+    
+    /**
+     * Reset thời gian về 0
+     */
+    public void resetTimer() {
+        gameTime = 0f;
+        updateTimerLabel();
+        Gdx.app.log("Hud", "Timer reset to 0");
+    }
+    
+    /**
+     * Lấy thời gian chơi hiện tại
+     */
+    public float getGameTime() {
+        return gameTime;
+    }
 
     private void createSlowMotionButton() {
         ImageButton.ImageButtonStyle style = new ImageButton.ImageButtonStyle();
@@ -333,6 +387,10 @@ public class Hud extends UI {
         stage.addActor(shieldButton);
     }
     public void update(float dt) {
+        // Cập nhật thời gian chơi
+        gameTime += dt;
+        updateTimerLabel();
+        
         if (touchDown) {
             dirTime += dt;
             // quick tap to change direction
