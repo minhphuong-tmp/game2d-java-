@@ -1,5 +1,6 @@
 package com.unlucky.entity;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
@@ -172,17 +173,35 @@ public class Player extends Entity {
     public boolean nextTileBlocked(int dir) {
         currentTileX = (int) (position.x / tileMap.tileSize);
         currentTileY = (int) (position.y / tileMap.tileSize);
+        Tile nextTile = null;
+        boolean blocked = false;
+        
         switch (dir) {
             case 0: // down
-                return tileMap.getTile(currentTileX, currentTileY - 1).isBlocked();
+                nextTile = tileMap.getTile(currentTileX, currentTileY - 1);
+                blocked = nextTile.isBlocked();
+                break;
             case 1: // up
-                return tileMap.getTile(currentTileX, currentTileY + 1).isBlocked();
+                nextTile = tileMap.getTile(currentTileX, currentTileY + 1);
+                blocked = nextTile.isBlocked();
+                break;
             case 2: // right
-                return tileMap.getTile(currentTileX + 1, currentTileY).isBlocked();
+                nextTile = tileMap.getTile(currentTileX + 1, currentTileY);
+                blocked = nextTile.isBlocked();
+                break;
             case 3: // left
-                return tileMap.getTile(currentTileX - 1, currentTileY).isBlocked();
+                nextTile = tileMap.getTile(currentTileX - 1, currentTileY);
+                blocked = nextTile.isBlocked();
+                break;
         }
-        return false;
+        
+        // Debug log
+        if (nextTile != null) {
+            Gdx.app.log("CollisionDebug", "Player at (" + currentTileX + "," + currentTileY + ") moving " + dir + 
+                       " -> Next tile ID: " + nextTile.id + ", Blocked: " + blocked);
+        }
+        
+        return blocked;
     }
 
     /**
