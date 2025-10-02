@@ -42,6 +42,9 @@ import com.unlucky.screen.homework.HomeworkInputHandler;
 
 public class GameScreen extends AbstractScreen {
 
+    // Static instance for score system access
+    private static GameScreen instance;
+
     public EventState currentEvent;
 
     // private Player player;
@@ -274,6 +277,9 @@ public class GameScreen extends AbstractScreen {
 
     public GameScreen(final Unlucky game, final ResourceManager rm) {
         super(game, rm);
+        
+        // Set static instance for score system
+        instance = this;
 
         currentEvent = EventState.MOVING;
 
@@ -312,9 +318,15 @@ public class GameScreen extends AbstractScreen {
         defenseSystems = new DefenseSystemsManager(game, rm, gameMap.player);
         weatherEffects = new WeatherEffectsManager(rm, cam);
         homeworkInput = new HomeworkInputHandler(this, hud, attackSystems, defenseSystems);
-
+        
         // NEW: Link DefenseSystemsManager to Hud for integrated button controls
         hud.setDefenseSystemsManager(defenseSystems);
+        
+        // NEW: Link Hud to DefenseSystemsManager for mana checking
+        defenseSystems.setHud(hud);
+        
+        // NEW: Add wind wall to Hud stage for proper rendering
+        defenseSystems.addWindWallToStage(hud.getStage());
 
         // create bg
         bg = new Background[2];
@@ -618,113 +630,79 @@ public class GameScreen extends AbstractScreen {
         if (currentEvent == EventState.INVENTORY)
             game.inventoryUI.update(dt);
 
-        // NEW: Update homework manager systems
-        if (attackSystems != null) {
-            attackSystems.update(dt);
-        }
+        // NEW: Update homework manager systems with proper coordination
+        updateHomeworkSystems(dt);
+    }
+
+    /**
+     * Update homework systems with proper coordination between attack and defense
+     */
+    private void updateHomeworkSystems(float dt) {
+        // Update defense systems first
         if (defenseSystems != null) {
             defenseSystems.update(dt);
         }
+        
+        // Update weather effects
         if (weatherEffects != null) {
             weatherEffects.update(dt);
         }
-
-        // OLD: Bullet updates moved to AttackSystemsManager
-
-        // OLD: Explosion and raindrop updates moved to homework managers
-
-        // NEW: === Moving Objects System Update for Teacher Requirements ===
-        updateMovingObjects(dt);
-    }
-
-    // NEW: Update method for moving objects system
-    private void updateMovingObjects(float dt) {
-        Gdx.app.log("MovingObjects", "=== UPDATE MOVING OBJECTS CALLED ===");
-        try {
-            // Slow motion factor: 1 = normal, 0.1 = slow
-            float factor = hud.slowMotion ? 0.1f : 1f; // <-- sửa ở đây
-
-            // Ensure we always have exactly 3 objects - spawn immediately if needed
-            while (movingObjects.size < MAX_OBJECTS) {
-                spawnRandomObject();
-            }
-            
-            // Debug log để kiểm tra moving objects
-            Gdx.app.log("MovingObjects", "=== UPDATE MOVING OBJECTS ===");
-            Gdx.app.log("MovingObjects", "Count: " + movingObjects.size);
-            
-            // Safe player access
-            if (gameMap != null && gameMap.player != null) {
-                Gdx.app.log("MovingObjects", "Player position: " + gameMap.player.getPosition().x + ", " + gameMap.player.getPosition().y);
-                Gdx.app.log("MovingObjects", "Player shield active: " + gameMap.player.isShieldActive());
+        
+        // Update attack systems with defense coordination
+        if (attackSystems != null) {
+            // Apply slow motion if active
+            if (defenseSystems != null && defenseSystems.isSlowMotionActive()) {
+                float timeMultiplier = defenseSystems.getTimeMultiplier();
+                attackSystems.update(dt, timeMultiplier);
+                Gdx.app.log("HomeworkSystems", "🐌 Applying slow motion: " + timeMultiplier + "x speed");
             } else {
-                Gdx.app.log("MovingObjects", "ERROR: gameMap or player is null!");
+                attackSystems.update(dt);
             }
-
-            // Update all moving objects with safe iteration
-            for (int i = movingObjects.size - 1; i >= 0; i--) {
-                if (i >= movingObjects.size) continue; // Safety check
-
-                MovingObject obj = movingObjects.get(i);
-                if (obj == null) continue;
-
-                obj.update(dt * factor);  // apply slow motion
-                
-                // Remove objects that finished sliding animation
-                if (obj.isSliding && obj.slideTimer >= obj.slideDuration) {
-                    Gdx.app.log("MovingObjects", "Removing object after slide animation");
-                    movingObjects.removeIndex(i);
-                    continue;
-                }
-
-                // Check collision with player
-                if (obj.collidesWithPlayer()) {
-                    Gdx.app.log("Collision", "=== OBJECT COLLIDED WITH PLAYER! ===");
-                    playRandomCollisionSound();
-
-                    // Xử lý va chạm với khiên (nếu có)
-                    if (gameMap.player.isShieldActive()) {
-                        Gdx.app.log("Collision", "Player has shield - calling handleShieldCollision()");
-                        gameMap.player.handleShieldCollision();
-                    } else {
-                        Gdx.app.log("Collision", "Player has no shield - calling deactivateShield()");
-                        // Không có khiên thì tắt shield
-                        gameMap.player.deactivateShield();
-                    }
-
-                    movingObjects.removeIndex(i);
-                    Gdx.app.log("Collision", "Object removed! Objects remaining: " + movingObjects.size);
-                    continue;
-                }
-
-                // Check collision with other objects
-                boolean objRemoved = false;
-                for (int j = i - 1; j >= 0; j--) {
-                    if (j >= movingObjects.size || i >= movingObjects.size) break;
-
-                    MovingObject other = movingObjects.get(j);
-                    if (other == null) continue;
-
-                    if (obj.collidesWith(other)) {
-                        // Xử lý va chạm với khiên (nếu có)
-                        if (gameMap.player.isShieldActive()) {
-                            gameMap.player.handleShieldCollision();
-                        } else {
-                            gameMap.player.deactivateShield();
-                        }
-                        playRandomCollisionSound();
-                        if (i < movingObjects.size) movingObjects.removeIndex(i);
-                        if (j < movingObjects.size) movingObjects.removeIndex(j);
-                        Gdx.app.log("Collision", "Two objects collided! Objects remaining: " + movingObjects.size);
-                        objRemoved = true;
-                        break;
+            
+            // Handle defense interactions with moving objects
+            handleDefenseInteractions();
+        }
+    }
+    
+    /**
+     * Handle interactions between defense systems and moving objects
+     */
+    private void handleDefenseInteractions() {
+        if (attackSystems == null || defenseSystems == null) return;
+        
+        Array<AttackSystemsManager.MovingObject> objects = attackSystems.getMovingObjects();
+        
+        for (int i = objects.size - 1; i >= 0; i--) {
+            AttackSystemsManager.MovingObject obj = objects.get(i);
+            
+            // Check wind wall barrier blocking
+            if (defenseSystems.checkWindWallBarrierCollision(obj)) {
+                attackSystems.removeMovingObjectAt(i);
+                Gdx.app.log("DefenseInteraction", "🌪️ Wind wall barrier blocked object!");
+                continue;
+            }
+            
+            // Check all player collisions - shield gets priority
+            if (obj.collidesWithPlayer()) {
+                if (defenseSystems.isShieldActive()) {
+                    // Shield handles collision - object gets destroyed
+                    defenseSystems.handleShieldCollision(obj);
+                    attackSystems.removeMovingObjectAt(i);
+                    playRandomCollisionSound(); // Play shield block sound
+                    Gdx.app.log("DefenseInteraction", "🛡️ Shield blocked and destroyed object!");
+                } else {
+                    // No shield - player takes damage, object is destroyed
+                    attackSystems.removeMovingObjectAt(i);
+                    playRandomCollisionSound(); // Play hit sound
+                    Gdx.app.log("DefenseInteraction", "💥 Object hit unprotected player!");
+                    
+                    // Damage player HP
+                    if (hud != null) {
+                        hud.damagePlayer(1); // Deal 1 damage per hit
                     }
                 }
-                if (objRemoved) continue;
+                continue; // Skip to next object since this one was removed
             }
-        } catch (Exception e) {
-            Gdx.app.log("GameScreen", "Error in updateMovingObjects: " + e.getMessage());
-            movingObjects.clear();
         }
     }
 
@@ -928,6 +906,50 @@ public class GameScreen extends AbstractScreen {
 
     public void setCurrentEvent(EventState event) {
         currentEvent = event;
+    }
+
+    // === Score System Methods ===
+    
+    /**
+     * Gets the static GameScreen instance for score access
+     */
+    public static GameScreen getInstance() {
+        return instance;
+    }
+    
+    /**
+     * Adds score points through the HUD
+     */
+    public void addScore(int points) {
+        if (hud != null) {
+            hud.addScore(points);
+        }
+    }
+    
+    /**
+     * Resets the game score
+     */
+    public void resetScore() {
+        if (hud != null) {
+            hud.resetScore();
+        }
+    }
+    
+    /**
+     * Checks if an enemy has died and awards score if needed
+     */
+    public void checkEnemyDeath(Enemy enemy) {
+        if (enemy.isDead() && !enemy.hasScoreBeenAdded) {
+            // Award points based on enemy type/level
+            int baseScore = 10;
+            int levelBonus = enemy.getLevel() * 5;
+            int totalScore = baseScore + levelBonus;
+            
+            addScore(totalScore);
+            enemy.hasScoreBeenAdded = true;
+            
+            Gdx.app.log("Score", "Enemy killed! Awarded " + totalScore + " points");
+        }
     }
 
     @Override

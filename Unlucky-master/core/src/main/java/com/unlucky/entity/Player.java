@@ -46,85 +46,30 @@ public class Player extends Entity {
     // tile causing a dialog event
     private boolean tileInteraction = false;
     // teleportation tiles
-    private boolean shieldActive = false;
     private boolean teleporting = false;
     // end tiles
-    private float shieldTimer = 0f;
 
     public boolean completedMap = false;
 
-    public boolean isShieldActive() {
-        return shieldActive;
-    }
     // Statistics
     public Statistics stats = new Statistics();
 
     // Battle
     private Enemy opponent;
     private boolean battling = false;
-
-    // exp and level up
-    public void deactivateShield() {
-        // Tắt trạng thái shield
-        this.shieldActive = false;
-    }
-    
-    /**
-     * Xử lý va chạm với moving objects khi có khiên
-     */
-    public void handleShieldCollision() {
-        if (!shieldActive) return; // Không có khiên thì không xử lý
-        
-        shieldHitCount++;
-        shieldFlashing = true;
-        shieldFlashTimer = 0f;
-        
-        Gdx.app.log("Shield", "=== SHIELD HIT! ===");
-        Gdx.app.log("Shield", "Count: " + shieldHitCount + "/" + MAX_SHIELD_HITS);
-        Gdx.app.log("Shield", "Flashing: " + shieldFlashing);
-        
-        // Nếu đã va chạm đủ 5 lần thì tắt khiên
-        if (shieldHitCount >= MAX_SHIELD_HITS) {
-            shieldActive = false;
-            shieldHitCount = 0; // Reset counter
-            Gdx.app.log("Shield", "=== SHIELD DESTROYED! ===");
-        }
-    }
-    
-    /**
-     * Kiểm tra khiên có đang nháy không
-     */
-    public boolean isShieldFlashing() {
-        return shieldFlashing;
-    }
-    
-    /**
-     * Kiểm tra khiên có hiển thị không (cho hiệu ứng nháy)
-     */
-    public boolean shouldShowShield() {
-        if (!shieldFlashing) return true; // Luôn hiển thị khi không nháy
-        
-        // Tính toán nháy nháy - đơn giản hơn
-        return (int)(shieldFlashTimer * 10) % 2 == 0; // Nhấp nháy mỗi 0.1 giây
-    }
     private int exp;
     private int maxExp;
 
-    private boolean shieldVisible = true;    // để tạm ẩn khiên khi va chạm
-    private float shieldCooldown = 0f;       // thời gian tạm ẩn khiên
-    private final float SHIELD_HIDE_TIME = 0.5f; // 0.5 giây
-    
-    // Shield collision system
-    private int shieldHitCount = 0;           // số lần va chạm với khiên
-    private final int MAX_SHIELD_HITS = 10;   // tối đa 10 lần va chạm (tăng từ 5 lên 10)
-    private boolean shieldFlashing = false;  // trạng thái nháy nháy
-    private float shieldFlashTimer = 0f;     // timer cho hiệu ứng nháy
-    private final float SHIELD_FLASH_INTERVAL = 0.1f; // khoảng cách nháy
+    // Shield system removed - now handled by DefenseSystemsManager
     private int hpIncrease = 0;
     private int minDmgIncrease = 0;
     private int maxDmgIncrease = 0;
     private int accuracyIncrease = 0;
     private int maxExpIncrease = 0;
+    
+    // === Mana System ===
+    private int mana = 100;
+    private int maxMana = 100;
 
     // gold
     private int gold = 0;
@@ -167,20 +112,10 @@ public class Player extends Entity {
 
     // the player's custom game settings
     public Settings settings = new Settings();
+    
+    // Defense systems removed - handled by DefenseSystemsManager in GameScreen
 
-    public void activateShield(float duration) {
-        shieldActive = true;
-        shieldTimer = duration;
-    }
-
-    public void updateShield(float dt) {
-        if (!shieldVisible) {
-            shieldCooldown -= dt;
-            if (shieldCooldown <= 0f) {
-                shieldVisible = true;
-            }
-        }
-    }
+    // Shield methods removed - now handled by DefenseSystemsManager via GameScreen
 
     public Player(String id, ResourceManager rm) {
         super(id, rm);
@@ -213,18 +148,9 @@ public class Player extends Entity {
         statusEffects = new StatusSet(true, rm);
         smoveset = new SpecialMoveset();
     }
-    public void toggleShield() {
-        shieldActive = !shieldActive;
-        Gdx.app.log("Player", "🛡️ Shield toggled to: " + shieldActive);
-
-        if (shieldActive) {
-            showDebugText("SHIELD ACTIVATED!");
-            Gdx.app.log("Player", "🛡️ Shield ON - will stay active until toggled off");
-        } else {
-            showDebugText("SHIELD DEACTIVATED!");
-            Gdx.app.log("Player", "🛡️ Shield OFF");
-        }
-    }    public void update(float dt) {
+    // toggleShield method removed - shield is now controlled by DefenseSystemsManager
+    
+    public void update(float dt) {
         super.update(dt);
 
         // Update kick animation
@@ -265,15 +191,7 @@ public class Player extends Entity {
             }
         }
         
-        // Update shield flashing effect
-        if (shieldFlashing) {
-            shieldFlashTimer += dt;
-            // Stop flashing after 1 second
-            if (shieldFlashTimer >= 1.0f) {
-                shieldFlashing = false;
-                shieldFlashTimer = 0f;
-            }
-        }
+        // Shield flashing removed - handled by DefenseSystemsManager
 
         // movement
         handleMovement(dt);
@@ -289,26 +207,14 @@ public class Player extends Entity {
     }
 
     public void render(SpriteBatch batch) {
-        Gdx.app.log("PlayerRender", "🎬 RENDER METHOD CALLED - shieldActive: " + shieldActive);
         // draw shadow
         batch.draw(rm.shadow11x6, position.x + 3, position.y - 3);
 
         // VẼ NHÂN VẬT TRƯỚC
         batch.draw(am.getKeyFrame(true), position.x + 1, position.y);
 
-
-        // === HIỆU ỨNG KHIEN - VẼ SAU NHÂN VẬT ===
-        if (shieldActive && shouldShowShield()) {
-            Gdx.app.log("PlayerRender", "🔴 🛡️ DRAWING SHIELD - Active: " + shieldActive + ", Flashing: " + shieldFlashing + ", ShouldShow: " + shouldShowShield());
-
-            // Vẽ khiên màu đỏ lớn để dễ nhìn
-            float shieldSize = 28f;
-            batch.setColor(1.0f, 0.0f, 0.0f, 0.8f); // Màu đỏ
-            batch.draw(rm.shopitems[7][0], position.x - 6, position.y - 6, shieldSize, shieldSize);
-            batch.setColor(Color.WHITE); // Reset màu
-        } else if (shieldActive) {
-            Gdx.app.log("PlayerRender", "🔴 🛡️ SHIELD HIDDEN - Active: " + shieldActive + ", Flashing: " + shieldFlashing + ", ShouldShow: " + shouldShowShield());
-        }
+        // === SHIELD RENDERING REMOVED ===
+        // Shield is now rendered by GameScreen using DefenseSystemsManager
 
         // Draw kick effect if kicking
         if (isKicking) {
@@ -1361,6 +1267,17 @@ public class Player extends Entity {
     }
 
     public int getGold() { return gold; }
+
+    // === Mana System Getters/Setters ===
+    public int getMana() { return mana; }
+    public void setMana(int mana) { this.mana = mana; }
+    public int getMaxMana() { return maxMana; }
+    public void setMaxMana(int maxMana) { this.maxMana = maxMana; }
+    
+    public boolean hasMana(int cost) { return mana >= cost; }
+    public void consumeMana(int cost) { 
+        mana = Math.max(0, mana - cost);
+    }
 
     public int getCurrentTileX() {
         return currentTileX;

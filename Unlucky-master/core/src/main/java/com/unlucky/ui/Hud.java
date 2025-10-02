@@ -77,6 +77,18 @@ public class Hud extends UI {
 
     // NEW: Reference to DefenseSystemsManager for modular defense controls
     private DefenseSystemsManager defenseSystems;
+    
+    // === Score and Timer System ===
+    private Label scoreLabel;
+    private int score = 0;
+    private Label timerLabel;
+    private float gameTime = 0f; // Game time in seconds
+    
+    // === HP System ===
+    private Label hpLabel;
+    
+    // === Mana System ===
+    private Label manaLabel;
 
     public Hud(final GameScreen gameScreen, TileMap tileMap, final Player player, final ResourceManager rm) {
         super(gameScreen, tileMap, player, rm);
@@ -108,6 +120,18 @@ public class Hud extends UI {
         createShieldButton(); // Phải tạo trước
         createSlowMotionButton();
         createWindWallButton();
+        
+        // Create score and timer UI elements
+        createScoreLabel();
+        createTimerLabel();
+        createHpLabel();
+        createManaLabel();
+        
+        // Initialize player HP system
+        initializePlayerHP();
+        
+        // Initialize player mana system
+        initializePlayerMana();
 
         Gdx.app.log("Hud", "Hud created with kick button");
         createLevelDescriptor();
@@ -269,19 +293,14 @@ public class Hud extends UI {
             public void clicked(InputEvent event, float x, float y) {
                 Gdx.app.log("ShieldButton", "=== SHIELD BUTTON CLICKED ===");
                 
-                // NEW: Use DefenseSystemsManager if available
+                // Shield is now completely controlled by DefenseSystemsManager
                 if (defenseSystems != null) {
+                    boolean before = defenseSystems.isShieldActive();
                     defenseSystems.activateShield();
+                    boolean after = defenseSystems.isShieldActive();
+                    Gdx.app.log("ShieldButton", "Shield state: " + before + " -> " + after);
                 } else {
-                    // Fallback to old method
-                    if (gameScreen != null && gameScreen.gameMap != null && gameScreen.gameMap.player != null) {
-                        boolean before = gameScreen.gameMap.player.isShieldActive();
-                        gameScreen.gameMap.player.toggleShield();
-                        boolean after = gameScreen.gameMap.player.isShieldActive();
-                        Gdx.app.log("ShieldButton", "Shield state: " + before + " -> " + after);
-                    } else {
-                        Gdx.app.log("ShieldButton", "ERROR: Player is null!");
-                    }
+                    Gdx.app.log("ShieldButton", "ERROR: DefenseSystemsManager is null!");
                 }
             }
         });
@@ -319,6 +338,12 @@ public class Hud extends UI {
                 levelDescriptor.setVisible(false);
             }
         }
+        
+        // Update game timer
+        updateTimer(dt);
+        
+        // Update mana regeneration
+        updateManaRegeneration(dt);
     }
 
     public void render(float dt) {
@@ -543,6 +568,58 @@ public class Hud extends UI {
         Gdx.app.log("Hud", "LeftButton1 visible: " + leftButton1.isVisible());
         Gdx.app.log("Hud", "LeftButton2 visible: " + leftButton2.isVisible());
     }
+
+    /**
+     * Creates the score label - positioned to the right of music/SFX buttons
+     */
+    private void createScoreLabel() {
+        Label.LabelStyle labelStyle = new Label.LabelStyle(rm.pixel10, Color.WHITE);
+        scoreLabel = new Label("Score: 0", labelStyle);
+        scoreLabel.setFontScale(0.8f);
+        scoreLabel.setPosition(50, 99); // Right of SFX button (button at 26+16=42, so 50 gives spacing)
+        scoreLabel.setAlignment(Align.left);
+        stage.addActor(scoreLabel);
+        Gdx.app.log("Score", "Score label created and positioned to right of music/SFX buttons");
+    }
+
+    /**
+     * Creates the timer label - positioned next to score label
+     */
+    private void createTimerLabel() {
+        Label.LabelStyle labelStyle = new Label.LabelStyle(rm.pixel10, Color.WHITE);
+        timerLabel = new Label("Time: 00:00", labelStyle);
+        timerLabel.setFontScale(0.8f);
+        timerLabel.setPosition(120, 99); // Next to score label (score at 50, timer at 120)
+        timerLabel.setAlignment(Align.left);
+        stage.addActor(timerLabel);
+        Gdx.app.log("Timer", "Timer label created and positioned next to score");
+    }
+
+    /**
+     * Creates the HP label - positioned below the score label
+     */
+    private void createHpLabel() {
+        Label.LabelStyle labelStyle = new Label.LabelStyle(rm.pixel10, Color.WHITE);
+        hpLabel = new Label("HP: 20/20", labelStyle);
+        hpLabel.setFontScale(0.8f);
+        hpLabel.setPosition(50, 99 - 12); // Below score label (score at y=99, so HP at y=87)
+        hpLabel.setAlignment(Align.left);
+        stage.addActor(hpLabel);
+        Gdx.app.log("HP", "HP label created and positioned below score");
+    }
+
+    /**
+     * Creates the mana label - positioned below the HP label
+     */
+    private void createManaLabel() {
+        Label.LabelStyle labelStyle = new Label.LabelStyle(rm.pixel10, Color.CYAN);
+        manaLabel = new Label("Mana: 100/100", labelStyle);
+        manaLabel.setFontScale(0.8f);
+        manaLabel.setPosition(50, 99 - 24); // Below HP label (HP at y=87, so Mana at y=75)
+        manaLabel.setAlignment(Align.left);
+        stage.addActor(manaLabel);
+        Gdx.app.log("Mana", "Mana label created and positioned below HP");
+    }
     
     // Show debug text on screen
     public void showDebugText(String text) {
@@ -735,5 +812,196 @@ public class Hud extends UI {
     }
 
     // Method handleOptionEvents() đã bị xóa vì không còn option buttons
+
+    /**
+     * Adds points to the current score
+     */
+    public void addScore(int points) {
+        score += points;
+        updateScoreLabel();
+        Gdx.app.log("Score", "Score increased by " + points + ". Total: " + score);
+    }
+
+    /**
+     * Resets the score to 0
+     */
+    public void resetScore() {
+        score = 0;
+        updateScoreLabel();
+        Gdx.app.log("Score", "Score reset to 0");
+    }
+
+    /**
+     * Updates the score label display
+     */
+    private void updateScoreLabel() {
+        if (scoreLabel != null) {
+            scoreLabel.setText("Score: " + score);
+        }
+    }
+
+    /**
+     * Updates the timer with elapsed game time
+     */
+    public void updateTimer(float deltaTime) {
+        gameTime += deltaTime;
+        updateTimerLabel();
+    }
+
+    /**
+     * Updates the timer label display
+     */
+    private void updateTimerLabel() {
+        if (timerLabel != null) {
+            int minutes = (int) (gameTime / 60);
+            int seconds = (int) (gameTime % 60);
+            timerLabel.setText(String.format("Time: %02d:%02d", minutes, seconds));
+        }
+    }
+
+    /**
+     * Resets the game timer
+     */
+    public void resetTimer() {
+        gameTime = 0f;
+        updateTimerLabel();
+        Gdx.app.log("Timer", "Game timer reset");
+    }
+
+    /**
+     * Gets the current score
+     */
+    public int getScore() {
+        return score;
+    }
+
+    /**
+     * Gets the current game time
+     */
+    public float getGameTime() {
+        return gameTime;
+    }
+
+    // === HP System Methods ===
+    
+    /**
+     * Updates the HP label display
+     */
+    public void updateHpLabel() {
+        if (hpLabel != null) {
+            hpLabel.setText("HP: " + player.getHp() + "/" + player.getMaxHp());
+        }
+    }
+    
+    /**
+     * Damages the player and updates HP display
+     */
+    public void damagePlayer(int damage) {
+        int newHp = player.getHp() - damage;
+        if (newHp < 0) newHp = 0;
+        player.setHp(newHp);
+        updateHpLabel();
+        
+        Gdx.app.log("HP", "Player took " + damage + " damage. HP: " + player.getHp() + "/" + player.getMaxHp());
+        
+        // Check for game over
+        if (player.getHp() <= 0) {
+            triggerGameOver();
+        }
+    }
+    
+    /**
+     * Triggers game over dialog
+     */
+    private void triggerGameOver() {
+        Gdx.app.log("GameOver", "Player HP reached 0 - triggering game over");
+        // Show the existing death dialog
+        if (deathGroup != null) {
+            deathGroup.setVisible(true);
+            shade.setVisible(true);
+        }
+    }
+    
+    /**
+     * Initializes player HP to full
+     */
+    public void initializePlayerHP() {
+        player.setMaxHp(20);
+        player.setHp(20);
+        updateHpLabel();
+        Gdx.app.log("HP", "Player HP initialized to " + player.getHp() + "/" + player.getMaxHp());
+    }
+
+    // === Mana System Methods ===
+    
+    /**
+     * Updates the mana label display
+     */
+    public void updateManaLabel() {
+        if (manaLabel != null) {
+            manaLabel.setText("Mana: " + player.getMana() + "/" + player.getMaxMana());
+        }
+    }
+    
+    /**
+     * Consumes mana and updates display
+     */
+    public boolean consumeMana(int cost) {
+        if (player.hasMana(cost)) {
+            player.consumeMana(cost);
+            updateManaLabel();
+            Gdx.app.log("Mana", "Consumed " + cost + " mana. Remaining: " + player.getMana() + "/" + player.getMaxMana());
+            return true;
+        } else {
+            Gdx.app.log("Mana", "Not enough mana! Need " + cost + ", have " + player.getMana());
+            return false;
+        }
+    }
+    
+    /**
+     * Initializes player mana to full
+     */
+    public void initializePlayerMana() {
+        player.setMaxMana(100);
+        player.setMana(100);
+        updateManaLabel();
+        Gdx.app.log("Mana", "Player mana initialized to " + player.getMana() + "/" + player.getMaxMana());
+    }
+    
+    /**
+     * Checks if player has enough mana for a skill
+     */
+    public boolean hasEnoughMana(int cost) {
+        return player.hasMana(cost);
+    }
+    
+    // Mana regeneration
+    private float manaRegenTimer = 0f;
+    private final float MANA_REGEN_INTERVAL = 2f; // Regenerate every 2 seconds
+    private final int MANA_REGEN_AMOUNT = 5; // Regenerate 5 mana per interval
+    
+    /**
+     * Updates mana regeneration over time
+     */
+    private void updateManaRegeneration(float dt) {
+        manaRegenTimer += dt;
+        
+        if (manaRegenTimer >= MANA_REGEN_INTERVAL) {
+            manaRegenTimer = 0f;
+            
+            int currentMana = player.getMana();
+            int maxMana = player.getMaxMana();
+            
+            if (currentMana < maxMana) {
+                int newMana = Math.min(maxMana, currentMana + MANA_REGEN_AMOUNT);
+                player.setMana(newMana);
+                updateManaLabel();
+                
+                if (newMana > currentMana) {
+                    Gdx.app.log("Mana", "Mana regenerated: +" + (newMana - currentMana) + " (" + newMana + "/" + maxMana + ")");
+                }
+            }
+        }
+    }
 
 }

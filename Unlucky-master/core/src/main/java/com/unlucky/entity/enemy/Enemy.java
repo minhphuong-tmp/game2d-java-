@@ -47,6 +47,9 @@ public abstract class Enemy extends Entity {
     private float slideRotation = 0f; // Rotation angle for sliding effect
     private int originalSlideTileX = -1; // Store original tile position for removal
     private int originalSlideTileY = -1;
+    
+    // Score system tracking
+    public boolean hasScoreBeenAdded = false;
 
     public Enemy(String id, Vector2 position, TileMap tileMap, ResourceManager rm) {
         super(id, position, tileMap, rm);
@@ -128,6 +131,9 @@ public abstract class Enemy extends Entity {
                     isVisible = true; // Make sure enemy is visible when dying
                     setDead(true);
                     
+                    // Award score for killing this enemy
+                    awardScoreForKill();
+                    
                     // Remove from map so it can respawn
                     if (tileMap != null) {
                         int tileX = (int) (position.x / tileMap.tileSize);
@@ -165,6 +171,9 @@ public abstract class Enemy extends Entity {
             if (slideTimer >= SLIDE_DURATION) {
                 isSliding = false;
                 setDead(true);
+                
+                // Award score for killing this enemy
+                awardScoreForKill();
                 
                 // Remove from map after sliding is complete
                 if (tileMap != null && originalSlideTileX >= 0 && originalSlideTileY >= 0) {
@@ -211,6 +220,33 @@ public abstract class Enemy extends Entity {
             } else {
                 // Normal rendering
                 super.render(batch, looping);
+            }
+        }
+    }
+    
+    /**
+     * Awards score points when this enemy is killed
+     */
+    private void awardScoreForKill() {
+        if (!hasScoreBeenAdded) {
+            // Import GameScreen to access score system
+            try {
+                // Use reflection to avoid circular import
+                Class<?> gameScreenClass = Class.forName("com.unlucky.screen.GameScreen");
+                Object gameScreenInstance = gameScreenClass.getMethod("getInstance").invoke(null);
+                if (gameScreenInstance != null) {
+                    // Award points based on enemy level/type
+                    int baseScore = 10;
+                    int levelBonus = getLevel() * 5;
+                    int totalScore = baseScore + levelBonus;
+                    
+                    gameScreenClass.getMethod("addScore", int.class).invoke(gameScreenInstance, totalScore);
+                    hasScoreBeenAdded = true;
+                    
+                    Gdx.app.log("Score", "Enemy " + id + " killed! Awarded " + totalScore + " points");
+                }
+            } catch (Exception e) {
+                Gdx.app.log("Score", "Failed to award score: " + e.getMessage());
             }
         }
     }

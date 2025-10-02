@@ -64,6 +64,8 @@ public class AttackSystemsManager {
         Gdx.app.log("AttackSystems", "Attack systems initialized");
     }
     
+
+    
     /**
      * Fire a bullet from player position
      */
@@ -80,6 +82,31 @@ public class AttackSystemsManager {
         updateBullets(dt);
         updateExplosions(dt);
         updateMovingObjects(dt);
+    }
+    
+    /**
+     * Update with time multiplier (for slow motion effect)
+     */
+    public void update(float dt, float timeMultiplier) {
+        updateBullets(dt);
+        updateExplosions(dt);
+        updateMovingObjects(dt * timeMultiplier);
+    }
+    
+    /**
+     * Remove a specific moving object
+     */
+    public void removeMovingObject(MovingObject obj) {
+        movingObjects.removeValue(obj, true);
+    }
+    
+    /**
+     * Remove moving object at index
+     */
+    public void removeMovingObjectAt(int index) {
+        if (index >= 0 && index < movingObjects.size) {
+            movingObjects.removeIndex(index);
+        }
     }
     
     private void updateBullets(float dt) {
@@ -130,13 +157,8 @@ public class AttackSystemsManager {
                 
                 obj.update(dt);
 
-                // Check collision with player
-                if (obj.collidesWithPlayer()) {
-                    playRandomCollisionSound();
-                    movingObjects.removeIndex(i);
-                    Gdx.app.log("AttackSystems", "Object collided with player! Objects remaining: " + movingObjects.size);
-                    continue;
-                }
+                // Player collision detection removed - GameScreen handles all collisions now
+                // This allows shield system to intercept collisions before objects are removed
 
                 // Check collision with other objects
                 boolean objRemoved = false;
@@ -408,7 +430,7 @@ public class AttackSystemsManager {
             return this.getRectangle().overlaps(other.getRectangle());
         }
         
-        boolean collidesWithPlayer() {
+        public boolean collidesWithPlayer() {
             try {
                 if (gameMap == null || gameMap.player == null || gameMap.player.getPosition() == null) {
                     return false;
@@ -416,10 +438,13 @@ public class AttackSystemsManager {
                 
                 float playerX = gameMap.player.getPosition().x;
                 float playerY = gameMap.player.getPosition().y;
-                float playerSize = 16f;
+                
+                // Use larger collision area to match shield size
+                // DefenseSystemsManager will handle shield-specific logic
+                float collisionSize = 40f; // Use shield size for consistent collision detection
                 
                 Rectangle playerRect = new Rectangle(
-                    playerX - playerSize / 2, playerY - playerSize / 2, playerSize, playerSize);
+                    playerX - collisionSize / 2, playerY - collisionSize / 2, collisionSize, collisionSize);
                 
                 return this.getRectangle().overlaps(playerRect);
             } catch (Exception e) {
