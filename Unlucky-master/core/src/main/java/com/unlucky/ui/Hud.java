@@ -251,6 +251,13 @@ public class Hud extends UI {
         
         Gdx.app.log("Hud", "New score: " + score);
         Gdx.app.log("Hud", "Slime killed! Score increased by " + points + ", total: " + score);
+        
+        // Kiểm tra win condition khi score đạt 5
+        if (score >= 5) {
+            Gdx.app.log("Hud", "=== WIN CONDITION REACHED ===");
+            Gdx.app.log("Hud", "Score: " + score + " >= 5, showing win dialog");
+            showWinDialog();
+        }
     }
     
     /**
@@ -276,6 +283,23 @@ public class Hud extends UI {
         score = 0;
         updateScoreLabel();
         Gdx.app.log("Hud", "Score reset to 0");
+    }
+    
+    /**
+     * Hiển thị màn hình chúc mừng khi thắng game
+     */
+    private void showWinDialog() {
+        Gdx.app.log("Hud", "Showing win screen: Chuc mung!");
+        
+        // Sử dụng WinScreen để hiển thị bảng thống kê
+        if (gameScreen != null && gameScreen.winScreen != null) {
+            gameScreen.setCurrentEvent(EventState.WIN_SCREEN);
+            gameScreen.hud.toggle(false); // Ẩn HUD
+            gameScreen.winScreen.show(score, gameTime);
+            Gdx.app.log("Hud", "Win screen shown successfully with score: " + score + ", time: " + gameTime);
+        } else {
+            Gdx.app.log("Hud", "ERROR: Cannot show win screen - gameScreen or winScreen is null");
+        }
     }
     
     /**

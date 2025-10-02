@@ -28,6 +28,7 @@ import com.unlucky.resource.ResourceManager;
 import com.unlucky.screen.game.DialogScreen;
 import com.unlucky.screen.game.LevelUpScreen;
 import com.unlucky.screen.game.TransitionScreen;
+import com.unlucky.screen.game.WinScreen;
 import com.unlucky.ui.Hud;
 import com.unlucky.ui.battleui.BattleUIHandler;
 
@@ -49,6 +50,7 @@ public class GameScreen extends AbstractScreen {
     public TransitionScreen transition;
     public LevelUpScreen levelUp;
     public DialogScreen dialog;
+    public WinScreen winScreen;
 
     // input
     public InputMultiplexer multiplexer;
@@ -426,6 +428,7 @@ public class GameScreen extends AbstractScreen {
         transition = new TransitionScreen(this, battle, battleUIHandler, hud, gameMap.player, rm);
         levelUp = new LevelUpScreen(this, gameMap.tileMap, gameMap.player, rm);
         dialog = new DialogScreen(this, gameMap.tileMap, gameMap.player, rm);
+        winScreen = new WinScreen(this, gameMap.tileMap, gameMap.player, rm);
 
         // NEW: load bullet end sound with error handling
         try {
@@ -493,6 +496,9 @@ public class GameScreen extends AbstractScreen {
                     hitUI = true;
                 } else if (currentEvent == EventState.TILE_EVENT
                         && dialog.getStage().hit(stageCoords.x, stageCoords.y, true) != null) {
+                    hitUI = true;
+                } else if (currentEvent == EventState.WIN_SCREEN
+                        && winScreen.getStage().hit(stageCoords.x, stageCoords.y, true) != null) {
                     hitUI = true;
                 } else if (currentEvent == EventState.INVENTORY
                         && game.inventoryUI.getStage().hit(stageCoords.x, stageCoords.y, true) != null) {
@@ -773,6 +779,8 @@ public class GameScreen extends AbstractScreen {
             dialog.update(dt);
         if (currentEvent == EventState.INVENTORY)
             game.inventoryUI.update(dt);
+        if (currentEvent == EventState.WIN_SCREEN)
+            winScreen.update(dt);
 
         // update bullets
         for (int i = bullets.size - 1; i >= 0; i--) {
@@ -1231,6 +1239,8 @@ public class GameScreen extends AbstractScreen {
             dialog.render(dt);
         else if (currentEvent == EventState.INVENTORY)
             game.inventoryUI.render(dt);
+        else if (currentEvent == EventState.WIN_SCREEN)
+            winScreen.render(dt);
         else if (currentEvent == EventState.PAUSE)
             hud.render(dt);  // Render HUD when paused to show settings dialog
     }
