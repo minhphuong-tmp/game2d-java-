@@ -67,6 +67,10 @@ public class Hud extends UI {
     private Image frame;
     private Label youDied;
     private Label loss;
+    
+    // Game over statistics labels
+    private Label currentStatsLabel;
+    private Label highScoresLabel;
 
     public Image shade;
     public Dialog settingsDialog;
@@ -132,6 +136,9 @@ public class Hud extends UI {
         
         // Initialize player mana system
         initializePlayerMana();
+        
+        // Load high scores
+        loadHighScores();
 
         Gdx.app.log("Hud", "Hud created with kick button");
         createLevelDescriptor();
@@ -339,11 +346,13 @@ public class Hud extends UI {
             }
         }
         
-        // Update game timer
-        updateTimer(dt);
-        
-        // Update mana regeneration
-        updateManaRegeneration(dt);
+        // Update game timer only if game is not over
+        if (!isGameOver) {
+            updateTimer(dt);
+            
+            // Update mana regeneration
+            updateManaRegeneration(dt);
+        }
     }
 
     public void render(float dt) {
@@ -665,23 +674,42 @@ public class Hud extends UI {
         deathGroup.addActor(dark);
 
         frame = new Image(rm.skin, "textfield");
-        frame.setSize(100, 60);
-        frame.setPosition(Unlucky.V_WIDTH / 2 - 50, Unlucky.V_HEIGHT / 2 - 30);
+        frame.setSize(120, 80); // Make dialog bigger to fit all text
+        frame.setPosition(Unlucky.V_WIDTH / 2 - 60, Unlucky.V_HEIGHT / 2 - 40);
         deathGroup.addActor(frame);
 
         youDied = new Label("YOU DIED!", new Label.LabelStyle(rm.pixel10, Color.RED));
-        youDied.setSize(100, 10);
-        youDied.setPosition(50, 75);
+        youDied.setSize(120, 10);
+        youDied.setPosition(40, 85); // Position at top of dialog
         youDied.setAlignment(Align.center);
         youDied.setTouchable(Touchable.disabled);
         deathGroup.addActor(youDied);
 
+        // Current game statistics - positioned below "YOU DIED!"
+        currentStatsLabel = new Label("", new Label.LabelStyle(rm.pixel10, Color.YELLOW));
+        currentStatsLabel.setFontScale(0.7f);
+        currentStatsLabel.setAlignment(Align.center);
+        currentStatsLabel.setSize(120, 25);
+        currentStatsLabel.setPosition(40, 55); // Below YOU DIED
+        currentStatsLabel.setTouchable(Touchable.disabled);
+        deathGroup.addActor(currentStatsLabel);
+
+        // High scores - positioned at bottom of dialog
+        highScoresLabel = new Label("", new Label.LabelStyle(rm.pixel10, Color.GREEN));
+        highScoresLabel.setFontScale(0.6f);
+        highScoresLabel.setAlignment(Align.center);
+        highScoresLabel.setSize(120, 20);
+        highScoresLabel.setPosition(40, 25); // Bottom of dialog
+        highScoresLabel.setTouchable(Touchable.disabled);
+        deathGroup.addActor(highScoresLabel);
+
+        // Keep the original loss label hidden (we're using our new labels instead)
         loss = new Label("", new Label.LabelStyle(rm.pixel10, Color.WHITE));
         loss.setFontScale(0.5f);
         loss.setWrap(true);
-        loss.setSize(100, 40);
+        loss.setSize(1, 1); // Make it tiny and invisible
         loss.setAlignment(Align.top);
-        loss.setPosition(Unlucky.V_WIDTH / 2 - 50, Unlucky.V_HEIGHT / 2 - 30);
+        loss.setPosition(-100, -100); // Position it off-screen
         loss.setTouchable(Touchable.disabled);
         deathGroup.addActor(loss);
 
@@ -713,6 +741,9 @@ public class Hud extends UI {
     }
 
     private void backToMenu() {
+        // Reset all game state for next game
+        resetGameState();
+        
         game.menuScreen.transitionIn = 0;
         if (gameScreen.gameMap.weather != WeatherType.NORMAL) {
             rm.lightrain.stop(gameScreen.gameMap.soundId);
@@ -867,6 +898,54 @@ public class Hud extends UI {
         updateTimerLabel();
         Gdx.app.log("Timer", "Game timer reset");
     }
+    
+    /**
+     * Resets all game statistics for a new game
+     */
+    public void resetGameStats() {
+        // Reset game over flag first
+        isGameOver = false;
+        
+        resetScore();
+        resetTimer();
+        initializePlayerHP();
+        initializePlayerMana();
+        Gdx.app.log("GameStats", "All game statistics reset for new game");
+    }
+
+    /**
+     * Resets the complete game state when returning to menu
+     */
+    private void resetGameState() {
+        // Reset all game statistics
+        resetGameStats();
+        
+        // Hide the death dialog
+        if (deathGroup != null) {
+            deathGroup.setVisible(false);
+        }
+        if (shade != null) {
+            shade.setVisible(false);
+        }
+        
+        // Clear current stats labels
+        if (currentStatsLabel != null) {
+            currentStatsLabel.setText("");
+        }
+        if (highScoresLabel != null) {
+            highScoresLabel.setText("");
+        }
+        
+        Gdx.app.log("GameState", "Complete game state reset for new game");
+    }
+
+    /**
+     * Public method to reset game state when starting a new game
+     */
+    public void resetForNewGame() {
+        resetGameState();
+        Gdx.app.log("GameState", "Game state reset for new game session");
+    }
 
     /**
      * Gets the current score
@@ -915,6 +994,17 @@ public class Hud extends UI {
      */
     private void triggerGameOver() {
         Gdx.app.log("GameOver", "Player HP reached 0 - triggering game over");
+        
+        // Set game over flag to stop timer updates
+        isGameOver = true;
+        
+        // Capture current stats at the moment of death (stop the timer)
+        float finalGameTime = gameTime;
+        int finalScore = score;
+        
+        // Update and show game over statistics with captured values
+        updateGameOverStats(finalScore, finalGameTime);
+        
         // Show the existing death dialog
         if (deathGroup != null) {
             deathGroup.setVisible(true);
@@ -980,6 +1070,9 @@ public class Hud extends UI {
     private final float MANA_REGEN_INTERVAL = 2f; // Regenerate every 2 seconds
     private final int MANA_REGEN_AMOUNT = 5; // Regenerate 5 mana per interval
     
+    // Game over flag to stop timer updates
+    private boolean isGameOver = false;
+    
     /**
      * Updates mana regeneration over time
      */
@@ -1002,6 +1095,92 @@ public class Hud extends UI {
                 }
             }
         }
+    }
+
+    // === High Score System ===
+    
+    private int highScore = 0;
+    private float highTime = 0f;
+    private final String HIGH_SCORES_FILE = "highscores.txt";
+    
+    /**
+     * Loads high scores from file
+     */
+    private void loadHighScores() {
+        try {
+            com.badlogic.gdx.files.FileHandle file = Gdx.files.local(HIGH_SCORES_FILE);
+            if (file.exists()) {
+                String content = file.readString();
+                String[] lines = content.split("\n");
+                if (lines.length >= 2) {
+                    highScore = Integer.parseInt(lines[0].trim());
+                    highTime = Float.parseFloat(lines[1].trim());
+                    Gdx.app.log("HighScores", "Loaded - High Score: " + highScore + ", High Time: " + highTime + "s");
+                }
+            }
+        } catch (Exception e) {
+            Gdx.app.log("HighScores", "Error loading high scores: " + e.getMessage());
+            highScore = 0;
+            highTime = 0f;
+        }
+    }
+    
+    /**
+     * Saves high scores to file
+     */
+    private void saveHighScores() {
+        try {
+            com.badlogic.gdx.files.FileHandle file = Gdx.files.local(HIGH_SCORES_FILE);
+            String content = highScore + "\n" + highTime;
+            file.writeString(content, false);
+            Gdx.app.log("HighScores", "Saved - High Score: " + highScore + ", High Time: " + highTime + "s");
+        } catch (Exception e) {
+            Gdx.app.log("HighScores", "Error saving high scores: " + e.getMessage());
+        }
+    }
+    
+    /**
+     * Updates high scores and shows game over statistics
+     */
+    private void updateGameOverStats(int finalScore, float finalTime) {
+        // Load current high scores
+        loadHighScores();
+        
+        // Check for new high scores
+        boolean newHighScore = finalScore > highScore;
+        boolean newHighTime = finalTime > highTime;
+        
+        if (newHighScore) {
+            highScore = finalScore;
+        }
+        if (newHighTime) {
+            highTime = finalTime;
+        }
+        
+        // Save if any high score was beaten
+        if (newHighScore || newHighTime) {
+            saveHighScores();
+        }
+        
+        // Format time display
+        int currentMinutes = (int) (finalTime / 60);
+        int currentSeconds = (int) (finalTime % 60);
+        int highMinutes = (int) (highTime / 60);
+        int highSecondsDisplay = (int) (highTime % 60);
+        
+        // Update current stats label (positioned inside the dialog)
+        String currentStats = String.format("Score: %d\nSurvived: %02d:%02d", 
+            finalScore, currentMinutes, currentSeconds);
+        if (newHighScore) currentStats += "\nNEW HIGH SCORE!";
+        if (newHighTime) currentStats += "\nNEW TIME RECORD!";
+        currentStatsLabel.setText(currentStats);
+        
+        // Update high scores label (positioned inside the dialog)
+        String highScoresText = String.format("High Score: %d\nBest Time: %02d:%02d", 
+            highScore, highMinutes, highSecondsDisplay);
+        highScoresLabel.setText(highScoresText);
+        
+        Gdx.app.log("GameOver", "Game Over Stats - Final: " + finalScore + "/" + finalTime + "s, High: " + highScore + "/" + highTime + "s");
     }
 
 }
