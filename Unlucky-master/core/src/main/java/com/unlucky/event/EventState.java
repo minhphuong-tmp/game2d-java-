@@ -14,5 +14,6 @@ public enum EventState {
     INVENTORY,
     TILE_EVENT,
     DEATH,
-    PAUSE
+    PAUSE,
+    HIGH_SCORE_SCREEN
 }

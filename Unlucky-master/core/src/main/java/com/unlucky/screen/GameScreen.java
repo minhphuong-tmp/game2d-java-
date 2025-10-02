@@ -26,6 +26,7 @@ import com.unlucky.map.GameMap;
 import com.unlucky.parallax.Background;
 import com.unlucky.resource.ResourceManager;
 import com.unlucky.screen.game.DialogScreen;
+import com.unlucky.screen.game.HighScoreScreen;
 import com.unlucky.screen.game.LevelUpScreen;
 import com.unlucky.screen.game.TransitionScreen;
 import com.unlucky.ui.Hud;
@@ -55,6 +56,7 @@ public class GameScreen extends AbstractScreen {
     public TransitionScreen transition;
     public LevelUpScreen levelUp;
     public DialogScreen dialog;
+    public HighScoreScreen highScoreScreen;
 
     // input
     public InputMultiplexer multiplexer;
@@ -290,6 +292,7 @@ public class GameScreen extends AbstractScreen {
         transition = new TransitionScreen(this, battle, battleUIHandler, hud, gameMap.player, rm);
         levelUp = new LevelUpScreen(this, gameMap.tileMap, gameMap.player, rm);
         dialog = new DialogScreen(this, gameMap.tileMap, gameMap.player, rm);
+        highScoreScreen = new HighScoreScreen(this, gameMap.tileMap, gameMap.player, rm);
 
         // NEW: Initialize homework managers for modular architecture
         // Note: Camera initialization will be fixed after battleUIHandler creates the camera
@@ -376,6 +379,9 @@ public class GameScreen extends AbstractScreen {
                     hitUI = true;
                 } else if (currentEvent == EventState.TILE_EVENT
                         && dialog.getStage().hit(stageCoords.x, stageCoords.y, true) != null) {
+                    hitUI = true;
+                } else if (currentEvent == EventState.HIGH_SCORE_SCREEN
+                        && highScoreScreen.getStage().hit(stageCoords.x, stageCoords.y, true) != null) {
                     hitUI = true;
                 } else if (currentEvent == EventState.INVENTORY
                         && game.inventoryUI.getStage().hit(stageCoords.x, stageCoords.y, true) != null) {
@@ -627,6 +633,8 @@ public class GameScreen extends AbstractScreen {
             levelUp.update(dt);
         if (currentEvent == EventState.TILE_EVENT)
             dialog.update(dt);
+        if (currentEvent == EventState.HIGH_SCORE_SCREEN)
+            highScoreScreen.update(dt);
         if (currentEvent == EventState.INVENTORY)
             game.inventoryUI.update(dt);
 
@@ -898,6 +906,8 @@ public class GameScreen extends AbstractScreen {
             levelUp.render(dt);
         else if (currentEvent == EventState.TILE_EVENT)
             dialog.render(dt);
+        else if (currentEvent == EventState.HIGH_SCORE_SCREEN)
+            highScoreScreen.render(dt);
         else if (currentEvent == EventState.INVENTORY)
             game.inventoryUI.render(dt);
         else if (currentEvent == EventState.PAUSE)

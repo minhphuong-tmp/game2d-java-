@@ -131,6 +131,9 @@ public class Hud extends UI {
         createHpLabel();
         createManaLabel();
         
+        // Initialize high scores system
+        loadHighScores();
+        
         // Initialize player HP system
         initializePlayerHP();
         
@@ -718,7 +721,7 @@ public class Hud extends UI {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (!game.player.settings.muteSfx) rm.buttonclick0.play(game.player.settings.sfxVolume);
-                backToMenu();
+                showHighScoreScreen();
             }
         });
 
@@ -739,8 +742,90 @@ public class Hud extends UI {
     public void setDefenseSystemsManager(DefenseSystemsManager defenseSystems) {
         this.defenseSystems = defenseSystems;
     }
+    
+    /**
+     * Shows high score screen after death
+     */
+    private void showHighScoreScreen() {
+        // Hide death screen
+        if (deathGroup != null) {
+            deathGroup.setVisible(false);
+        }
+        if (shade != null) {
+            shade.setVisible(false);
+        }
+        
+        // Show high score screen with current data
+        if (gameScreen != null && gameScreen.highScoreScreen != null && highScores != null) {
+            gameScreen.setCurrentEvent(EventState.HIGH_SCORE_SCREEN);
+            
+            // Find current entry (should be the most recent one added)
+            com.unlucky.save.HighScoreEntry currentEntry = null;
+            if (!highScores.isEmpty()) {
+                // The current entry should be the one we just added
+                currentEntry = highScores.get(0); // Assuming it's sorted and current is first
+                
+                // If not first, find it by checking if it matches current game stats
+                for (com.unlucky.save.HighScoreEntry entry : highScores) {
+                    // This is a simple way to identify current entry - could be improved
+                    if (Math.abs(entry.survivalTime - gameTime) < 1.0f) {
+                        currentEntry = entry;
+                        break;
+                    }
+                }
+            }
+            
+            if (currentEntry == null) {
+                // Fallback: create current entry
+                currentEntry = new com.unlucky.save.HighScoreEntry(gameTime, score);
+            }
+            
+            gameScreen.highScoreScreen.show(highScores, currentEntry);
+            Gdx.app.log("Hud", "High score screen shown");
+        } else {
+            Gdx.app.log("Hud", "ERROR: Cannot show high score screen - missing components");
+            // Fallback to menu
+            backToMenu();
+        }
+    }
+    
+    /**
+     * Shows high score screen when player wins (score = 5)
+     */
+    private void showWinHighScoreScreen() {
+        // Hide HUD
+        toggle(false);
+        
+        // Load high scores and add current entry
+        loadHighScores();
+        
+        // Create current entry for win
+        com.unlucky.save.HighScoreEntry currentEntry = new com.unlucky.save.HighScoreEntry(gameTime, score);
+        
+        // Add to high scores list
+        highScores.add(currentEntry);
+        
+        // Sort by survival time (longest first)
+        java.util.Collections.sort(highScores);
+        
+        // Keep only top 6
+        if (highScores.size() > MAX_HIGH_SCORES) {
+            highScores = highScores.subList(0, MAX_HIGH_SCORES);
+        }
+        
+        // Save updated high scores
+        saveHighScores();
+        
+        // Set game state to high score screen
+        gameScreen.setCurrentEvent(EventState.HIGH_SCORE_SCREEN);
+        
+        // Show high score screen with "YOU WIN" message
+        gameScreen.highScoreScreen.showWin(highScores, currentEntry);
+        
+        Gdx.app.log("WinHighScore", "YOU WIN! High score screen shown with " + highScores.size() + " entries");
+    }
 
-    private void backToMenu() {
+    public void backToMenu() {
         // Reset all game state for next game
         resetGameState();
         
@@ -850,6 +935,12 @@ public class Hud extends UI {
     public void addScore(int points) {
         score += points;
         updateScoreLabel();
+        
+        // Check win condition - show high score screen when score reaches 50
+        if (score >= 50) {
+            showWinHighScoreScreen();
+        }
+        
         Gdx.app.log("Score", "Score increased by " + points + ". Total: " + score);
     }
 
@@ -1099,29 +1190,39 @@ public class Hud extends UI {
 
     // === High Score System ===
     
-    private int highScore = 0;
-    private float highTime = 0f;
+    private java.util.List<com.unlucky.save.HighScoreEntry> highScores;
     private final String HIGH_SCORES_FILE = "highscores.txt";
+    private final int MAX_HIGH_SCORES = 6;
     
     /**
      * Loads high scores from file
      */
     private void loadHighScores() {
+        highScores = new java.util.ArrayList<>();
+        
         try {
             com.badlogic.gdx.files.FileHandle file = Gdx.files.local(HIGH_SCORES_FILE);
             if (file.exists()) {
                 String content = file.readString();
                 String[] lines = content.split("\n");
-                if (lines.length >= 2) {
-                    highScore = Integer.parseInt(lines[0].trim());
-                    highTime = Float.parseFloat(lines[1].trim());
-                    Gdx.app.log("HighScores", "Loaded - High Score: " + highScore + ", High Time: " + highTime + "s");
+                
+                for (String line : lines) {
+                    if (line.trim().isEmpty()) continue;
+                    
+                    com.unlucky.save.HighScoreEntry entry = com.unlucky.save.HighScoreEntry.fromFileString(line.trim());
+                    if (entry != null) {
+                        highScores.add(entry);
+                    }
                 }
+                
+                // Sắp xếp theo thời gian sống (lâu nhất trên đầu)
+                java.util.Collections.sort(highScores);
+                
+                Gdx.app.log("HighScores", "Loaded " + highScores.size() + " high score entries");
             }
         } catch (Exception e) {
             Gdx.app.log("HighScores", "Error loading high scores: " + e.getMessage());
-            highScore = 0;
-            highTime = 0f;
+            highScores = new java.util.ArrayList<>();
         }
     }
     
@@ -1131,9 +1232,14 @@ public class Hud extends UI {
     private void saveHighScores() {
         try {
             com.badlogic.gdx.files.FileHandle file = Gdx.files.local(HIGH_SCORES_FILE);
-            String content = highScore + "\n" + highTime;
-            file.writeString(content, false);
-            Gdx.app.log("HighScores", "Saved - High Score: " + highScore + ", High Time: " + highTime + "s");
+            StringBuilder content = new StringBuilder();
+            
+            for (com.unlucky.save.HighScoreEntry entry : highScores) {
+                content.append(entry.toFileString()).append("\n");
+            }
+            
+            file.writeString(content.toString(), false);
+            Gdx.app.log("HighScores", "Saved " + highScores.size() + " high score entries");
         } catch (Exception e) {
             Gdx.app.log("HighScores", "Error saving high scores: " + e.getMessage());
         }
@@ -1146,41 +1252,36 @@ public class Hud extends UI {
         // Load current high scores
         loadHighScores();
         
-        // Check for new high scores
-        boolean newHighScore = finalScore > highScore;
-        boolean newHighTime = finalTime > highTime;
+        // Create new entry for current game
+        com.unlucky.save.HighScoreEntry newEntry = new com.unlucky.save.HighScoreEntry(finalTime, finalScore);
         
-        if (newHighScore) {
-            highScore = finalScore;
-        }
-        if (newHighTime) {
-            highTime = finalTime;
-        }
+        // Add to list and sort
+        highScores.add(newEntry);
+        java.util.Collections.sort(highScores);
         
-        // Save if any high score was beaten
-        if (newHighScore || newHighTime) {
-            saveHighScores();
+        // Keep only top 6
+        if (highScores.size() > MAX_HIGH_SCORES) {
+            highScores = highScores.subList(0, MAX_HIGH_SCORES);
         }
         
-        // Format time display
-        int currentMinutes = (int) (finalTime / 60);
-        int currentSeconds = (int) (finalTime % 60);
-        int highMinutes = (int) (highTime / 60);
-        int highSecondsDisplay = (int) (highTime % 60);
+        // Check if this is a new record (top survival time)
+        boolean isNewRecord = highScores.get(0) == newEntry;
         
-        // Update current stats label (positioned inside the dialog)
-        String currentStats = String.format("Score: %d\nSurvived: %02d:%02d", 
-            finalScore, currentMinutes, currentSeconds);
-        if (newHighScore) currentStats += "\nNEW HIGH SCORE!";
-        if (newHighTime) currentStats += "\nNEW TIME RECORD!";
+        // Save updated high scores
+        saveHighScores();
+        
+        // Format current stats
+        String currentStats = String.format("Score: %d\nSurvived: %s", 
+            finalScore, newEntry.getFormattedTime());
+        if (isNewRecord) {
+            currentStats += "\nNEW SURVIVAL RECORD!";
+        }
         currentStatsLabel.setText(currentStats);
         
-        // Update high scores label (positioned inside the dialog)
-        String highScoresText = String.format("High Score: %d\nBest Time: %02d:%02d", 
-            highScore, highMinutes, highSecondsDisplay);
-        highScoresLabel.setText(highScoresText);
+        // Hide high scores label in death screen (will be shown in separate screen)
+        highScoresLabel.setText("Click to view High Scores");
         
-        Gdx.app.log("GameOver", "Game Over Stats - Final: " + finalScore + "/" + finalTime + "s, High: " + highScore + "/" + highTime + "s");
+        Gdx.app.log("GameOver", "Game Over Stats - Final: " + finalScore + "/" + finalTime + "s");
     }
 
 }
