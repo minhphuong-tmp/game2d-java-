@@ -2,42 +2,41 @@
 "worlds": [
 	{
 		"name":"SLIME FOREST",
-		"shortDesc":"LV. 1-6\nBOSS: SLIME KING",
+		"shortDesc":"LV. 1-5\nBOSS: SLIME KING",
 		"longDesc":"A long time ago, this forest was inhabited by regular animals. A mad scientist also lived here, conducting strange experiments on the creatures. One day, something went wrong and he turned the animals into hostile slimes. The slimes killed him and have ruled this forest ever since...",
-		"numLevels":6,
+		"numLevels":5,
 		"levels": [
 			{ "name":"Forest Entrance", "avgLevel":1 },
 			{ "name":"Into The Trees", "avgLevel":2 },
 			{ "name":"Rainy Grove", "avgLevel":3 },
-			{ "name":"A Hint of Blue", "avgLevel":4 },
-			{ "name":"Big Red Spiral", "avgLevel":5 },
-			{ "name":"Face the King", "avgLevel":6 }
+			{ "name":"Big Red Spiral", "avgLevel":4 },
+			{ "name":"Face the King", "avgLevel":5 }
 		]
 	},
 	{
 		"name":"SPOOKY GRAVEYARD",
-		"shortDesc":"LV. 7-11\nBOSS: RED REAPER",
+		"shortDesc":"LV. 6-10\nBOSS: RED REAPER",
 		"longDesc":"The entities that haunt this graveyard were created by a powerful necromancer thousands of years ago. In the darkness, evil spirits and spooky skeletons guard the graves of the deceased. Deep in this terrority is said to reside Death himself...",
 		"numLevels": 5,
 		"levels": [
-			{ "name":"Ghastly Gate", "avgLevel":7 },
-			{ "name":"Scattered Tombs", "avgLevel":8 },
-			{ "name":"The Undead", "avgLevel":9 },
-			{ "name":"Spooky Skeletons", "avgLevel":10 },
-			{ "name":"The Red Reaper", "avgLevel":11 }
+			{ "name":"Ghastly Gate", "avgLevel":6 },
+			{ "name":"Scattered Tombs", "avgLevel":7 },
+			{ "name":"The Undead", "avgLevel":8 },
+			{ "name":"Spooky Skeletons", "avgLevel":9 },
+			{ "name":"The Red Reaper", "avgLevel":10 }
 		]
 	},
 	{
 		"name": "FROSTY CAVE",
-		"shortDesc": "LV. 12-16\nBOSS: ICE GOLEM",
+		"shortDesc": "LV. 11-15\nBOSS: ICE GOLEM",
 		"longDesc": "Hidden deep in a snowy mountain is an icy cave that held monsters frozen in a dormant state for thousands of years. The creatures have since defrosted and have been running rampant throughout the cave. They assume the forms of deadly and durable beasts...",
 		"numLevels": 5,
 		"levels": [
-			{ "name":"Tundra Trails", "avgLevel":12 },
-			{ "name":"Blizzard Mayham", "avgLevel":13 },
-			{ "name":"Frozen Gems", "avgLevel":14 },
-			{ "name":"Coldest Cavern", "avgLevel":15 },
-			{ "name":"Ice Rocks", "avgLevel":16 }
+			{ "name":"Tundra Trails", "avgLevel":11 },
+			{ "name":"Blizzard Mayham", "avgLevel":12 },
+			{ "name":"Frozen Gems", "avgLevel":13 },
+			{ "name":"Coldest Cavern", "avgLevel":14 },
+			{ "name":"Ice Rocks", "avgLevel":15 }
 		]
 	}
 
