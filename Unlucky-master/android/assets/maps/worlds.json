@@ -2,50 +2,42 @@
 "worlds": [
 	{
 		"name":"RỪNG SLIME",
-		"shortDesc":"LV. 1-11\nBOSS: VUA SLIME",
-		"longDesc":"Từ xa xưa… khu rừng này từng là nơi muông thú sinh sống. Cho đến khi một kẻ điên thực hiện những thí nghiệm cấm kỵ. Thí nghiệm thất bại… bầy thú hóa thành slime hung hãn, nổi loạn giết chết chủ nhân. Và từ đó, khu rừng này chìm dưới ách thống trị của slime…",
-		"numLevels":11,
+		"shortDesc":"LV. 1-6\nTRÙM: VUA SLIME",
+		"longDesc":"Ngày xưa rừng chỉ có muông thú. Một nhà khoa học điên làm thí nghiệm thất bại, biến chúng thành slime hung hãn. Chúng giết ông và chiếm lấy khu rừng.",
+		"numLevels":6,
 		"levels": [
-			{ "name":"Lối vào khu rừng", "avgLevel":1 },
-			{ "name":"Con đường nhớp nháp", "avgLevel":2 },
-			{ "name":"Xanh ngập lối", "avgLevel":3 },
-			{ "name":"One Two Tree", "avgLevel":4 },
-			{ "name":"Sắc xanh thấp thoáng", "avgLevel":5 },
-			{ "name":"Hồ Slime", "avgLevel":6 },
-			{ "name":"Bên kia làn nước", "avgLevel":7 },
-			{ "name":"Rừng trên đồi", "avgLevel":8 },
-			{ "name":"Theo dấu vết", "avgLevel":9 },
-			{ "name":"Xoáy đỏ khổng lồ", "avgLevel":10 },
-			{ "name":"Đối mặt nhà vua", "avgLevel":11 }
+			{ "name":"Lối vào rừng", "avgLevel":1 },
+			{ "name":"Giữa tán cây", "avgLevel":2 },
+			{ "name":"Lùm cây mưa ướt", "avgLevel":3 },
+			{ "name":"Ánh xanh thấp thoáng", "avgLevel":4 },
+			{ "name":"Vòng xoắn đỏ lớn", "avgLevel":5 },
+			{ "name":"Đối mặt nhà vua", "avgLevel":6 }
 		]
 	},
 	{
 		"name":"NGHĨA ĐỊA MA ÁM",
-		"shortDesc":"LV. 12-24\nBOSS: LƯỠI HÁI ĐỎ",
-		"longDesc":"Ngàn năm trước, một pháp sư hắc ám đã tạo nên những linh hồn vĩnh viễn lang thang ở nghĩa địa này. Trong bóng tối, ma quỷ và bộ xương gớm ghiếc canh giữ phần mộ người đã khuất. Người ta đồn rằng, sâu thẳm nơi đây… chính Tử Thần đang ngự trị",
-		"numLevels":7,
+		"shortDesc":"LV. 7-11\nTRÙM: LƯỠI HÁI ĐỎ",
+		"longDesc":"Nghĩa địa này bị ám bởi những thực thể do một pháp sư hắc ám tạo ra từ ngàn xưa. Trong bóng tối, hồn ma và bộ xương rùng rợn canh giữ mộ phần. Tương truyền nơi sâu thẳm nhất còn có cả Thần Chết...",
+		"numLevels": 5,
 		"levels": [
-			{ "name":"Cổng âm hồn", "avgLevel":12 },
-			{ "name":"Mộ hoang rải rác", "avgLevel":13 },
-			{ "name":"Lũ xác sống", "avgLevel":14 },
-			{ "name":"Bộ xương rùng rợn", "avgLevel":15 },
-			{ "name":"Xương trắng hồn ma", "avgLevel":16 },
-			{ "name":"Thánh đường sọ người", "avgLevel":17 },
-			{ "name":"Tử thần lưỡi đỏ", "avgLevel":18 }
+			{ "name":"Cổng ma ám", "avgLevel":7 },
+			{ "name":"Mộ phần rải rác", "avgLevel":8 },
+			{ "name":"Xác sống", "avgLevel":9 },
+			{ "name":"Bộ xương rùng rợn", "avgLevel":10 },
+			{ "name":"Lưỡi hái đỏ", "avgLevel":11 }
 		]
 	},
 	{
-		"name":"HANG BĂNG GIÁ",
-		"shortDesc":"LV. 25-38\nBOSS: NGƯỜI ĐÁ BĂNG",
-		"longDesc":"Ẩn sâu trong dãy núi tuyết là một hang động băng giá, nơi quái vật từng bị phong ấn trong lớp băng suốt ngàn năm. Nhưng giờ đây, băng tan… lũ quái vật tỉnh giấc và gieo rắc hỗn loạn khắp hang động. Chúng mang hình dạng của những mãnh thú chết chóc và bất khả xâm phạm…",
-		"numLevels":6,
+		"name": "ĐỘNG BĂNG GIÁ",
+		"shortDesc": "LV. 12-16\nTRÙM: NGƯỜI KHỔNG LỒ BĂNG",
+		"longDesc": "Nằm sâu trong ngọn núi tuyết là hang băng từng giam giữ quái vật suốt hàng ngàn năm. Giờ chúng thoát ra, tung hoành khắp nơi, mang hình dạng của những sinh vật vừa nguy hiểm vừa bền bỉ...",
+		"numLevels": 5,
 		"levels": [
-			{ "name":"Lối mòn tuyết trắng", "avgLevel":19 },
-			{ "name":"Hồ băng vĩnh cửu", "avgLevel":20 },
-			{ "name":"Cuồng phong bão tuyết", "avgLevel":21 },
-			{ "name":"Ngọc băng giá", "avgLevel":22 },
-			{ "name":"Hang động lạnh nhất", "avgLevel":23 },
-			{ "name":"Hang người tuyết", "avgLevel":24 }
+			{ "name":"Lối mòn tuyết phủ", "avgLevel":12 },
+			{ "name":"Bão tuyết hỗn loạn", "avgLevel":13 },
+			{ "name":"Ngọc băng giá", "avgLevel":14 },
+			{ "name":"Hang động lạnh nhất", "avgLevel":15 },
+			{ "name":"Tảng băng khổng lồ", "avgLevel":16 }
 		]
 	}
 

@@ -51,7 +51,7 @@ public class InventoryUI extends UI {
     private ImageButton exitButton;
     // headers
     private Label[] headers;
-    private String[] headerStrs = { "STATUS", "EQUIPMENT", "INVENTORY" };
+    private String[] headerStrs = { "TRẠNG THÁI", "TRANG BỊ", "TÚI ĐỒ" };
     // stats labels
     // 0 - hp, 1 - dmg, 2 - acc, 3 - exp, 4 - gold
     private Label[] stats;
@@ -865,12 +865,12 @@ public class InventoryUI extends UI {
      */
     private void updateText() {
         // update all text
-        headers[0].setText("LV. " + player.getLevel() + " PLAYER");
+        headers[0].setText("LV. " + player.getLevel() + " NGƯỜI CHƠI");
         stats[0].setText("HP: " + player.getHp() + "/" + player.getMaxHp());
-        stats[1].setText("DAMAGE: " + player.getMinDamage() + "-" + player.getMaxDamage());
-        stats[2].setText("ACCURACY: " + player.getAccuracy() + "%");
+        stats[1].setText("SÁT THƯƠNG: " + player.getMinDamage() + "-" + player.getMaxDamage());
+        stats[2].setText("ĐỌ CHÍNH XÁC: " + player.getAccuracy() + "%");
         stats[3].setText("EXP: " + player.getExp() + "/" + player.getMaxExp());
-        stats[4].setText("GOLD: " + player.getGold());
+        stats[4].setText("VÀNG: " + player.getGold());
     }
 
     /**
@@ -888,17 +888,17 @@ public class InventoryUI extends UI {
                     invButtons[i].setStyle(enabled);
                     // add enchant cost of item to button
                     if (currentItem.type >= 2 && currentItem.type <= 9)
-                        invButtonLabels[0].setText("ENCHANT FOR\n" + currentItem.enchantCost + " g");
+                        invButtonLabels[0].setText("LUYỆN VỚI\n" + currentItem.enchantCost + " g");
                     // add sell value of item to button
-                    invButtonLabels[1].setText("SELL FOR\n" + currentItem.sell + " g");
+                    invButtonLabels[1].setText("BÁN VỚI\n" + currentItem.sell + " g");
                 }
             }
         } else {
             for (int i = 0; i < 2; i++) {
                 invButtons[i].setTouchable(Touchable.disabled);
                 invButtons[i].setStyle(disabled);
-                invButtonLabels[0].setText("ENCHANT");
-                invButtonLabels[1].setText("SELL");
+                invButtonLabels[0].setText("LUYỆN");
+                invButtonLabels[1].setText("BÁN");
             }
         }
     }

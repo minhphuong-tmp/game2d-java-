@@ -73,7 +73,7 @@ public class MenuScreen extends MenuExtensionScreen {
         handlePlayButton();
         handleOptionButtons();
 
-        battleLabel = new Label("Battle", menuStyle);
+        battleLabel = new Label("BATTLE", menuStyle);
         battleLabel.setSize(80, 40);
         battleLabel.setFontScale(1.5f);
         battleLabel.setTouchable(Touchable.disabled);

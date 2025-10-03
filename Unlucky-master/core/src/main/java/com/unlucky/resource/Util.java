@@ -54,19 +54,19 @@ public class Util {
     public static final int SHIELD = 7;
 
     public static final SpecialMove S_DISTRACT = new SpecialMove(DISTRACT,
-            "Đánh lạc hướng", "Đòn tiếp theo của kẻ địch\n-" + Util.P_DISTRACT + "% chính xác", 1, null);
+            "Đánh lạc hướng", "Đòn tiếp theo \ncủa kẻ địch -" + Util.P_DISTRACT + "% chính xác", 1, null);
     public static final SpecialMove S_FOCUS = new SpecialMove(FOCUS,
-            "Tập trung", "Đòn đánh tiếp theo chắc chắn trúng \nvà +" + Util.P_FOCUS_CRIT + "% tỉ lệ chí mạng", 7, null);
+            "Tập trung", "Đòn tiếp theo 100% trúng \nvà +" + Util.P_FOCUS_CRIT + "% tỉ lệ chí mạng", 7, null);
     public static final SpecialMove S_INTIMIDATE = new SpecialMove(INTIMIDATE,
             "Đe dọa", "Đòn đánh tiếp theo \nđược cường hóa " + Util.P_INTIMIDATE + "%", 3, null);
     public static final SpecialMove S_REFLECT = new SpecialMove(REFLECT,
-            "Phản đòn", "Đòn đánh tiếp theo của kẻ địch\nbị phản lại", 23, null);
+            "Phản đòn", "Đòn tiếp theo của \nkẻ địch bị phản lại", 23, null);
     public static final SpecialMove S_STUN = new SpecialMove(STUN,
             "Choáng", Util.P_STUN + "% tỉ lệ\nchoáng kẻ địch", 5, null);
     public static final SpecialMove S_INVERT = new SpecialMove(INVERT,
-            "Nghịch đảo", "Chiêu hồi máu sẽ gây sát thương\nChiêu sát thương sẽ hồi máu", 13, null);
+            "Nghịch đảo", "Chiêu hồi máu gây sát thương\nChiêu sát thương hồi máu", 13, null);
     public static final SpecialMove S_SACRIFICE = new SpecialMove(SACRIFICE,
-            "Hiến tế", "Hi sinh toàn bộ máu, chỉ còn 1 máu\nđể tăng mạnh sát thương", 10, null);
+            "Hiến tế", "Hi sinh toàn bộ máu\nđể tăng mạnh sát thương", 10, null);
     public static final SpecialMove S_SHIELD = new SpecialMove(SHIELD,
             "Khiên", "Tạo lá chắn hấp thụ \nsát thương = " + Util.P_SHIELD + "% máu tối đa", 17, null);
 
@@ -207,14 +207,14 @@ public class Util {
 
     // all blocked tile ids
     public static final int[] BLOCKED_TILE_IDS = {
-            5, 6, 7, 9, 10, 11, 12, 13, 14, 15, 25, 26, 27, 28, 29, 30, 31, 36,
-            38, 41, 42, 48, 49, 50, 51, 54, 55, 64, 65, 66, 67, 70, 84, 85, 86,
-            87, 88, 91, 92, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 112,
-            113, 114, 115, 116, 117, 118, 120, 121, 123, 128, 129, 130, 130, 131, 132,
-            133, 134, 135, 136, 137, 138, 139, 144, 145, 146, 147, 156, 157, 165, 166,
-            151, 152, 167, 168, 169, 170, 184, 185, 186, 197, 198, 199, 200, 201, 202,
-            215, 216, 217, 218, 227, 228, 229, 230, 231, 232, 233, 234, 235, 243, 244,
-            247, 249, 263, 264, 265, 266, 267, 268, 269
+        5, 6, 7, 9, 10, 11, 12, 13, 14, 15, 25, 26, 27, 28, 29, 30, 31, 36,
+        38, 41, 42, 44, 45, 46, 48, 49, 50, 51, 52, 54, 55, 59, 60, 61, 62, 63, 64, 65, 66, 67, 69, 70, 74, 75, 76, 77, 80, 83, 84, 85, 86,
+        87, 88, 90, 91, 92, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 109, 110, 112,
+        113, 114, 115, 116, 117, 118, 120, 121, 123, 128, 129, 130, 130, 131, 132,
+        133, 134, 135, 136, 137, 138, 139, 144, 145, 146, 147, 156, 157, 160, 165, 166,
+        151, 152, 167, 168, 169, 170, 176, 184, 185, 186, 197, 198, 199, 200, 201, 202,
+        215, 216, 217, 218, 227, 228, 229, 230, 231, 232, 233, 234, 235, 243, 244,
+        247, 249, 263, 264, 265, 266, 267, 268, 269
     };
 
     public static final int[] BLOCKED_ANIMATED_TILE_IDS = { 96, 109 };

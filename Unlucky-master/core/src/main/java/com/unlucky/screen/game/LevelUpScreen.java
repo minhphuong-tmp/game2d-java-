@@ -32,7 +32,7 @@ public class LevelUpScreen extends UI {
     private Label title;
     private Label levelDesc;
     private Label[] statsDescs;
-    private String[] statNames = { "KINH NGHIỆM TỐI ĐA:", "ĐỘ CHÍNH XÁC:", "SÁT THƯƠNG TỐI ĐA:", "SÁT THƯƠNG TỐI THIỂU:", "MÁU TỐI ĐA:" };
+    private String[] statNames = { "MAX EXP:", "ACC:", "MAX DMG:", "MIN DMG:", "MAX HP:" };
     private Label[] stats;
     private Label[] increases;
     private Label clickToContinue;

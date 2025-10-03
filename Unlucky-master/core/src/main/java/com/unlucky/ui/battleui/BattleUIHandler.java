@@ -76,17 +76,17 @@ public class BattleUIHandler extends UI {
         if (enemy.isBoss()) {
             if (MathUtils.randomBoolean()) {
                 intro = new String[] {
-                        "you encountered the boss " + enemy.getId() + "!",
-                        "its power is far greater than any regular enemy.",
-                        "Passive: " + ((Boss) enemy).getPassiveDescription()
+                        "Bạn đã chạm trán trùm " + enemy.getId() + "!",
+                        "sức mạnh của nó vượt xa mọi kẻ thù thông thường.",
+                        "Bị động: " + ((Boss) enemy).getPassiveDescription()
                 };
                 battleEventHandler.startDialog(intro, BattleEvent.NONE, BattleEvent.PLAYER_TURN);
             } else {
                 intro = new String[] {
-                        "you encountered the boss " + enemy.getId() + "!",
-                        "its power is far greater than any regular enemy.",
-                        "Passive: " + ((Boss) enemy).getPassiveDescription(),
-                        enemy.getId() + " strikes first!"
+                        "Bạn đã chạm trán  " + enemy.getId() + "!",
+                        "sức mạnh của nó vượt xa mọi kẻ thù thông thường.",
+                        "Bị động: " + ((Boss) enemy).getPassiveDescription(),
+                        enemy.getId() + " ra đòn trước!"
                 };
                 battleEventHandler.startDialog(intro, BattleEvent.NONE, BattleEvent.ENEMY_TURN);
             }
@@ -94,26 +94,26 @@ public class BattleUIHandler extends UI {
         else {
             if (saved) {
                 intro = new String[]{
-                        "you encountered " + enemy.getId() + "! " +
-                                "maybe there's a chance it doesn't want to fight...",
-                        "the enemy stares at you and decides to flee the battle."
+                        "Bạn đã chạm trán " + enemy.getId() + "! " +
+                                "có lẽ nó chưa muốn giao chiến...",
+                        "kẻ địch nhìn chằm chằm rồi bỏ chạy khỏi trận chiến."
                 };
                 battleEventHandler.startDialog(intro, BattleEvent.NONE, BattleEvent.END_BATTLE);
             } else {
                 // 50-50 chance for first attack from enemy or player
                 if (MathUtils.randomBoolean()) {
                     intro = new String[]{
-                            "you encountered " + enemy.getId() + "! " +
-                                    "maybe there's a chance it doesn't want to fight...",
-                            "the enemy glares at you and decides to engage in battle!"
+                            "Bạn đã chạm trán " + enemy.getId() + "! " +
+                                    "có lẽ nó chưa muốn giao chiến...",
+                            "Kẻ địch nhìn chằm chằm rồi quyết định lao vào chiến đấu!"
                     };
                     battleEventHandler.startDialog(intro, BattleEvent.NONE, BattleEvent.PLAYER_TURN);
                 } else {
                     intro = new String[]{
-                            "you encountered " + enemy.getId() + "! " +
-                                    "maybe there's a chance it doesn't want to fight...",
-                            "the enemy glares at you and decides to engage in battle!",
-                            enemy.getId() + " attacks first!"
+                            "Bạn đã chạm trán " + enemy.getId() + "! " +
+                                    "có lẽ nó chưa muốn giao chiến...",
+                            "Kẻ địch nhìn chằm chằm rồi quyết định lao vào chiến đấu!",
+                            enemy.getId() + " ra đòn trước!"
                     };
                     battleEventHandler.startDialog(intro, BattleEvent.NONE, BattleEvent.ENEMY_TURN);
                 }

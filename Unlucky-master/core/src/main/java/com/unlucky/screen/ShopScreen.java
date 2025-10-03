@@ -39,7 +39,7 @@ public class ShopScreen extends MenuExtensionScreen {
     private ImageButton exitButton;
     // headers
     private Label[] headers;
-    private String[] headerStrs = new String[] { "SHOP", "INVENTORY" };
+    private String[] headerStrs = new String[] { "SHOP", "TÚI ĐỒ" };
     private Label gold;
 
     // 0 - buy, 1 - sell
@@ -76,9 +76,9 @@ public class ShopScreen extends MenuExtensionScreen {
         handleStageEvents();
         handleInvButtonEvents();
 
-        warningFullDialog = new Dialog("Warning", rm.dialogSkin) {
+        warningFullDialog = new Dialog("Cảnh báo", rm.dialogSkin) {
             {
-                Label l = new Label("Your inventory is full.", rm.dialogSkin);
+                Label l = new Label("Túi đồ đã đầy.", rm.dialogSkin);
                 l.setFontScale(0.5f);
                 l.setAlignment(Align.center);
                 text(l);
@@ -107,7 +107,7 @@ public class ShopScreen extends MenuExtensionScreen {
 
 
         // update labels
-        gold.setText("GOLD: " + player.getGold());
+        gold.setText("VÀNG: " + player.getGold());
     }
 
     private void createInventoryUI() {
@@ -176,8 +176,8 @@ public class ShopScreen extends MenuExtensionScreen {
             stage.addActor(invButtons[i]);
             stage.addActor(invButtonLabels[i]);
         }
-        invButtonLabels[0].setText("BUY");
-        invButtonLabels[1].setText("SELL");
+        invButtonLabels[0].setText("MUA");
+        invButtonLabels[1].setText("BÁN");
     }
 
     /**
@@ -275,7 +275,7 @@ public class ShopScreen extends MenuExtensionScreen {
                 itemDesc.setFontScale(0.5f);
                 itemDesc.setTouchable(Touchable.disabled);
                 itemDesc.setAlignment(Align.left);
-                Label itemPrice = new Label("PRICE: " + item.price, goldStyle);
+                Label itemPrice = new Label("GIÁ: " + item.price, goldStyle);
                 itemPrice.setFontScale(0.5f);
                 itemPrice.setTouchable(Touchable.disabled);
                 itemPrice.setAlignment(Align.left);
@@ -298,13 +298,13 @@ public class ShopScreen extends MenuExtensionScreen {
                             // enable buying
                             invButtons[0].setTouchable(Touchable.enabled);
                             invButtons[0].setStyle(enabled);
-                            invButtonLabels[0].setText("BUY FOR\n" + item.price + " g");
+                            invButtonLabels[0].setText("MUA VỚI\n" + item.price + " g");
                         }
                         else {
                             currentShopItem = null;
                             invButtons[0].setTouchable(Touchable.disabled);
                             invButtons[0].setStyle(disabled);
-                            invButtonLabels[0].setText("BUY");
+                            invButtonLabels[0].setText("MUA");
                         }
                     }
                 });
@@ -365,7 +365,7 @@ public class ShopScreen extends MenuExtensionScreen {
                     // enable selling
                     invButtons[1].setTouchable(Touchable.enabled);
                     invButtons[1].setStyle(enabled);
-                    invButtonLabels[1].setText("SELL FOR\n" + item.sell + " g");
+                    invButtonLabels[1].setText("BÁN VỚI\n" + item.sell + " g");
                 }
             }
         });
@@ -410,9 +410,9 @@ public class ShopScreen extends MenuExtensionScreen {
         if (currentShopItem != null) {
             // item is too expensive to buy
             if (player.getGold() < currentShopItem.price) {
-                new Dialog("Warning", rm.dialogSkin) {
+                new Dialog("Cảnh báo", rm.dialogSkin) {
                     {
-                        Label l = new Label("You do not have enough\ngold to buy " + currentShopItem.labelName + ".", rm.dialogSkin);
+                        Label l = new Label("Bạn không đủ vàng \nđể mua " + currentShopItem.labelName + ".", rm.dialogSkin);
                         l.setFontScale(0.5f);
                         l.setAlignment(Align.center);
                         text(l);
@@ -428,16 +428,16 @@ public class ShopScreen extends MenuExtensionScreen {
                 }.show(stage).getTitleLabel().setAlignment(Align.center);
                 return;
             }
-            new Dialog("BUY", rm.dialogSkin) {
+            new Dialog("MUA", rm.dialogSkin) {
                 {
-                    Label l = new Label("Are you sure you want\nto buy " + currentShopItem.labelName + "?", rm.dialogSkin);
+                    Label l = new Label("Bạn có chắc muốn\nmua không " + currentShopItem.labelName + "?", rm.dialogSkin);
                     l.setFontScale(0.5f);
                     l.setAlignment(Align.center);
                     text(l);
                     getButtonTable().defaults().width(40);
                     getButtonTable().defaults().height(15);
-                    button("Yes", "yes");
-                    button("No", "no");
+                    button("Có", "có");
+                    button("Không", "không");
                 }
 
                 @Override
@@ -459,12 +459,12 @@ public class ShopScreen extends MenuExtensionScreen {
                         stage.addActor(item.actor);
                         item.actor.setZIndex(item.index + 1);
                         addInventoryEvent(item);
-                        gold.setText("GOLD: " + player.getGold());
+                        gold.setText("VÀNG: " + player.getGold());
                         player.stats.numShopItemsBought++;
                         game.save.save();
-                        new Dialog("Success", rm.dialogSkin) {
+                        new Dialog("Thành công", rm.dialogSkin) {
                             {
-                                Label l = new Label("You successfully\npurchased " + currentShopItem.labelName + ".", rm.dialogSkin);
+                                Label l = new Label("Bạn đã mua\nthành công" + currentShopItem.labelName + ".", rm.dialogSkin);
                                 l.setFontScale(0.5f);
                                 l.setAlignment(Align.center);
                                 text(l);
@@ -487,25 +487,25 @@ public class ShopScreen extends MenuExtensionScreen {
         if (currentItem != null) {
             new Dialog("Sell", rm.dialogSkin) {
                 {
-                    Label l = new Label("Are you sure you want\nto sell " + currentItem.labelName + "?", rm.dialogSkin);
+                    Label l = new Label("Bạn có chắc muốn\nbán không" + currentItem.labelName + "?", rm.dialogSkin);
                     l.setFontScale(0.5f);
                     l.setAlignment(Align.center);
                     text(l);
                     getButtonTable().defaults().width(40);
                     getButtonTable().defaults().height(15);
-                    button("Yes", "yes");
-                    button("No", "no");
+                    button("Có", "có");
+                    button("Không", "không");
                 }
 
                 @Override
                 protected void result(Object object) {
                     if (!game.player.settings.muteSfx) rm.buttonclick2.play(game.player.settings.sfxVolume);
-                    if (object.equals("yes")) {
+                    if (object.equals("có")) {
                         player.addGold(currentItem.sell);
                         player.inventory.items[currentItem.index].actor.remove();
                         player.inventory.removeItem(currentItem.index);
                         unselectItem();
-                        gold.setText("GOLD: " + player.getGold());
+                        gold.setText("VÀNG: " + player.getGold());
                         game.save.save();
                     }
                 }
@@ -539,7 +539,7 @@ public class ShopScreen extends MenuExtensionScreen {
         tooltip.hide();
         invButtons[1].setTouchable(Touchable.disabled);
         invButtons[1].setStyle(disabled);
-        invButtonLabels[1].setText("SELL");
+        invButtonLabels[1].setText("BÁN");
     }
 
     private void showSelectedSlot(Item item) {

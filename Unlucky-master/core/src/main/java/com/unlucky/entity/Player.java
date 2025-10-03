@@ -1,5 +1,6 @@
 package com.unlucky.entity;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
@@ -89,12 +90,14 @@ public class Player extends Entity {
     // the player's custom game settings
     public Settings settings = new Settings();
     public void fullLevel() {
-        level = 10;              // max level
-        maxHp = hp = 9999;       // full HP
-        minDamage = maxDamage = 999; // full damage
-        accuracy = 100;           // full accuracy
-        gold = 999999;            // max gold
-        exp = maxExp = 0;         // exp không cần nữa
+        level = 99;
+        maxHp = hp = 9999;
+        minDamage = maxDamage = 999;
+        accuracy = 100;
+        gold = 999999;
+        exp = maxExp = 0;
+        maxWorld = Integer.MAX_VALUE;
+        maxLevel = Integer.MAX_VALUE;
     }
     public int getLevel() {
         return level;
@@ -115,29 +118,24 @@ public class Player extends Entity {
         minDamage = Util.PLAYER_INIT_MIN_DMG;
         maxDamage = Util.PLAYER_INIT_MAX_DMG;
 
-//        level = 1;
         speed = 50.f;
 
         exp = 0;
-        // offset between 3 and 5
         maxExp = Util.calculateMaxExp(1, MathUtils.random(3, 5));
 
-        // create tilemap animation
         am = new AnimationManager(rm.sprites16x16, Util.PLAYER_WALKING, Util.PLAYER_WALKING_DELAY);
-        // create battle scene animation
         bam = new AnimationManager(rm.battleSprites96x96, 2, Util.PLAYER_WALKING, 2 / 5f);
 
         moveset = new Moveset(rm);
-        // damage seed is a random number between the damage range
         moveset.reset(minDamage, maxDamage, maxHp);
 
         statusEffects = new StatusSet(true, rm);
         smoveset = new SpecialMoveset();
+
         this.gold = 999999;
+
         fullLevel();
-
     }
-
 
     public void update(float dt) {
         super.update(dt);
@@ -188,17 +186,35 @@ public class Player extends Entity {
     public boolean nextTileBlocked(int dir) {
         currentTileX = (int) (position.x / tileMap.tileSize);
         currentTileY = (int) (position.y / tileMap.tileSize);
+        Tile nextTile = null;
+        boolean blocked = false;
+        
         switch (dir) {
             case 0: // down
-                return tileMap.getTile(currentTileX, currentTileY - 1).isBlocked();
+                nextTile = tileMap.getTile(currentTileX, currentTileY - 1);
+                blocked = nextTile.isBlocked();
+                break;
             case 1: // up
-                return tileMap.getTile(currentTileX, currentTileY + 1).isBlocked();
+                nextTile = tileMap.getTile(currentTileX, currentTileY + 1);
+                blocked = nextTile.isBlocked();
+                break;
             case 2: // right
-                return tileMap.getTile(currentTileX + 1, currentTileY).isBlocked();
+                nextTile = tileMap.getTile(currentTileX + 1, currentTileY);
+                blocked = nextTile.isBlocked();
+                break;
             case 3: // left
-                return tileMap.getTile(currentTileX - 1, currentTileY).isBlocked();
+                nextTile = tileMap.getTile(currentTileX - 1, currentTileY);
+                blocked = nextTile.isBlocked();
+                break;
         }
-        return false;
+        
+        // Debug log
+        if (nextTile != null) {
+            Gdx.app.log("CollisionDebug", "Player at (" + currentTileX + "," + currentTileY + ") moving " + dir + 
+                       " -> Next tile ID: " + nextTile.id + ", Blocked: " + blocked);
+        }
+        
+        return blocked;
     }
 
     /**

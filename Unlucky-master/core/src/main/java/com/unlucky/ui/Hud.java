@@ -70,21 +70,21 @@ public class Hud extends UI {
         shade.setTouchable(Touchable.disabled);
         stage.addActor(shade);
 
-        settingsDialog = new Dialog("Paused", rm.dialogSkin) {
+        settingsDialog = new Dialog("Dừng", rm.dialogSkin) {
             {
                 getButtonTable().defaults().width(50);
                 getButtonTable().defaults().height(15);
-                TextButton b = new TextButton("Back", rm.dialogSkin);
+                TextButton b = new TextButton("Trờ lại", rm.dialogSkin);
                 b.getLabel().setFontScale(0.75f);
-                button(b, "back");
+                button(b, "trở lại");
                 getButtonTable().padTop(-6).row();
-                TextButton s = new TextButton("Settings", rm.dialogSkin);
+                TextButton s = new TextButton("Cài đặt", rm.dialogSkin);
                 s.getLabel().setFontScale(0.75f);
-                button(s, "settings");
+                button(s, "cài đặt");
                 getButtonTable().row();
-                TextButton q = new TextButton("Quit", rm.dialogSkin);
+                TextButton q = new TextButton("Thoát", rm.dialogSkin);
                 q.getLabel().setFontScale(0.75f);
-                button(q, "quit");
+                button(q, "thoát");
             }
             @Override
             protected void result(Object object) {
@@ -125,7 +125,7 @@ public class Hud extends UI {
                             })));
                     }
                 }
-                else if (object.equals("quit")) {
+                else if (object.equals("thoát")) {
                     quit();
                 }
             }
@@ -182,7 +182,7 @@ public class Hud extends UI {
         String worldName = rm.worlds.get(worldIndex).name;
         String levelName = rm.worlds.get(worldIndex).levels[levelIndex].name;
 
-        levelDescriptor.getTitleLabel().setText("WORLD " + (worldIndex + 1) + " : " + "LEVEL " + (levelIndex + 1));
+        levelDescriptor.getTitleLabel().setText("KHU VỰC " + (worldIndex + 1) + " : " + "CẤP " + (levelIndex + 1));
         levelDesc.setText(worldName + "\n" + levelName + "\n" + "AVG LVL: " + rm.worlds.get(worldIndex).levels[levelIndex].avgLevel);
         levelDescriptor.setVisible(true);
         levelDescriptor.pack();
@@ -372,9 +372,9 @@ public class Hud extends UI {
      * The player will lose all gold, exp, and items obtained during the level
      */
     private void quit() {
-        final String text = "If you quit, you will lose all \ngold, exp, and items obtained in this level.\n" +
-            "Are you sure you want to quit?";
-            new Dialog("Warning", rm.dialogSkin) {
+        final String text = "Nếu bạn thoát, toàn bộ vàng, \nexp và vật phẩm kiếm được trong màn này sẽ mất hết.\n" +
+            "Bạn có chắc không?";
+            new Dialog("Cảnh báo", rm.dialogSkin) {
             {
                 Label l = new Label(text, rm.dialogSkin);
                 l.setFontScale(0.5f);
@@ -382,13 +382,13 @@ public class Hud extends UI {
                 text(l);
                 getButtonTable().defaults().width(40);
                 getButtonTable().defaults().height(15);
-                button("Yes", "yes");
-                button("No", "no");
+                button("Có", "có");
+                button("Không", "không");
             }
             @Override
             protected void result(Object object) {
                 if (!game.player.settings.muteSfx) rm.buttonclick2.play(game.player.settings.sfxVolume);
-                if (object.equals("yes")) {
+                if (object.equals("có")) {
                     loseObtained();
                     player.setHp(player.getMaxHp());
                     player.inMap = false;

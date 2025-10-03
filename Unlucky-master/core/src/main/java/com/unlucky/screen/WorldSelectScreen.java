@@ -34,7 +34,7 @@ public class WorldSelectScreen extends SelectScreen {
     public void show() {
         super.show();
 
-        bannerLabel.setText("SELECT A WORLD");
+        bannerLabel.setText("CHỌN KHU VỰC");
         bannerLabel.getStyle().fontColor = new Color(1, 212 / 255.f, 0, 1);
 
         this.worldIndex = game.player.maxWorld;
@@ -54,7 +54,7 @@ public class WorldSelectScreen extends SelectScreen {
     protected void handleEnterButton() {
         enterButtonGroup.setPosition(114, 4);
         stage.addActor(enterButtonGroup);
-        enterLabel.setText("SELECT");
+        enterLabel.setText("CHỌN");
         enterButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {

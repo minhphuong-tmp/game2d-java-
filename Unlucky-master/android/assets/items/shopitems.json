@@ -480,9 +480,8 @@
 			"price": 30000
 		},
 		{
-			"name": "Mặt Dây Chuyền Phòng知道了
-
-			System: Bảo Vệ",
+			"name": "Mặt Dây Chuyền Phòng Thủ",
+			"System": "Bảo Vệ",
 			"desc": "Mặt dây chuyền tăng cường phòng thủ.",
 			"type": 7,
 			"imgIndex": 4,
@@ -841,7 +840,7 @@
 		},
 		{
 			"name": "Nền Tảng",
-			"desc": "Dây chuyền tăng cường độ tập trung và chính xác vượt trội.",
+			"desc": "Tăng độ tập trung và\nchính xác vượt trội.",
 			"type": 7,
 			"imgIndex": 8,
 			"level": 60,
@@ -853,7 +852,7 @@
 		},
 		{
 			"name": "Khiên Hấp Thụ",
-			"desc": "Hấp thụ phần lớn sát thương từ đòn tấn công.",
+			"desc": "Hấp thụ phần lớn sát \nthương từ đòn tấn công.",
 			"type": 8,
 			"imgIndex": 7,
 			"level": 50,

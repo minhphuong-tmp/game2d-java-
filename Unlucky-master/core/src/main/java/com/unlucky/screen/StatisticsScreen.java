@@ -102,13 +102,13 @@ public class StatisticsScreen extends MenuExtensionScreen {
 
         for (int i = 0; i < statsDescs.length; i++) {
             Label statDesc;
-            if (statsDescs[i].startsWith("player")) {
+            if (statsDescs[i].startsWith("người chơi")) {
                 statDesc = new Label(statsDescs[i], headerStyles[0]);
                 statDesc.setFontScale(0.8f);
-            } else if (statsDescs[i].startsWith("map")) {
+            } else if (statsDescs[i].startsWith("bản đồ")) {
                 statDesc = new Label(statsDescs[i], headerStyles[1]);
                 statDesc.setFontScale(0.8f);
-            } else if (statsDescs[i].startsWith("battle")) {
+            } else if (statsDescs[i].startsWith("chiến đấu")) {
                 statDesc = new Label(statsDescs[i], headerStyles[2]);
                 statDesc.setFontScale(0.8f);
             } else {
@@ -118,7 +118,7 @@ public class StatisticsScreen extends MenuExtensionScreen {
             Label statNum = new Label(statsNums[i], statStyle);
             statNum.setFontScale(0.5f);
 
-            if (statsDescs[i].startsWith("player") || statsDescs[i].startsWith("map") || statsDescs[i].startsWith("battle")) {
+            if (statsDescs[i].startsWith("người chơi") || statsDescs[i].startsWith("map") || statsDescs[i].startsWith("battle")) {
                 selectionContainer.add(statDesc).padBottom(6).align(Align.left).row();
             }
             else {
