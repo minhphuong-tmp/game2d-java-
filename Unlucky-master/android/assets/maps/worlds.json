@@ -8,7 +8,7 @@
 		"levels": [
 			{ "name":"Lối vào rừng", "avgLevel":1 },
 			{ "name":"Giữa tán cây", "avgLevel":2 },
-			{ "name":"Lùm cây mưa ướt", "avgLevel":3 },
+			{ "name":"Lùm   cây mưa ướt", "avgLevel":3 },
 			{ "name":"Ánh xanh thấp thoáng", "avgLevel":4 },
 			{ "name":"Vòng xoắn đỏ lớn", "avgLevel":5 },
 			{ "name":"Đối mặt nhà vua", "avgLevel":6 }

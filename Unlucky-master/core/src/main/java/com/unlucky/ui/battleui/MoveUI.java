@@ -77,8 +77,8 @@ public class MoveUI extends BattleUI {
             shouldReset = false;
         }
         else {
-            if (onCd) optionDescLabels[0].setText(player.smoveCd - turnCounter + " turn(s) until\n" +
-                    "new special move");
+            if (onCd) optionDescLabels[0].setText(player.smoveCd - turnCounter + " lượt đến\n" +
+                    "kỹ năng đặc biệt");
         }
 
         for (int i = 0; i < playerSmoveset.size; i++) {
@@ -355,7 +355,7 @@ public class MoveUI extends BattleUI {
                 onCd = true;
                 optionButtons[0].setTouchable(Touchable.disabled);
                 optionButtons[0].setStyle(disabled[0]);
-                optionNameLabels[0].setText("ĐANG HỒI CHIÊU");
+                optionNameLabels[0].setText("HỒI CHIÊU");
                 optionButtonTouchable[0] = false;
 
                 shouldReset = true;
@@ -386,7 +386,7 @@ public class MoveUI extends BattleUI {
                 }
                 optionButtons[1].setTouchable(Touchable.disabled);
                 optionButtons[1].setStyle(disabled[1]);
-                optionDescLabels[1].setText("Không thể chạy trốn nữa");
+                optionDescLabels[1].setText("Hết cơ hội thoát");
                 optionButtonTouchable[1] = false;
             }
         });

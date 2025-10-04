@@ -1060,7 +1060,7 @@
 		},
 		{
 			"name": "Cuộn Phù Phép C",
-			"desc": "Tăng nhẹ xác suất thành công khi phù phép.",
+			"desc": "Tăng nhẹ khả năng phù phép.",
 			"type": 10,
 			"imgIndex": 0,
 			"minLevel": 10,

@@ -888,7 +888,7 @@
 		},
 		{
 			"name": "Cuộn Phù Phép C",
-			"desc": "Cuộn giấy tăng cơ hội phù phép.",
+			"desc": "Tăng cơ hội phù phép.",
 			"type": 10,
 			"imgIndex": 0,
 			"level": 1,
@@ -898,7 +898,7 @@
 		},
 		{
 			"name": "Cuộn Phù Phép B",
-			"desc": "Cuộn giấy tăng cơ hội phù phép.",
+			"desc": "Tăng cơ hội phù phép.",
 			"type": 10,
 			"imgIndex": 1,
 			"level": 1,
@@ -908,7 +908,7 @@
 		},
 		{
 			"name": "Cuộn Phù Phép A",
-			"desc": "Cuộn giấy tăng cơ hội phù phép.",
+			"desc": "Tăng cơ hội phù phép.",
 			"type": 10,
 			"imgIndex": 2,
 			"level": 1,
@@ -918,7 +918,7 @@
 		},
 		{
 			"name": "Cuộn Phù Phép S",
-			"desc": "Cuộn giấy tăng cơ hội phù phép.",
+			"desc": "Tăng cơ hội phù phép.",
 			"type": 10,
 			"imgIndex": 3,
 			"level": 1,

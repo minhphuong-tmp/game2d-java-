@@ -83,7 +83,7 @@ public class SpecialMoveScreen extends MenuExtensionScreen {
         banner.setSize(164, 12);
         stage.addActor(banner);
 
-        bannerLabel = new Label("MANAGE SPECIAL MOVES", rm.skin);
+        bannerLabel = new Label("KỸ NĂNG ĐẶC BIỆT", rm.skin);
         bannerLabel.setStyle(headerStyle);
         bannerLabel.setSize(50, 12);
         bannerLabel.setTouchable(Touchable.disabled);
@@ -146,7 +146,7 @@ public class SpecialMoveScreen extends MenuExtensionScreen {
             }
         });
 
-        smoveset = new Label("Special\nMoveset", headerStyle);
+        smoveset = new Label("Kỹ năng\nđặc biệt", headerStyle);
         smoveset.setFontScale(0.5f);
         smoveset.setPosition(130, 40);
         smoveset.setAlignment(Align.center);
@@ -155,9 +155,9 @@ public class SpecialMoveScreen extends MenuExtensionScreen {
 
         createSmoveButtons();
 
-        warningFullDialog = new Dialog("Warning", rm.dialogSkin) {
+        warningFullDialog = new Dialog("Cảnh báo", rm.dialogSkin) {
             {
-                Label l = new Label("Your special moveset is full.", rm.dialogSkin);
+                Label l = new Label("Kĩ năng đầy.", rm.dialogSkin);
                 l.setFontScale(0.5f);
                 l.setAlignment(Align.center);
                 text(l);
@@ -188,7 +188,7 @@ public class SpecialMoveScreen extends MenuExtensionScreen {
         smoveButtonLabels[1].toFront();
         addSmoveActors();
         // update turn cd
-        turnPrompt.setText("Special moves can be used in battle every " + player.smoveCd + " turns.");
+        turnPrompt.setText("Kỹ năng đặc biệt có thể sử dụng trong mọi " + player.smoveCd + " lượt .");
     }
 
     /**
@@ -271,9 +271,9 @@ public class SpecialMoveScreen extends MenuExtensionScreen {
         if (smoveToAdd != null) {
             // already two of a kind in the set
             if (!player.smoveset.canAdd(smoveToAdd.id)) {
-                new Dialog("Warning", rm.dialogSkin) {
+                new Dialog("Cảnh báo", rm.dialogSkin) {
                     {
-                        Label l = new Label("Cannot have more than\n2 of " + smoveToAdd.name + ".", rm.dialogSkin);
+                        Label l = new Label("Không thể nhiều hơn\n2 " + smoveToAdd.name + ".", rm.dialogSkin);
                         l.setFontScale(0.5f);
                         l.setAlignment(Align.center);
                         text(l);
@@ -329,7 +329,7 @@ public class SpecialMoveScreen extends MenuExtensionScreen {
         if (index == 2) return new Vector2(170, 56);
         // bottom right
         if (index == 3) return new Vector2(170, 24);
-        // bottom left
+            // bottom left
         else return new Vector2(138, 10);
     }
 
@@ -420,9 +420,9 @@ public class SpecialMoveScreen extends MenuExtensionScreen {
             desc.setTouchable(Touchable.disabled);
             Label status;
             // green label if unlocked
-            if (player.getLevel() >= smove.levelUnlocked) status = new Label("UNLOCKED", green);
-            // red label with level to unlock
-            else status = new Label("UNLOCKED AT LV." + smove.levelUnlocked, red);
+            if (player.getLevel() >= smove.levelUnlocked) status = new Label("<MỞ KHÓA>", green);
+                // red label with level to unlock
+            else status = new Label("MỞ KHÓA Ở LV." + smove.levelUnlocked, red);
             status.setFontScale(0.5f);
             status.setPosition(20, 3);
             status.setTouchable(Touchable.disabled);
@@ -430,7 +430,7 @@ public class SpecialMoveScreen extends MenuExtensionScreen {
             final TextButton button = new TextButton("", rm.skin);
             button.setFillParent(true);
             button.setTouchable(player.getLevel() >= smove.levelUnlocked ?
-                Touchable.enabled : Touchable.disabled);
+                    Touchable.enabled : Touchable.disabled);
             bg.add(button);
             addScrollPaneEvents(button, smove);
 
@@ -446,7 +446,7 @@ public class SpecialMoveScreen extends MenuExtensionScreen {
         selectionContainer.pack();
         selectionContainer.setTransform(false);
         selectionContainer.setOrigin(selectionContainer.getWidth() / 2,
-            selectionContainer.getHeight() / 2);
+                selectionContainer.getHeight() / 2);
 
         scrollPane = new ScrollPane(selectionContainer, rm.skin);
         scrollPane.setScrollingDisabled(true, false);

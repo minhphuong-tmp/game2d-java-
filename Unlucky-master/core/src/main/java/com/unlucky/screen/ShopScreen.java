@@ -436,8 +436,8 @@ public class ShopScreen extends MenuExtensionScreen {
                     text(l);
                     getButtonTable().defaults().width(40);
                     getButtonTable().defaults().height(15);
-                    button("Có", "có");
-                    button("Không", "không");
+                    button("Yes", "yes");
+                    button("No", "no");
                 }
 
                 @Override
@@ -493,14 +493,14 @@ public class ShopScreen extends MenuExtensionScreen {
                     text(l);
                     getButtonTable().defaults().width(40);
                     getButtonTable().defaults().height(15);
-                    button("Có", "có");
-                    button("Không", "không");
+                    button("Yes", "yes");
+                    button("No", "no");
                 }
 
                 @Override
                 protected void result(Object object) {
                     if (!game.player.settings.muteSfx) rm.buttonclick2.play(game.player.settings.sfxVolume);
-                    if (object.equals("có")) {
+                    if (object.equals("yes")) {
                         player.addGold(currentItem.sell);
                         player.inventory.items[currentItem.index].actor.remove();
                         player.inventory.removeItem(currentItem.index);

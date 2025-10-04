@@ -14,13 +14,13 @@
 		},
 		{
 			"type": 0,
-			"name": "Đâm nhanh",
+			"name": "Đâm xuyên",
 			"minDamage": 1,
 			"maxDamage": 2
 		},
 		{
 			"type": 0,
-			"name": "Phát bắn thần tốc",
+			"name": "Bắn thần tốc",
 			"minDamage": 2,
 			"maxDamage": 3
 		},
@@ -50,7 +50,7 @@
 		},
 		{
 			"type": 0,
-			"name": "Cú đấm điện giật",
+			"name": "Đấm nhanh",
 			"minDamage": 3,
 			"maxDamage": 4
 		},
@@ -86,7 +86,7 @@
 		},
 		{
 			"type": 0,
-			"name": "Điện lưu sát thương",
+			"name": "Cú đấm điện",
 			"minDamage": 3,
 			"maxDamage": 5
 		},
@@ -116,7 +116,7 @@
 		},
 		{
 			"type": 0,
-			"name": "Cú đánh nguyên lực",
+			"name": "Nguyên lực",
 			"minDamage": 4,
 			"maxDamage": 5
 		},
@@ -208,7 +208,7 @@
 		},
 		{
 			"type": 1,
-			"name": "Đòn tấn công bóng tối",
+			"name": "Đấm bóng tối",
 			"minDamage": 1,
 			"maxDamage": 5
 		},
@@ -226,7 +226,7 @@
 		},
 		{
 			"type": 1,
-			"name": "Đòn xoáy trôn ốc",
+			"name": "Đòn xoáy",
 			"minDamage": 1,
 			"maxDamage": 5
 		},
@@ -256,7 +256,7 @@
 		},
 		{
 			"type": 1,
-			"name": "Điện chớp tử linh",
+			"name": "Điện chớp",
 			"minDamage": 1,
 			"maxDamage": 6
 		},
@@ -268,7 +268,7 @@
 		},
 		{
 			"type": 1,
-			"name": "Hào quang cực quang",
+			"name": "Cực quang",
 			"minDamage": 1,
 			"maxDamage": 6
 		},
@@ -298,7 +298,7 @@
 		},
 		{
 			"type": 1,
-			"name": "Cú đánh lượng tử",
+			"name": "Đòn lượng tử",
 			"minDamage": 1,
 			"maxDamage": 9
 		},
@@ -310,19 +310,19 @@
 		},
 		{
 			"type": 1,
-			"name": "Triệu hồi thiên thạch",
+			"name": "Triệu thạch",
 			"minDamage": 1,
 			"maxDamage": 10
 		},
 		{
 			"type": 1,
-			"name": "Chấn động địa cầu",
+			"name": "Chấn động",
 			"minDamage": 1,
 			"maxDamage": 11
 		},
 		{
 			"type": 1,
-			"name": "Cầu may liều lĩnh",
+			"name": "Đòn cầu may",
 			"minDamage": 1,
 			"maxDamage": 15
 		}
@@ -334,7 +334,7 @@
 			"crit": 60
 		},
 		{
-			"name": "Xoáy nước tử thần",
+			"name": "Xoáy tử thần",
 			"damage": 2,
 			"crit": 70
 		},
@@ -359,12 +359,12 @@
 			"crit": 60
 		},
 		{
-			"name": "Được ăn cả, ngã về không",
+			"name": "đâm kiếm",
 			"damage": 2,
 			"crit": 50
 		},
 		{
-			"name": "Ngọn lửa tan chảy",
+			"name": "Lửa tan chảy",
 			"damage": 2,
 			"crit": 55
 		},
@@ -384,7 +384,7 @@
 			"crit": 30
 		},
 		{
-			"name": "Giải phóng hỗn nguyên",
+			"name": "Hỗn nguyên",
 			"damage": 3,
 			"crit": 40
 		},
@@ -419,12 +419,12 @@
 			"crit": 45
 		},
 		{
-			"name": "Phát bắn cuồng phong",
+			"name": "Đạn cuồng phong",
 			"damage": 3,
 			"crit": 30
 		},
 		{
-			"name": "Đập nát ký ức",
+			"name": "Đập nát",
 			"damage": 4,
 			"crit": 15
 		},
@@ -520,7 +520,7 @@
 			"dmgReduction": 40
 		},
 		{
-			"name": "Trị liệu sinh mệnh",
+			"name": "Trị liệu",
 			"minHeal": 4,
 			"maxHeal": 6,
 			"dmgReduction": 50

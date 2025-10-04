@@ -426,7 +426,7 @@ public class Battle {
             case Util.FOCUS:
                 return new String[] {
                         "Vận sức!",
-                        "Đòn tiếp theo chắc chắn trúng, tỉ lệ chí mạng tăng " + Util.P_FOCUS_CRIT + "%!"
+                        "Đòn tiếp theo 100% acc, tăng crit " + Util.P_FOCUS_CRIT + "%!"
                 };
             case Util.INTIMIDATE:
                 return new String[] {

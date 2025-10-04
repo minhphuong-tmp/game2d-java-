@@ -70,21 +70,21 @@ public class Hud extends UI {
         shade.setTouchable(Touchable.disabled);
         stage.addActor(shade);
 
-        settingsDialog = new Dialog("Dừng", rm.dialogSkin) {
+        settingsDialog = new Dialog("Paused", rm.dialogSkin) {
             {
                 getButtonTable().defaults().width(50);
                 getButtonTable().defaults().height(15);
-                TextButton b = new TextButton("Trờ lại", rm.dialogSkin);
+                TextButton b = new TextButton("Trở lại", rm.dialogSkin);
                 b.getLabel().setFontScale(0.75f);
-                button(b, "trở lại");
+                button(b, "back");
                 getButtonTable().padTop(-6).row();
                 TextButton s = new TextButton("Cài đặt", rm.dialogSkin);
                 s.getLabel().setFontScale(0.75f);
-                button(s, "cài đặt");
+                button(s, "settings");
                 getButtonTable().row();
                 TextButton q = new TextButton("Thoát", rm.dialogSkin);
                 q.getLabel().setFontScale(0.75f);
-                button(q, "thoát");
+                button(q, "quit");
             }
             @Override
             protected void result(Object object) {
@@ -116,16 +116,16 @@ public class Hud extends UI {
                         gameScreen.setBatchFade(false);
                         // fade out animation
                         stage.addAction(Actions.sequence(Actions.fadeOut(0.3f),
-                            Actions.run(new Runnable() {
-                                @Override
-                                public void run() {
-                                    gameScreen.setClickable(true);
-                                    game.setScreen(game.settingsScreen);
-                                }
-                            })));
+                                Actions.run(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        gameScreen.setClickable(true);
+                                        game.setScreen(game.settingsScreen);
+                                    }
+                                })));
                     }
                 }
-                else if (object.equals("thoát")) {
+                else if (object.equals("quit")) {
                     quit();
                 }
             }
@@ -139,7 +139,7 @@ public class Hud extends UI {
             dirTime += dt;
             // quick tap to change direction
             if (dirTime > 0 && dirTime <= 0.15f) player.getAm().setAnimation(dirIndex);
-            // move the player
+                // move the player
             else movePlayer(dirIndex);
         }
         else {
@@ -159,7 +159,7 @@ public class Hud extends UI {
                 levelMoving.start();
             }
             if (levelMoving.target.x == -levelDescriptor.getPrefWidth() &&
-                levelMoving.position.x == levelMoving.target.x) {
+                    levelMoving.position.x == levelMoving.target.x) {
                 ld = false;
                 showTime = 0;
                 levelDescriptor.setVisible(false);
@@ -182,7 +182,7 @@ public class Hud extends UI {
         String worldName = rm.worlds.get(worldIndex).name;
         String levelName = rm.worlds.get(worldIndex).levels[levelIndex].name;
 
-        levelDescriptor.getTitleLabel().setText("KHU VỰC " + (worldIndex + 1) + " : " + "CẤP " + (levelIndex + 1));
+        levelDescriptor.getTitleLabel().setText("KHU VỰC " + (worldIndex + 1) + " : " + "CẤP ĐỘ " + (levelIndex + 1));
         levelDesc.setText(worldName + "\n" + levelName + "\n" + "AVG LVL: " + rm.worlds.get(worldIndex).levels[levelIndex].avgLevel);
         levelDescriptor.setVisible(true);
         levelDescriptor.pack();
@@ -296,7 +296,7 @@ public class Hud extends UI {
         frame.setPosition(Unlucky.V_WIDTH / 2 - 50, Unlucky.V_HEIGHT / 2 - 30);
         deathGroup.addActor(frame);
 
-        youDied = new Label("YOU DIED!", new Label.LabelStyle(rm.pixel10, Color.RED));
+        youDied = new Label("BẠN ĐÃ BỊ HẠ!", new Label.LabelStyle(rm.pixel10, Color.RED));
         youDied.setSize(100, 10);
         youDied.setPosition(50, 75);
         youDied.setAlignment(Align.center);
@@ -343,14 +343,14 @@ public class Hud extends UI {
             gameScreen.setBatchFade(false);
             // fade out animation
             stage.addAction(Actions.sequence(Actions.fadeOut(0.3f),
-                Actions.run(new Runnable() {
-                    @Override
-                    public void run() {
-                        gameScreen.setClickable(true);
-                        gameScreen.gameMap.mapTheme.stop();
-                        game.setScreen(game.menuScreen);
-                    }
-                })));
+                    Actions.run(new Runnable() {
+                        @Override
+                        public void run() {
+                            gameScreen.setClickable(true);
+                            gameScreen.gameMap.mapTheme.stop();
+                            game.setScreen(game.menuScreen);
+                        }
+                    })));
         }
     }
 
@@ -372,9 +372,9 @@ public class Hud extends UI {
      * The player will lose all gold, exp, and items obtained during the level
      */
     private void quit() {
-        final String text = "Nếu bạn thoát, toàn bộ vàng, \nexp và vật phẩm kiếm được trong màn này sẽ mất hết.\n" +
-            "Bạn có chắc không?";
-            new Dialog("Cảnh báo", rm.dialogSkin) {
+        final String text = "Nếu thoát, bạn sẽ mất toàn bộ vàng, exp\nvà trang bị nhận được ở vòng này.\n" +
+                "Bạn chắc chưa?";
+        new Dialog("Cảnh báo", rm.dialogSkin) {
             {
                 Label l = new Label(text, rm.dialogSkin);
                 l.setFontScale(0.5f);
@@ -382,13 +382,13 @@ public class Hud extends UI {
                 text(l);
                 getButtonTable().defaults().width(40);
                 getButtonTable().defaults().height(15);
-                button("Có", "có");
-                button("Không", "không");
+                button("Yes", "yes");
+                button("No", "no");
             }
             @Override
             protected void result(Object object) {
                 if (!game.player.settings.muteSfx) rm.buttonclick2.play(game.player.settings.sfxVolume);
-                if (object.equals("có")) {
+                if (object.equals("yes")) {
                     loseObtained();
                     player.setHp(player.getMaxHp());
                     player.inMap = false;

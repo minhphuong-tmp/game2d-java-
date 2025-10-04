@@ -117,13 +117,13 @@ public class LevelSelectScreen extends SelectScreen {
                                 text(l);
                                 getButtonTable().defaults().width(40);
                                 getButtonTable().defaults().height(15);
-                                button("Có", "có");
-                                button("Không", "Không");
+                                button("Yes", "yes");
+                                button("No", "no");
                             }
 
                             @Override
                             protected void result(Object object) {
-                                if (object.equals("có")) enterGame();
+                                if (object.equals("yes")) enterGame();
                             }
 
                         }.show(stage).getTitleLabel().setAlignment(Align.center);
