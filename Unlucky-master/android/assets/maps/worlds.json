@@ -1,43 +1,43 @@
 {
 "worlds": [
 	{
-		"name":"SLIME FOREST",
-		"shortDesc":"LV. 1-6\nBOSS: SLIME KING",
-		"longDesc":"A long time ago, this forest was inhabited by regular animals. A mad scientist also lived here, conducting strange experiments on the creatures. One day, something went wrong and he turned the animals into hostile slimes. The slimes killed him and have ruled this forest ever since...",
+		"name":"RỪNG SLIME",
+		"shortDesc":"LV. 1-6\nTRÙM: VUA SLIME",
+		"longDesc":"Ngày xưa rừng chỉ có muông thú. Một nhà khoa học điên làm thí nghiệm thất bại, biến chúng thành slime hung hãn. Chúng giết ông và chiếm lấy khu rừng.",
 		"numLevels":6,
 		"levels": [
-			{ "name":"Forest Entrance", "avgLevel":1 },
-			{ "name":"Into The Trees", "avgLevel":2 },
-			{ "name":"Rainy Grove", "avgLevel":3 },
-			{ "name":"A Hint of Blue", "avgLevel":4 },
-			{ "name":"Big Red Spiral", "avgLevel":5 },
-			{ "name":"Face the King", "avgLevel":6 }
+			{ "name":"Lối vào rừng", "avgLevel":1 },
+			{ "name":"Giữa tán cây", "avgLevel":2 },
+			{ "name":"Lùm   cây mưa ướt", "avgLevel":3 },
+			{ "name":"Ánh xanh thấp thoáng", "avgLevel":4 },
+			{ "name":"Vòng xoắn đỏ lớn", "avgLevel":5 },
+			{ "name":"Đối mặt nhà vua", "avgLevel":6 }
 		]
 	},
 	{
-		"name":"SPOOKY GRAVEYARD",
-		"shortDesc":"LV. 7-11\nBOSS: RED REAPER",
-		"longDesc":"The entities that haunt this graveyard were created by a powerful necromancer thousands of years ago. In the darkness, evil spirits and spooky skeletons guard the graves of the deceased. Deep in this terrority is said to reside Death himself...",
+		"name":"NGHĨA ĐỊA MA ÁM",
+		"shortDesc":"LV. 7-11\nTRÙM: LƯỠI HÁI ĐỎ",
+		"longDesc":"Nghĩa địa này bị ám bởi những thực thể do một pháp sư hắc ám tạo ra từ ngàn xưa. Trong bóng tối, hồn ma và bộ xương rùng rợn canh giữ mộ phần. Tương truyền nơi sâu thẳm nhất còn có cả Thần Chết...",
 		"numLevels": 5,
 		"levels": [
-			{ "name":"Ghastly Gate", "avgLevel":7 },
-			{ "name":"Scattered Tombs", "avgLevel":8 },
-			{ "name":"The Undead", "avgLevel":9 },
-			{ "name":"Spooky Skeletons", "avgLevel":10 },
-			{ "name":"The Red Reaper", "avgLevel":11 }
+			{ "name":"Cổng ma ám", "avgLevel":7 },
+			{ "name":"Mộ phần rải rác", "avgLevel":8 },
+			{ "name":"Xác sống", "avgLevel":9 },
+			{ "name":"Bộ xương rùng rợn", "avgLevel":10 },
+			{ "name":"Lưỡi hái đỏ", "avgLevel":11 }
 		]
 	},
 	{
-		"name": "FROSTY CAVE",
-		"shortDesc": "LV. 12-16\nBOSS: ICE GOLEM",
-		"longDesc": "Hidden deep in a snowy mountain is an icy cave that held monsters frozen in a dormant state for thousands of years. The creatures have since defrosted and have been running rampant throughout the cave. They assume the forms of deadly and durable beasts...",
+		"name": "ĐỘNG BĂNG GIÁ",
+		"shortDesc": "LV. 12-16\nTRÙM: NGƯỜI KHỔNG LỒ BĂNG",
+		"longDesc": "Nằm sâu trong ngọn núi tuyết là hang băng từng giam giữ quái vật suốt hàng ngàn năm. Giờ chúng thoát ra, tung hoành khắp nơi, mang hình dạng của những sinh vật vừa nguy hiểm vừa bền bỉ...",
 		"numLevels": 5,
 		"levels": [
-			{ "name":"Tundra Trails", "avgLevel":12 },
-			{ "name":"Blizzard Mayham", "avgLevel":13 },
-			{ "name":"Frozen Gems", "avgLevel":14 },
-			{ "name":"Coldest Cavern", "avgLevel":15 },
-			{ "name":"Ice Rocks", "avgLevel":16 }
+			{ "name":"Lối mòn tuyết phủ", "avgLevel":12 },
+			{ "name":"Bão tuyết hỗn loạn", "avgLevel":13 },
+			{ "name":"Ngọc băng giá", "avgLevel":14 },
+			{ "name":"Hang động lạnh nhất", "avgLevel":15 },
+			{ "name":"Tảng băng khổng lồ", "avgLevel":16 }
 		]
 	}
 

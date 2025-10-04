@@ -11,6 +11,11 @@ repositories {
 }
 
 def gdxVersion = rootProject.ext.gdxVersion
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+//def gdxVersion = "1.11.0" // hoặc "1.12.1" nếu bạn đồng bộ với root build.gradle
 
 dependencies {
     implementation "com.badlogicgames.gdx:gdx:$gdxVersion"

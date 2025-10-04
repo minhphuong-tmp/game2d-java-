@@ -77,8 +77,8 @@ public class MoveUI extends BattleUI {
             shouldReset = false;
         }
         else {
-            if (onCd) optionDescLabels[0].setText(player.smoveCd - turnCounter + " turn(s) until\n" +
-                    "new special move");
+            if (onCd) optionDescLabels[0].setText(player.smoveCd - turnCounter + " lượt đến\n" +
+                    "kỹ năng đặc biệt");
         }
 
         for (int i = 0; i < playerSmoveset.size; i++) {
@@ -96,7 +96,7 @@ public class MoveUI extends BattleUI {
         turnCounter = 0;
         onCd = false;
         shouldReset = false;
-        optionDescLabels[1].setText("7% chance to run\nfrom a battle");
+        optionDescLabels[1].setText("7% cơ hội \nchạy trốn");
         for (int i = 0; i < 2; i++) {
             optionButtonTouchable[i] = true;
             optionButtons[i].setStyle(optionStyles[1 - i]);
@@ -154,8 +154,8 @@ public class MoveUI extends BattleUI {
             }
         }
         else {
-            optionNameLabels[0].setText("NONE");
-            optionDescLabels[0].setText("No special\nmoves left");
+            optionNameLabels[0].setText("KHÔNG CÓ GÌ");
+            optionDescLabels[0].setText("Không còn \nchiêu đặc biệt");
             optionButtons[0].setStyle(disabled[0]);
             optionButtons[0].setTouchable(Touchable.disabled);
             optionButtonTouchable[0] = false;
@@ -264,14 +264,14 @@ public class MoveUI extends BattleUI {
         optionDescLabels[0].setTouchable(Touchable.disabled);
         optionDescLabels[0].setPosition(2 * Util.MOVE_WIDTH + 7, Util.MOVE_HEIGHT - 12);
 
-        optionNameLabels[1] = new Label("Run", font);
+        optionNameLabels[1] = new Label("Chạy", font);
         optionNameLabels[1].setAlignment(Align.topLeft);
         optionNameLabels[1].setSize(55, 25);
         optionNameLabels[1].setFontScale(0.62f);
         optionNameLabels[1].setTouchable(Touchable.disabled);
         optionNameLabels[1].setPosition(2 * Util.MOVE_WIDTH + 7, -6);
 
-        optionDescLabels[1] = new Label("7% chance to run\nfrom a battle", font);
+        optionDescLabels[1] = new Label("7% cơ hội \nchạy trốn", font);
         optionDescLabels[1].setAlignment(Align.topLeft);
         optionDescLabels[1].setSize(55, 25);
         optionDescLabels[1].setFontScale(0.7f / 2);
@@ -355,7 +355,7 @@ public class MoveUI extends BattleUI {
                 onCd = true;
                 optionButtons[0].setTouchable(Touchable.disabled);
                 optionButtons[0].setStyle(disabled[0]);
-                optionNameLabels[0].setText("ON COOLDOWN");
+                optionNameLabels[0].setText("HỒI CHIÊU");
                 optionButtonTouchable[0] = false;
 
                 shouldReset = true;
@@ -377,16 +377,16 @@ public class MoveUI extends BattleUI {
                 // 7% chance to run from the battle
                 if (Util.isSuccess(Util.RUN_FROM_BATTLE)) {
                     uiHandler.battleEventHandler.startDialog(new String[]{
-                            "You successfully ran from the battle!"
+                            "Bạn chạy trốn thành công khỏi trận chiến!"
                     }, BattleEvent.PLAYER_TURN, BattleEvent.END_BATTLE);
                 } else {
                     uiHandler.battleEventHandler.startDialog(new String[]{
-                            "You couldn't run from the battle!"
+                            "Bạn buộc phải đánh tiếp!"
                     }, BattleEvent.PLAYER_TURN, BattleEvent.ENEMY_TURN);
                 }
                 optionButtons[1].setTouchable(Touchable.disabled);
                 optionButtons[1].setStyle(disabled[1]);
-                optionDescLabels[1].setText("cannot run again");
+                optionDescLabels[1].setText("Hết cơ hội thoát");
                 optionButtonTouchable[1] = false;
             }
         });

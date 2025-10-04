@@ -32,7 +32,7 @@ public class LevelUpScreen extends UI {
     private Label title;
     private Label levelDesc;
     private Label[] statsDescs;
-    private String[] statNames = { "MAX EXP:", "ACCURACY:", "MAX DMG:", "MIN DMG:", "MAX HP:" };
+    private String[] statNames = { "MAX EXP:", "ACC:", "MAX DMG:", "MIN DMG:", "MAX HP:" };
     private Label[] stats;
     private Label[] increases;
     private Label clickToContinue;
@@ -74,7 +74,7 @@ public class LevelUpScreen extends UI {
         Label.LabelStyle yellow = new Label.LabelStyle(font, new Color(1, 212 / 255.f, 0, 1));
         Label.LabelStyle blue = new Label.LabelStyle(font, new Color(0, 190 / 255.f, 1, 1));
 
-        title = new Label("LEVEL UP!", titleFont);
+        title = new Label("TĂNG CẤP!", titleFont);
         title.setSize(200, 20);
         title.setPosition(0, 95);
         title.setFontScale(2.5f);
@@ -82,7 +82,7 @@ public class LevelUpScreen extends UI {
         title.setTouchable(Touchable.disabled);
         stage.addActor(title);
 
-        levelDesc = new Label("You reached level 1", stdWhite);
+        levelDesc = new Label("Bạn đạt level 1", stdWhite);
         levelDesc.setSize(200, 20);
         levelDesc.setPosition(0, 80);
         levelDesc.setAlignment(Align.center);
@@ -119,7 +119,7 @@ public class LevelUpScreen extends UI {
             stage.addActor(increases[i]);
         }
 
-        clickToContinue = new Label("Click to continue", stdWhite);
+        clickToContinue = new Label("Nhấn để tiếp tục", stdWhite);
         clickToContinue.setSize(200, 10);
         clickToContinue.setFontScale(0.5f);
         clickToContinue.setPosition(0, 2);
@@ -155,7 +155,7 @@ public class LevelUpScreen extends UI {
         }
         ui.setTouchable(Touchable.enabled);
         // update information
-        levelDesc.setText("You reached level " + player.getLevel());
+        levelDesc.setText("Bạn đạt level " + player.getLevel());
     }
 
     private void handleClick() {

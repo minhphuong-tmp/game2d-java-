@@ -325,8 +325,8 @@ public class BattleEventHandler extends BattleUI {
             // 1% chance for revival after dead
             if (Util.isSuccess(Util.REVIVAL)) {
                 startDialog(new String[] {
-                        "You took fatal damage and died!",
-                        "However, it looks like luck was on your side and you revived!"
+                        "Nhận sát thương chí mạng và bị hạ gục!",
+                        "Tuy nhiên có vẻ may mắn đứng về phía bạn, bạn vẫn sống!"
                 }, BattleEvent.PLAYER_TURN, BattleEvent.PLAYER_TURN);
                 player.setHp(player.getMaxHp());
                 player.setDead(false);
@@ -335,9 +335,9 @@ public class BattleEventHandler extends BattleUI {
             else {
                 if (!player.settings.muteSfx) rm.death.play(player.settings.sfxVolume);
                 startDialog(new String[] {
-                        "Oh no, you took fatal damage and died!",
-                        "You will lose " + Util.DEATH_PENALTY +
-                            "% of your exp and gold and all the items obtained in this level as a penalty."
+                        "Ôi không, bạn nhận sát thương chí mạng và bị hạ gục!",
+                        "Bạn sẽ mất " + Util.DEATH_PENALTY +
+                            "% kinh nghiệm, vàng và toàn bộ vật phẩm nhặt được ở vòng này."
                 }, BattleEvent.PLAYER_TURN, BattleEvent.PLAYER_DEAD);
                 gameScreen.gameMap.setDeath();
 
@@ -371,8 +371,8 @@ public class BattleEventHandler extends BattleUI {
             // 1% chance for enemy revival (bosses can't revive)
             if (Util.isSuccess(Util.REVIVAL) && !battle.opponent.isBoss()) {
                 startDialog(new String[] {
-                        "The enemy took fatal damage and died!",
-                        "Oh no, it looks like the enemy has been revived!"
+                        "Kẻ địch nhận sát thương chí mạng và bị hạ gục!",
+                        "Ôi không, có vẻ kẻ địch sắp hồi sinh!"
                 }, BattleEvent.ENEMY_TURN, BattleEvent.ENEMY_TURN);
                 battle.opponent.setHp(battle.opponent.getMaxHp());
                 battle.opponent.setDead(false);
@@ -412,21 +412,21 @@ public class BattleEventHandler extends BattleUI {
                     int remainder = (player.getExp() + expGained) - player.getMaxExp();
                     player.levelUp(remainder);
                     startDialog(new String[] {
-                            "You defeated " + battle.opponent.getId() + "!",
-                            "You obtained " + goldGained + " gold.",
+                            "Bạn đã đánh bại " + battle.opponent.getId() + "!",
+                            "Nhận " + goldGained + " vàng.",
                             battle.getItemDialog(itemGained),
-                            "You gained " + expGained + " experience.",
-                            "You leveled up!"
+                            "Nhận " + expGained + " kinh nghiệm.",
+                            "Tăng cấp!"
                     }, BattleEvent.ENEMY_TURN, BattleEvent.LEVEL_UP);
                     return true;
                 }
                 else {
                     player.addExp(expGained);
                     startDialog(new String[] {
-                            "You defeated " + battle.opponent.getId() + "!",
-                            "You obtained " + goldGained + " gold.",
+                            "Bạn đã đánh bại " + battle.opponent.getId() + "!",
+                            "Nhận " + goldGained + " vàng.",
                             battle.getItemDialog(itemGained),
-                            "You gained " + expGained + " experience."
+                            "Nhận " + expGained + " kinh nghiệm."
                     }, BattleEvent.ENEMY_TURN, BattleEvent.END_BATTLE);
                     return true;
                 }
@@ -456,8 +456,8 @@ public class BattleEventHandler extends BattleUI {
                     battle.opponent.setDead(false);
 
                     startDialog(new String[] {
-                            "King Slime respawned with half its health points!",
-                            "It will respawn " + (3 - battle.opponent.numRespawn) + " more time(s)!"
+                            "Vua Slime hồi sinh với 50% máu!",
+                            "Hắn sẽ hồi sinh thêm " + (3 - battle.opponent.numRespawn) + " lần nữa!"
                     }, BattleEvent.ENEMY_TURN, BattleEvent.ENEMY_TURN);
                     return true;
                 }
