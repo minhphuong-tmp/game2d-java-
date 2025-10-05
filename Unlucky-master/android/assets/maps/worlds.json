@@ -8,38 +8,19 @@
 		"levels": [
 			{ "name":"Lối vào rừng", "avgLevel":1 },
 			{ "name":"Giữa tán cây", "avgLevel":2 },
-			{ "name":"Lùm   cây mưa ướt", "avgLevel":3 },
-			{ "name":"Ánh xanh thấp thoáng", "avgLevel":4 },
-			{ "name":"Vòng xoắn đỏ lớn", "avgLevel":5 },
-			{ "name":"Đối mặt nhà vua", "avgLevel":6 }
+			{ "name":"Đối mặt nhà vua", "avgLevel":3 }
 		]
 	},
 	{
 		"name":"NGHĨA ĐỊA MA ÁM",
 		"shortDesc":"LV. 7-11\nTRÙM: LƯỠI HÁI ĐỎ",
 		"longDesc":"Nghĩa địa này bị ám bởi những thực thể do một pháp sư hắc ám tạo ra từ ngàn xưa. Trong bóng tối, hồn ma và bộ xương rùng rợn canh giữ mộ phần. Tương truyền nơi sâu thẳm nhất còn có cả Thần Chết...",
-		"numLevels": 5,
+		"numLevels": 3,
 		"levels": [
 			{ "name":"Cổng ma ám", "avgLevel":7 },
 			{ "name":"Mộ phần rải rác", "avgLevel":8 },
-			{ "name":"Xác sống", "avgLevel":9 },
-			{ "name":"Bộ xương rùng rợn", "avgLevel":10 },
 			{ "name":"Lưỡi hái đỏ", "avgLevel":11 }
 		]
-	},
-	{
-		"name": "ĐỘNG BĂNG GIÁ",
-		"shortDesc": "LV. 12-16\nTRÙM: NGƯỜI KHỔNG LỒ BĂNG",
-		"longDesc": "Nằm sâu trong ngọn núi tuyết là hang băng từng giam giữ quái vật suốt hàng ngàn năm. Giờ chúng thoát ra, tung hoành khắp nơi, mang hình dạng của những sinh vật vừa nguy hiểm vừa bền bỉ...",
-		"numLevels": 5,
-		"levels": [
-			{ "name":"Lối mòn tuyết phủ", "avgLevel":12 },
-			{ "name":"Bão tuyết hỗn loạn", "avgLevel":13 },
-			{ "name":"Ngọc băng giá", "avgLevel":14 },
-			{ "name":"Hang động lạnh nhất", "avgLevel":15 },
-			{ "name":"Tảng băng khổng lồ", "avgLevel":16 }
-		]
 	}
-
 ]
 }
