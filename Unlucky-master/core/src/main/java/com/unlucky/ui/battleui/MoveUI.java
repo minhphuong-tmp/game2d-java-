@@ -203,15 +203,15 @@ public class MoveUI extends BattleUI {
             moveDescLabels[i].setFontScale(0.5f);
             moveDescLabels[i].setTouchable(Touchable.disabled);
         }
-        moveNameLabels[0].setPosition(8, Util.MOVE_HEIGHT - 7);
-        moveNameLabels[1].setPosition(Util.MOVE_WIDTH + 7, Util.MOVE_HEIGHT - 7);
-        moveNameLabels[2].setPosition(8, -7);
-        moveNameLabels[3].setPosition(Util.MOVE_WIDTH + 7, -7);
+        moveNameLabels[0].setPosition(8, Util.MOVE_HEIGHT - 5);
+        moveNameLabels[1].setPosition(Util.MOVE_WIDTH + 7, Util.MOVE_HEIGHT - 5);
+        moveNameLabels[2].setPosition(8, -5);
+        moveNameLabels[3].setPosition(Util.MOVE_WIDTH + 7, -5);
 
-        moveDescLabels[0].setPosition(8, Util.MOVE_HEIGHT - 2);
-        moveDescLabels[1].setPosition(Util.MOVE_WIDTH + 7, Util.MOVE_HEIGHT - 2);
-        moveDescLabels[2].setPosition(8, -2);
-        moveDescLabels[3].setPosition(Util.MOVE_WIDTH + 7, -2);
+        moveDescLabels[0].setPosition(8, Util.MOVE_HEIGHT - 4);
+        moveDescLabels[1].setPosition(Util.MOVE_WIDTH + 7, Util.MOVE_HEIGHT - 4);
+        moveDescLabels[2].setPosition(8, -4);
+        moveDescLabels[3].setPosition(Util.MOVE_WIDTH + 7, -4);
 
         for (int i = 0; i < 4; i++) {
             stage.addActor(moveButtons[i]);
