@@ -1,6 +1,5 @@
 package com.unlucky.screen;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -50,25 +49,21 @@ public class LevelSelectScreen extends SelectScreen {
         bannerLabel.setText(rm.worlds.get(worldIndex).name);
         bannerLabel.setStyle(nameStyles[worldIndex]);
 
-        playerStats = "Player\n-----------------------------------\n" +
-                "LEVEL: " + game.player.getLevel() +
-                "\nHP: " + game.player.getHp() + "/" + game.player.getMaxHp() +
-                "\nDAMAGE: " + game.player.getMinDamage() + "-" + game.player.getMaxDamage() +
-                "\nSPECIAL MOVESET: \n" + game.player.smoveset.toString();
+        playerStats = "NGƯỜI CHƠI\n-----------------------------------\n" +
+                "CẤP ĐỘ: " + game.player.getLevel() +
+                "\nMÁU: " + game.player.getHp() + "/" + game.player.getMaxHp() +
+                "\nsÁT THƯƠNG: " + game.player.getMinDamage() + "-" + game.player.getMaxDamage() +
+                "\nKĨ NĂNG ĐẶC BIỆT: \n" + game.player.smoveset.toString();
 
         // the level the player is currently on and not completed
         if (this.worldIndex == game.player.maxWorld) {
             this.currentLevelIndex = game.player.maxLevel;
             this.numLevelsToShow = game.player.maxLevel;
         }
-        // levels the player has completed so show all the levels
+        // levels the player have completed so show all the levels
         else if (this.worldIndex < game.player.maxWorld) {
             this.currentLevelIndex = 0;
             this.numLevelsToShow = rm.worlds.get(worldIndex).numLevels - 1;
-            // cho phép full luôn
-            if (this.numLevelsToShow < rm.worlds.get(worldIndex).levels.length - 1) {
-                this.numLevelsToShow = rm.worlds.get(worldIndex).levels.length - 1;
-            }
         }
         // in a world the player has not gotten to yet
         else {
@@ -76,22 +71,11 @@ public class LevelSelectScreen extends SelectScreen {
             this.numLevelsToShow = -1;
         }
 
-        // ✅ FIX: tránh out-of-range khi số map giảm
-        int actualLevels = rm.worlds.get(worldIndex).levels.length;
-        if (currentLevelIndex >= actualLevels) {
-            Gdx.app.log("LevelSelectScreen",
-                    "currentLevelIndex " + currentLevelIndex +
-                            " >= actualLevels " + actualLevels + " → ép về cuối");
-            currentLevelIndex = actualLevels - 1;
-        }
-
         // the side description will show player stats and level name
         String levelName = rm.worlds.get(worldIndex).levels[currentLevelIndex].name;
         fullDescLabel.setText(levelName + "\n\n" + playerStats);
 
-        if (this.worldIndex > game.player.maxWorld) {
-            fullDescLabel.setText("???????????????" + "\n\n" + playerStats);
-        }
+        if (this.worldIndex > game.player.maxWorld) fullDescLabel.setText("???????????????" + "\n\n" + playerStats);
 
         scrollTable.remove();
         createScrollPane();
@@ -102,13 +86,13 @@ public class LevelSelectScreen extends SelectScreen {
     }
 
     /**
-     * To know what world this screen is in
+     * To know know what world this screen is in
      *
      * @param worldIndex
      */
     public void setWorld(int worldIndex) {
         this.worldIndex = worldIndex;
-        this.numLevels = rm.worlds.get(worldIndex).levels.length;
+        this.numLevels = rm.worlds.get(worldIndex).numLevels;
     }
 
     protected void handleExitButton() {
@@ -121,14 +105,13 @@ public class LevelSelectScreen extends SelectScreen {
         enterButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if (!game.player.settings.muteSfx)
-                    rm.buttonclick0.play(game.player.settings.sfxVolume);
+                if (!game.player.settings.muteSfx) rm.buttonclick0.play(game.player.settings.sfxVolume);
                 if (worldIndex <= game.player.maxWorld) {
                     // if the player's inventory is full give a warning
                     if (game.player.inventory.isFull()) {
                         new Dialog("Warning", rm.dialogSkin) {
                             {
-                                Label l = new Label("Your inventory is full.\nAre you sure you want to proceed?", rm.dialogSkin);
+                                Label l = new Label("Túi đầy.\nBạn có muốn tiếp tục?", rm.dialogSkin);
                                 l.setFontScale(0.5f);
                                 l.setAlignment(Align.center);
                                 text(l);
@@ -176,8 +159,7 @@ public class LevelSelectScreen extends SelectScreen {
         stage.addActor(scrollTable);
 
         selectionContainer = new Table();
-        int actualLevels = rm.worlds.get(worldIndex).levels.length;
-        for (int i = 0; i < actualLevels; i++) {
+        for (int i = 0; i < numLevels; i++) {
             final int index = i;
 
             // button and label group
@@ -188,15 +170,15 @@ public class LevelSelectScreen extends SelectScreen {
             Level l = rm.worlds.get(worldIndex).levels[index];
 
             Label name;
-            if (i == actualLevels - 1) {
-                name = new Label(l.name, new Label.LabelStyle(rm.pixel10, new Color(225 / 255f, 0, 0, 1)));
-            } else {
+            // on last level (boss level) the name is red
+            if (i == numLevels - 1)
+                name = new Label(l.name, new Label.LabelStyle(rm.pixel10, new Color(225 / 255.f, 0, 0, 1)));
+            else
                 name = new Label(l.name, nameStyle);
-            }
             name.setPosition(5, 10);
             name.setFontScale(0.66f);
             name.setTouchable(Touchable.disabled);
-            Label desc = new Label("Average level: " + l.avgLevel, descStyle);
+            Label desc = new Label("Cấp độ trung bình: " + l.avgLevel, descStyle);
             desc.setPosition(5, 4);
             desc.setFontScale(0.5f);
             desc.setTouchable(Touchable.disabled);
@@ -210,20 +192,20 @@ public class LevelSelectScreen extends SelectScreen {
             if (index > numLevelsToShow) {
                 b.setTouchable(Touchable.disabled);
                 name.setText("???????????????");
-                desc.setText("Average level:  ???");
-            } else {
+                desc.setText("Cấp độ trung bình:  ???");
+            }
+            else {
                 b.setTouchable(Touchable.enabled);
                 scrollButtons.add(b);
                 name.setText(l.name);
-                desc.setText("Average level: " + l.avgLevel);
+                desc.setText("Cấp độ trung bình: " + l.avgLevel);
             }
 
             // select level
             b.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    if (!game.player.settings.muteSfx)
-                        rm.invselectclick.play(game.player.settings.sfxVolume);
+                    if (!game.player.settings.muteSfx) rm.invselectclick.play(game.player.settings.sfxVolume);
                     currentLevelIndex = index;
                     selectAt(currentLevelIndex);
                     String levelName = rm.worlds.get(worldIndex).levels[currentLevelIndex].name;
@@ -254,4 +236,5 @@ public class LevelSelectScreen extends SelectScreen {
     public void render(float dt) {
         super.render(dt, worldIndex);
     }
+
 }

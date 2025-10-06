@@ -30,22 +30,44 @@ public class WorldSelectScreen extends SelectScreen {
         createScrollPane();
     }
 
-    @Override
-    public void show() {
-        super.show();
+//    @Override
+//    public void show() {
+//        super.show();
+//
+//        bannerLabel.setText("CHỌN KHU VỰC");
+//        bannerLabel.getStyle().fontColor = new Color(1, 212 / 255.f, 0, 1);
+//
+//        this.worldIndex = game.player.maxWorld;
+//
+//        // automatically scroll to the position of the currently selected world button
+//        float r = (float) worldIndex / (rm.worlds.size - 1);
+//        scrollPane.setScrollPercentY(r);
+//
+//        selectAt(worldIndex);
+//        fullDescLabel.setText(rm.worlds.get(worldIndex).longDesc);
+//    }
+@Override
+public void show() {
+    super.show();
 
-        bannerLabel.setText("SELECT A WORLD");
-        bannerLabel.getStyle().fontColor = new Color(1, 212 / 255.f, 0, 1);
+    bannerLabel.setText("CHỌN KHU VỰC");
+    bannerLabel.getStyle().fontColor = new Color(1, 212 / 255.f, 0, 1);
 
+    // giới hạn worldIndex để không vượt quá số lượng world
+    if (game.player.maxWorld >= rm.worlds.size) {
+        this.worldIndex = rm.worlds.size - 1;
+    } else {
         this.worldIndex = game.player.maxWorld;
-
-        // automatically scroll to the position of the currently selected world button
-        float r = (float) worldIndex / (rm.worlds.size - 1);
-        scrollPane.setScrollPercentY(r);
-
-        selectAt(worldIndex);
-        fullDescLabel.setText(rm.worlds.get(worldIndex).longDesc);
     }
+
+    // automatically scroll to the position of the currently selected world button
+    float r = (float) worldIndex / (rm.worlds.size - 1);
+    scrollPane.setScrollPercentY(r);
+
+    selectAt(worldIndex);
+    fullDescLabel.setText(rm.worlds.get(worldIndex).longDesc);
+}
+
 
     protected void handleExitButton() {
         super.handleExitButton(game.menuScreen);
@@ -54,7 +76,7 @@ public class WorldSelectScreen extends SelectScreen {
     protected void handleEnterButton() {
         enterButtonGroup.setPosition(114, 4);
         stage.addActor(enterButtonGroup);
-        enterLabel.setText("SELECT");
+        enterLabel.setText("CHỌN");
         enterButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {

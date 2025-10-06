@@ -186,8 +186,8 @@ public class ResourceManager {
         atlas = assetManager.get("textures.atlas", TextureAtlas.class);
 
         // load font
-        pixel10 = new BitmapFont(Gdx.files.internal("fonts/pixel.fnt"), atlas.findRegion("pixel"), false);
-
+//        pixel10 = new BitmapFont(Gdx.files.internal("fonts/vietpixel.fnt"), atlas.findRegion("vietpixel"), false);
+        pixel10 = new BitmapFont(Gdx.files.internal("fonts/vietpixel.fnt"), false);
         skin = new Skin(atlas);
         skin.add("default-font", pixel10);
         skin.load(Gdx.files.internal("skins/ui.json"));
@@ -195,6 +195,7 @@ public class ResourceManager {
         dialogSkin = new Skin(assetManager.get("skins/dialog.atlas", TextureAtlas.class));
         dialogSkin.add("default-font", pixel10);
         dialogSkin.load(Gdx.files.internal("skins/dialog.json"));
+
 
         // sprites
         sprites16x16 = atlas.findRegion("16x16_sprites").split(16, 16);

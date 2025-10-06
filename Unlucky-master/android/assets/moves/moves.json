@@ -1,547 +1,547 @@
 {
-"accurate":[
-	{
-		"type":0,
-		"name":"Shock",
-		"minDamage":1,
-		"maxDamage":2
-	},
-	{
-		"type":0,
-		"name":"Poke",
-		"minDamage":1,
-		"maxDamage":2
-	},
-	{
-		"type":0,
-		"name":"Jab",
-		"minDamage":1,
-		"maxDamage":2
-	},
-	{
-		"type":0,
-		"name":"Quick Shot",
-		"minDamage":2,
-		"maxDamage":3
-	},
-	{
-		"type":0,
-		"name":"Silence",
-		"minDamage":2,
-		"maxDamage":3
-	},
-	{
-		"type":0,
-		"name":"Headbutt",
-		"minDamage":2,
-		"maxDamage":3
-	},
-	{
-		"type":0,
-		"name":"Slash Storm",
-		"minDamage":2,
-		"maxDamage":3
-	},
-	{
-		"type":0,
-		"name":"Flash Attack",
-		"minDamage":2,
-		"maxDamage":3
-	},
-	{
-		"type":0,
-		"name":"Electro Punch",
-		"minDamage":3,
-		"maxDamage":4
-	},
-	{
-		"type":0,
-		"name":"Magma Punch",
-		"minDamage":3,
-		"maxDamage":4
-	},
-	{
-		"type":0,
-		"name":"Ice Punch",
-		"minDamage":3,
-		"maxDamage":4
-	},
-	{
-		"type":0,
-		"name":"Comet Punch",
-		"minDamage":3,
-		"maxDamage":4
-	},
-	{
-		"type":0,
-		"name":"Acid Rain",
-		"minDamage":3,
-		"maxDamage":4
-	},
-	{
-		"type":0,
-		"name":"Poison Vapor",
-		"minDamage":3,
-		"maxDamage":4
-	},
-	{
-		"type":0,
-		"name":"Electrocute",
-		"minDamage":3,
-		"maxDamage":5
-	},
-	{
-		"type":0,
-		"name":"Incinerate",
-		"minDamage":3,
-		"maxDamage":5
-	},
-	{
-		"type":0,
-		"name":"Freeze",
-		"minDamage":3,
-		"maxDamage":5
-	},
-	{
-		"type":0,
-		"name":"Ignite",
-		"minDamage":3,
-		"maxDamage":5
-	},
-	{
-		"type":0,
-		"name":"Apply Poison",
-		"minDamage":3,
-		"maxDamage":5
-	},
-	{
-		"type":0,
-		"name":"Source Strike",
-		"minDamage":4,
-		"maxDamage":5
-	},
-	{
-		"type":0,
-		"name":"Cyclone",
-		"minDamage":4,
-		"maxDamage":5
-	},
-	{
-		"type":0,
-		"name":"Vortex Punch",
-		"minDamage":4,
-		"maxDamage":5
-	},
-	{
-		"type":0,
-		"name":"Mind Control",
-		"minDamage":4,
-		"maxDamage":5
-	},
-	{
-		"type":0,
-		"name":"Open the Void",
-		"minDamage":5,
-		"maxDamage":6
-	},
-	{
-		"type":0,
-		"name":"Shade Twist",
-		"minDamage":5,
-		"maxDamage":6
-	},
-	{
-		"type":0,
-		"name":"Death Seal",
-		"minDamage":6,
-		"maxDamage":7
-	},
-	{
-		"type":0,
-		"name":"End of Time",
-		"minDamage":7,
-		"maxDamage":8
-	}
-],
-"wide":[
-	{
-		"type":1,
-		"name":"Swipe",
-		"minDamage":1,
-		"maxDamage":4
-	},
-	{
-		"type":1,
-		"name":"Swindle",
-		"minDamage":1,
-		"maxDamage":4
-	},
-	{
-		"type":1,
-		"name":"Flimflam",
-		"minDamage":1,
-		"maxDamage":4
-	},
-	{
-		"type":1,
-		"name":"Boom",
-		"minDamage":1,
-		"maxDamage":4
-	},
-	{
-		"type":1,
-		"name":"Rain of Arrows",
-		"minDamage":1,
-		"maxDamage":5
-	},
-	{
-		"type":1,
-		"name":"Trick Shot",
-		"minDamage":1,
-		"maxDamage":5
-	},
-	{
-		"type":1,
-		"name":"Brandish",
-		"minDamage":1,
-		"maxDamage":5
-	},
-	{
-		"type":1,
-		"name":"Shadow Attack",
-		"minDamage":1,
-		"maxDamage":5
-	},
-	{
-		"type":1,
-		"name":"Mortal Spear",
-		"minDamage":1,
-		"maxDamage":5
-	},
-	{
-		"type":1,
-		"name":"Mirage Stab",
-		"minDamage":1,
-		"maxDamage":5
-	},
-	{
-		"type":1,
-		"name":"Spiral Strike",
-		"minDamage":1,
-		"maxDamage":5
-	},
-	{
-		"type":1,
-		"name":"Ace of Spades",
-		"minDamage":1,
-		"maxDamage":5
-	},
-	{
-		"type":1,
-		"name":"Hurricane Beam",
-		"minDamage":1,
-		"maxDamage":5
-	},
-	{
-		"type":1,
-		"name":"Charm",
-		"minDamage":1,
-		"maxDamage":6
-	},
-	{
-		"type":1,
-		"name":"Ring of Fire",
-		"minDamage":1,
-		"maxDamage":6
-	},
-	{
-		"type":1,
-		"name":"Necrotic Zap",
-		"minDamage":1,
-		"maxDamage":6
-	},
-	{
-		"type":1,
-		"name":"Chronostrike",
-		"minDamage":1,
-		"maxDamage":6
-	},
-	{
-		"type":1,
-		"name":"Aura Aurora",
-		"minDamage":1,
-		"maxDamage":6
-	},
-	{
-		"type":1,
-		"name":"Reflection Ray",
-		"minDamage":1,
-		"maxDamage":7
-	},
-	{
-		"type":1,
-		"name":"Death and Decay",
-		"minDamage":1,
-		"maxDamage":7
-	},
-	{
-		"type":1,
-		"name":"Gravity Punch",
-		"minDamage":1,
-		"maxDamage":7
-	},
-	{
-		"type":1,
-		"name":"Phantom Slice",
-		"minDamage":1,
-		"maxDamage":8
-	},
-	{
-		"type":1,
-		"name":"Quantum Strike",
-		"minDamage":1,
-		"maxDamage":9
-	},
-	{
-		"type":1,
-		"name":"Infinity Stab",
-		"minDamage":1,
-		"maxDamage":9
-	},
-	{
-		"type":1,
-		"name":"Summon Meteor",
-		"minDamage":1,
-		"maxDamage":10
-	},
-	{
-		"type":1,
-		"name":"Shake the Earth",
-		"minDamage":1,
-		"maxDamage":11
-	},
-	{
-		"type":1,
-		"name":"Press the Luck",
-		"minDamage":1,
-		"maxDamage":15
-	}
-],
-"crit":[
-	{
-		"name":"Shift Stab",
-		"damage":2,
-		"crit":60
-	},
-	{
-		"name":"Whirlpool",
-		"damage":2,
-		"crit":70
-	},
-	{
-		"name":"Lucky Strike",
-		"damage":2,
-		"crit":67
-	},
-	{
-		"name":"Conjure Wave",
-		"damage":2,
-		"crit":80
-	},
-	{
-		"name":"Execute",
-		"damage":2,
-		"crit":50
-	},
-	{
-		"name":"Bee Sting",
-		"damage":2,
-		"crit":60
-	},
-	{
-		"name":"Flip the Coin",
-		"damage":2,
-		"crit":50
-	},
-	{
-		"name":"Melting Fire",
-		"damage":2,
-		"crit":55
-	},
-	{
-		"name":"Warp Strike",
-		"damage":2,
-		"crit":40
-	},
-	{
-		"name":"Pyro Pulse",
-		"damage":2,
-		"crit":40
-	},
-	{
-		"name":"Expose Weakness",
-		"damage":3,
-		"crit":30
-	},
-	{
-		"name":"Entropy Release",
-		"damage":3,
-		"crit":40
-	},
-	{
-		"name":"Plague",
-		"damage":3,
-		"crit":50
-	},
-	{
-		"name":"Illusion",
-		"damage":3,
-		"crit":55
-	},
-	{
-		"name":"Vital Stab",
-		"damage":3,
-		"crit":25
-	},
-	{
-		"name":"Radiant Punch",
-		"damage":3,
-		"crit":33
-	},
-	{
-		"name":"Shockwave",
-		"damage":3,
-		"crit":35
-	},
-	{
-		"name":"Zeus's Lightning",
-		"damage":3,
-		"crit":45
-	},
-	{
-		"name":"Tempest Shot",
-		"damage":3,
-		"crit":30
-	},
-	{
-		"name":"Memory Mash",
-		"damage":4,
-		"crit":15
-	},
-	{
-		"name":"Headshot",
-		"damage":4,
-		"crit":10
-	},
-	{
-		"name":"Soul Stealer",
-		"damage":4,
-		"crit":20
-	},
-	{
-		"name":"Toxic Dart",
-		"damage":4,
-		"crit":25
-	},
-	{
-		"name":"Moonstrike",
-		"damage":4,
-		"crit":15
-	},
-	{
-		"name":"Earthquake",
-		"damage":5,
-		"crit":10
-	},
-	{
-		"name":"Disintegrate",
-		"damage":5,
-		"crit":15
-	},
-	{
-		"name":"Nuclear Bullet",
-		"damage":5,
-		"crit":65
-	}
-],
-"healing":[
-	{
-		"name":"Bandage",
-		"minHeal":1,
-		"maxHeal":2,
-		"dmgReduction":30
-	},
-	{
-		"name":"Undying Resolve",
-		"minHeal":1,
-		"maxHeal":2,
-		"dmgReduction":80
-	},
-	{
-		"name":"Light Heal",
-		"minHeal":1,
-		"maxHeal":3,
-		"dmgReduction":20
-	},
-	{
-		"name":"Cure",
-		"minHeal":2,
-		"maxHeal":3,
-		"dmgReduction":30
-	},
-	{
-		"name":"Strengthen",
-		"minHeal":2,
-		"maxHeal":3,
-		"dmgReduction":50
-	},
-	{
-		"name":"Regeneration",
-		"minHeal":2,
-		"maxHeal":4,
-		"dmgReduction":20
-	},
-	{
-		"name":"Repair Self",
-		"minHeal":2,
-		"maxHeal":4,
-		"dmgReduction":10
-	},
-	{
-		"name":"Recovery",
-		"minHeal":3,
-		"maxHeal":5,
-		"dmgReduction":20
-	},
-	{
-		"name":"Healing Wave",
-		"minHeal":4,
-		"maxHeal":5,
-		"dmgReduction":40
-	},
-	{
-		"name":"Heal of Life",
-		"minHeal":4,
-		"maxHeal":6,
-		"dmgReduction":50
-	},
-	{
-		"name":"Blessing of Gods",
-		"minHeal":6,
-		"maxHeal":8,
-		"dmgReduction":60
-	},
-	{
-		"name":"Genesis",
-		"minHeal":7,
-		"maxHeal":10,
-		"dmgReduction":40
-	},
-	{
-		"name":"Life or Death",
-		"minHeal":1,
-		"maxHeal":10,
-		"dmgReduction":30
-	}
-]
+	"accurate": [
+		{
+			"type": 0,
+			"name": "Điện giật",
+			"minDamage": 1,
+			"maxDamage": 2
+		},
+		{
+			"type": 0,
+			"name": "Chích nhẹ",
+			"minDamage": 1,
+			"maxDamage": 2
+		},
+		{
+			"type": 0,
+			"name": "Đâm xuyên",
+			"minDamage": 1,
+			"maxDamage": 2
+		},
+		{
+			"type": 0,
+			"name": "Bắn thần tốc",
+			"minDamage": 2,
+			"maxDamage": 3
+		},
+		{
+			"type": 0,
+			"name": "Câm lặng",
+			"minDamage": 2,
+			"maxDamage": 3
+		},
+		{
+			"type": 0,
+			"name": "Húc đầu",
+			"minDamage": 2,
+			"maxDamage": 3
+		},
+		{
+			"type": 0,
+			"name": "Bão kiếm",
+			"minDamage": 2,
+			"maxDamage": 3
+		},
+		{
+			"type": 0,
+			"name": "Đòn chớp nhoáng",
+			"minDamage": 2,
+			"maxDamage": 3
+		},
+		{
+			"type": 0,
+			"name": "Đấm nhanh",
+			"minDamage": 3,
+			"maxDamage": 4
+		},
+		{
+			"type": 0,
+			"name": "Cú đấm dung nham",
+			"minDamage": 3,
+			"maxDamage": 4
+		},
+		{
+			"type": 0,
+			"name": "Cú đấm băng giá",
+			"minDamage": 3,
+			"maxDamage": 4
+		},
+		{
+			"type": 0,
+			"name": "Cú đấm sao băng",
+			"minDamage": 3,
+			"maxDamage": 4
+		},
+		{
+			"type": 0,
+			"name": "Mưa axit",
+			"minDamage": 3,
+			"maxDamage": 4
+		},
+		{
+			"type": 0,
+			"name": "Hơi độc",
+			"minDamage": 3,
+			"maxDamage": 4
+		},
+		{
+			"type": 0,
+			"name": "Cú đấm điện",
+			"minDamage": 3,
+			"maxDamage": 5
+		},
+		{
+			"type": 0,
+			"name": "Thiêu đốt",
+			"minDamage": 3,
+			"maxDamage": 5
+		},
+		{
+			"type": 0,
+			"name": "Đóng băng",
+			"minDamage": 3,
+			"maxDamage": 5
+		},
+		{
+			"type": 0,
+			"name": "Bùng cháy",
+			"minDamage": 3,
+			"maxDamage": 5
+		},
+		{
+			"type": 0,
+			"name": "Hạ độc",
+			"minDamage": 3,
+			"maxDamage": 5
+		},
+		{
+			"type": 0,
+			"name": "Nguyên lực",
+			"minDamage": 4,
+			"maxDamage": 5
+		},
+		{
+			"type": 0,
+			"name": "Lốc xoáy",
+			"minDamage": 4,
+			"maxDamage": 5
+		},
+		{
+			"type": 0,
+			"name": "Cú đấm xoáy",
+			"minDamage": 4,
+			"maxDamage": 5
+		},
+		{
+			"type": 0,
+			"name": "Khống tâm",
+			"minDamage": 4,
+			"maxDamage": 5
+		},
+		{
+			"type": 0,
+			"name": "Mở cửa hư không",
+			"minDamage": 5,
+			"maxDamage": 6
+		},
+		{
+			"type": 0,
+			"name": "Xoáy bóng tối",
+			"minDamage": 5,
+			"maxDamage": 6
+		},
+		{
+			"type": 0,
+			"name": "Ấn tử vong",
+			"minDamage": 6,
+			"maxDamage": 7
+		},
+		{
+			"type": 0,
+			"name": "Tận thế",
+			"minDamage": 7,
+			"maxDamage": 8
+		}
+	],
+	"wide": [
+		{
+			"type": 1,
+			"name": "Quét ngang",
+			"minDamage": 1,
+			"maxDamage": 4
+		},
+		{
+			"type": 1,
+			"name": "Đòn lừa xảo",
+			"minDamage": 1,
+			"maxDamage": 4
+		},
+		{
+			"type": 1,
+			"name": "Ảo chiêu",
+			"minDamage": 1,
+			"maxDamage": 4
+		},
+		{
+			"type": 1,
+			"name": "Bùng nổ",
+			"minDamage": 1,
+			"maxDamage": 4
+		},
+		{
+			"type": 1,
+			"name": "Mưa tên",
+			"minDamage": 1,
+			"maxDamage": 5
+		},
+		{
+			"type": 1,
+			"name": "Phát bắn ảo diệu",
+			"minDamage": 1,
+			"maxDamage": 5
+		},
+		{
+			"type": 1,
+			"name": "Vung vũ khí",
+			"minDamage": 1,
+			"maxDamage": 5
+		},
+		{
+			"type": 1,
+			"name": "Đấm bóng tối",
+			"minDamage": 1,
+			"maxDamage": 5
+		},
+		{
+			"type": 1,
+			"name": "Thương tử vong",
+			"minDamage": 1,
+			"maxDamage": 5
+		},
+		{
+			"type": 1,
+			"name": "Nhát đâm ảo ảnh",
+			"minDamage": 1,
+			"maxDamage": 5
+		},
+		{
+			"type": 1,
+			"name": "Đòn xoáy",
+			"minDamage": 1,
+			"maxDamage": 5
+		},
+		{
+			"type": 1,
+			"name": "Át bích tử thần",
+			"minDamage": 1,
+			"maxDamage": 5
+		},
+		{
+			"type": 1,
+			"name": "Chùm bão tố",
+			"minDamage": 1,
+			"maxDamage": 5
+		},
+		{
+			"type": 1,
+			"name": "Mê hoặc",
+			"minDamage": 1,
+			"maxDamage": 6
+		},
+		{
+			"type": 1,
+			"name": "Vòng lửa",
+			"minDamage": 1,
+			"maxDamage": 6
+		},
+		{
+			"type": 1,
+			"name": "Điện chớp",
+			"minDamage": 1,
+			"maxDamage": 6
+		},
+		{
+			"type": 1,
+			"name": "Đòn thời gian",
+			"minDamage": 1,
+			"maxDamage": 6
+		},
+		{
+			"type": 1,
+			"name": "Cực quang",
+			"minDamage": 1,
+			"maxDamage": 6
+		},
+		{
+			"type": 1,
+			"name": "Tia phản chiếu",
+			"minDamage": 1,
+			"maxDamage": 7
+		},
+		{
+			"type": 1,
+			"name": "Suy tàn tử vong",
+			"minDamage": 1,
+			"maxDamage": 7
+		},
+		{
+			"type": 1,
+			"name": "Cú đấm trọng lực",
+			"minDamage": 1,
+			"maxDamage": 7
+		},
+		{
+			"type": 1,
+			"name": "Nhát chém hồn ma",
+			"minDamage": 1,
+			"maxDamage": 8
+		},
+		{
+			"type": 1,
+			"name": "Đòn lượng tử",
+			"minDamage": 1,
+			"maxDamage": 9
+		},
+		{
+			"type": 1,
+			"name": "Đâm vô tận",
+			"minDamage": 1,
+			"maxDamage": 9
+		},
+		{
+			"type": 1,
+			"name": "Triệu thạch",
+			"minDamage": 1,
+			"maxDamage": 10
+		},
+		{
+			"type": 1,
+			"name": "Chấn động",
+			"minDamage": 1,
+			"maxDamage": 11
+		},
+		{
+			"type": 1,
+			"name": "Đòn cầu may",
+			"minDamage": 1,
+			"maxDamage": 15
+		}
+	],
+	"crit": [
+		{
+			"name": "Đâm dịch chuyển",
+			"damage": 2,
+			"crit": 60
+		},
+		{
+			"name": "Xoáy tử thần",
+			"damage": 2,
+			"crit": 70
+		},
+		{
+			"name": "Đòn may mắn",
+			"damage": 2,
+			"crit": 67
+		},
+		{
+			"name": "Triệu sóng",
+			"damage": 2,
+			"crit": 80
+		},
+		{
+			"name": "Xử quyết",
+			"damage": 2,
+			"crit": 50
+		},
+		{
+			"name": "Nọc ong",
+			"damage": 2,
+			"crit": 60
+		},
+		{
+			"name": "đâm kiếm",
+			"damage": 2,
+			"crit": 50
+		},
+		{
+			"name": "Lửa tan chảy",
+			"damage": 2,
+			"crit": 55
+		},
+		{
+			"name": "Đòn xuyên không",
+			"damage": 2,
+			"crit": 40
+		},
+		{
+			"name": "Xung hỏa",
+			"damage": 2,
+			"crit": 40
+		},
+		{
+			"name": "Lộ điểm yếu",
+			"damage": 3,
+			"crit": 30
+		},
+		{
+			"name": "Hỗn nguyên",
+			"damage": 3,
+			"crit": 40
+		},
+		{
+			"name": "Dịch bệnh",
+			"damage": 3,
+			"crit": 50
+		},
+		{
+			"name": "Ảo ảnh",
+			"damage": 3,
+			"crit": 55
+		},
+		{
+			"name": "Đâm vào tử huyệt",
+			"damage": 3,
+			"crit": 25
+		},
+		{
+			"name": "Cú đấm rực sáng",
+			"damage": 3,
+			"crit": 33
+		},
+		{
+			"name": "Sóng xung kích",
+			"damage": 3,
+			"crit": 35
+		},
+		{
+			"name": "Lôi thần Zeus",
+			"damage": 3,
+			"crit": 45
+		},
+		{
+			"name": "Đạn cuồng phong",
+			"damage": 3,
+			"crit": 30
+		},
+		{
+			"name": "Đập nát",
+			"damage": 4,
+			"crit": 15
+		},
+		{
+			"name": "Bắn thẳng đầu",
+			"damage": 4,
+			"crit": 10
+		},
+		{
+			"name": "Đoạt hồn",
+			"damage": 4,
+			"crit": 20
+		},
+		{
+			"name": "Phi tiêu độc",
+			"damage": 4,
+			"crit": 25
+		},
+		{
+			"name": "Đòn nguyệt ảnh",
+			"damage": 4,
+			"crit": 15
+		},
+		{
+			"name": "Động đất",
+			"damage": 5,
+			"crit": 10
+		},
+		{
+			"name": "Hủy nguyên tử",
+			"damage": 5,
+			"crit": 15
+		},
+		{
+			"name": "Đạn hạt nhân",
+			"damage": 5,
+			"crit": 65
+		}
+	],
+	"healing": [
+		{
+			"name": "Băng bó",
+			"minHeal": 1,
+			"maxHeal": 2,
+			"dmgReduction": 30
+		},
+		{
+			"name": "Ý chí bất diệt",
+			"minHeal": 1,
+			"maxHeal": 2,
+			"dmgReduction": 80
+		},
+		{
+			"name": "Hồi phục nhẹ",
+			"minHeal": 1,
+			"maxHeal": 3,
+			"dmgReduction": 20
+		},
+		{
+			"name": "Giải trừ",
+			"minHeal": 2,
+			"maxHeal": 3,
+			"dmgReduction": 30
+		},
+		{
+			"name": "Cường hóa",
+			"minHeal": 2,
+			"maxHeal": 3,
+			"dmgReduction": 50
+		},
+		{
+			"name": "Tái sinh",
+			"minHeal": 2,
+			"maxHeal": 4,
+			"dmgReduction": 20
+		},
+		{
+			"name": "Tự sửa chữa",
+			"minHeal": 2,
+			"maxHeal": 4,
+			"dmgReduction": 10
+		},
+		{
+			"name": "Phục hồi",
+			"minHeal": 3,
+			"maxHeal": 5,
+			"dmgReduction": 20
+		},
+		{
+			"name": "Sóng trị liệu",
+			"minHeal": 4,
+			"maxHeal": 5,
+			"dmgReduction": 40
+		},
+		{
+			"name": "Trị liệu",
+			"minHeal": 4,
+			"maxHeal": 6,
+			"dmgReduction": 50
+		},
+		{
+			"name": "Phúc thần ban",
+			"minHeal": 6,
+			"maxHeal": 8,
+			"dmgReduction": 60
+		},
+		{
+			"name": "Khởi nguyên",
+			"minHeal": 7,
+			"maxHeal": 10,
+			"dmgReduction": 40
+		},
+		{
+			"name": "Sinh tử",
+			"minHeal": 1,
+			"maxHeal": 10,
+			"dmgReduction": 30
+		}
+	]
 }

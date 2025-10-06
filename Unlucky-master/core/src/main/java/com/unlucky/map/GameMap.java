@@ -178,14 +178,14 @@ public class GameMap {
             for (int i = 0; i < itemsObtained.size; i++) {
                 Item item = itemsObtained.get(i);
                 if (i == itemsObtained.size - 1) {
-                    itemText += item.name + ".\n\nClick to continue...";
+                    itemText += item.name + ".\n\nNhấn để tiếp tục...";
                     break;
                 }
                 itemText += item.name + ", ";
             }
         }
-        String deathText = "You lost " + goldLost + " G and " + expLost + " EXP.\n" +
-            (itemsObtained.size == 0 ? "\nClick to continue..." : "You also lost the following items: " + itemText);
+        String deathText = "Bạn đã mất " + goldLost + " vàng và " + expLost + " kinh nghiệm.\n" +
+                (itemsObtained.size == 0 ? "\nNhấn để tiếp tục..." : "Bạn cũng mất các vật phẩm sau: " + itemText);
         gameScreen.hud.setDeathText(deathText);
 
         // apply death penalties
@@ -246,7 +246,7 @@ public class GameMap {
             if (!player.settings.muteSfx) rm.finish.play(player.settings.sfxVolume);
             // if the player beat this map and there are remaining maps in this world
             if (this.levelIndex == player.maxLevel && this.worldIndex == player.maxWorld &&
-                this.levelIndex != rm.worlds.get(worldIndex).numLevels - 1) {
+                    this.levelIndex != rm.worlds.get(worldIndex).numLevels - 1) {
                 player.maxLevel++;
             }
             // else the player unlocks the next world
@@ -271,15 +271,15 @@ public class GameMap {
             if (switchable) {
                 switchable = false;
                 gameScreen.hud.getStage().addAction(Actions.sequence(Actions.fadeOut(0.3f),
-                    Actions.run(new Runnable() {
-                        @Override
-                        public void run() {
-                            switchable = true;
-                            gameScreen.setClickable(true);
-                            mapTheme.stop();
-                            gameScreen.getGame().setScreen(gameScreen.getGame().victoryScreen);
-                        }
-                    })));
+                        Actions.run(new Runnable() {
+                            @Override
+                            public void run() {
+                                switchable = true;
+                                gameScreen.setClickable(true);
+                                mapTheme.stop();
+                                gameScreen.getGame().setScreen(gameScreen.getGame().victoryScreen);
+                            }
+                        })));
             }
         }
 

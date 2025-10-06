@@ -54,27 +54,28 @@ public class Util {
     public static final int SHIELD = 7;
 
     public static final SpecialMove S_DISTRACT = new SpecialMove(DISTRACT,
-            "Distract", "Next enemy attack\n-" + Util.P_DISTRACT + "% ACC", 1, null);
+            "Lạc hướng", "Đòn tiếp theo của \nkẻ địch -" + Util.P_DISTRACT + "% acc", 1, null);
     public static final SpecialMove S_FOCUS = new SpecialMove(FOCUS,
-            "Focus", "Next attack 100% ACC\nand +" + Util.P_FOCUS_CRIT + "% crit chance", 7, null);
+            "Tập trung", "Đòn tiếp theo 100% \ntrúng và +" + Util.P_FOCUS_CRIT + "% crit", 7, null);
     public static final SpecialMove S_INTIMIDATE = new SpecialMove(INTIMIDATE,
-            "Intimidate", "Next attack is\namplified by " + Util.P_INTIMIDATE + "%", 3, null);
+            "Đe dọa", "Đòn đánh tiếp theo \nđược cường hóa " + Util.P_INTIMIDATE + "%", 3, null);
     public static final SpecialMove S_REFLECT = new SpecialMove(REFLECT,
-            "Reflect", "Next enemy attack\nis reflected back", 23, null);
+            "Phản đòn", "Đòn tiếp theo của \nkẻ địch bị phản lại", 23, null);
     public static final SpecialMove S_STUN = new SpecialMove(STUN,
-            "Stun", Util.P_STUN + "% chance to\nstun enemy", 5, null);
+            "Choáng", Util.P_STUN + "% tỉ lệ\nchoáng kẻ địch", 5, null);
     public static final SpecialMove S_INVERT = new SpecialMove(INVERT,
-            "Invert", "Heal moves damage\nDamage moves heal", 13, null);
+            "Nghịch đảo", "Hồi máu gây dmg\ngây dmg hồi máu", 13, null);
     public static final SpecialMove S_SACRIFICE = new SpecialMove(SACRIFICE,
-            "Sacrifice", "Sacrifice all but 1 hp\nfor increased dmg", 10, null);
+            "Hiến tế", "Hi sinh toàn bộ máu\nđể tăng sát thương", 10, null);
     public static final SpecialMove S_SHIELD = new SpecialMove(SHIELD,
-            "Shield", "Summon a shield that\nabsorbs " + Util.P_SHIELD + "% max hp", 17, null);
+            "Khiên", "Tạo lá chắn hấp thụ \nsát thương = " + Util.P_SHIELD + "% max hp", 17, null);
+
 
     public static final SpecialMove[] SMOVES_ORDER_BY_LVL = {
-        S_DISTRACT, S_INTIMIDATE, S_STUN, S_FOCUS, S_SACRIFICE, S_INVERT, S_SHIELD, S_REFLECT
+            S_DISTRACT, S_INTIMIDATE, S_STUN, S_FOCUS, S_SACRIFICE, S_INVERT, S_SHIELD, S_REFLECT
     };
     public static final SpecialMove[] SMOVES_ORDER_BY_ID = {
-        S_DISTRACT, S_FOCUS, S_INTIMIDATE, S_REFLECT, S_STUN, S_INVERT, S_SACRIFICE, S_SHIELD
+            S_DISTRACT, S_FOCUS, S_INTIMIDATE, S_REFLECT, S_STUN, S_INVERT, S_SACRIFICE, S_SHIELD
     };
 
     // Button dimensions
@@ -207,14 +208,14 @@ public class Util {
 
     // all blocked tile ids
     public static final int[] BLOCKED_TILE_IDS = {
-        5, 6, 7, 9, 10, 11, 12, 13, 14, 15, 25, 26, 27, 28, 29, 30, 31, 36,
-        38, 41, 42, 44, 45, 46, 48, 49, 50, 51, 52, 54, 55, 59, 60, 61, 62, 63, 64, 65, 66, 67, 69, 70, 74, 75, 76, 77, 80, 83, 84, 85, 86,
-        87, 88, 90, 91, 92, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 109, 110, 112,
-        113, 114, 115, 116, 117, 118, 120, 121, 123, 128, 129, 130, 130, 131, 132,
-        133, 134, 135, 136, 137, 138, 139, 144, 145, 146, 147, 156, 157, 160, 165, 166,
-        151, 152, 167, 168, 169, 170, 176, 184, 185, 186, 197, 198, 199, 200, 201, 202,
-        215, 216, 217, 218, 227, 228, 229, 230, 231, 232, 233, 234, 235, 243, 244,
-        247, 249, 263, 264, 265, 266, 267, 268, 269
+            5, 6, 7, 9, 10, 11, 12, 13, 14, 15, 25, 26, 27, 28, 29, 30, 31, 36,
+            38, 41, 42, 44, 45, 46, 48, 49, 50, 51, 52, 54, 55, 59, 60, 61, 62, 63, 64, 65, 66, 67, 69, 70, 74, 75, 76, 77, 80, 83, 84, 85, 86,
+            87, 88, 90, 91, 92, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 109, 110, 112,
+            113, 114, 115, 116, 117, 118, 120, 121, 123, 128, 129, 130, 130, 131, 132,
+            133, 134, 135, 136, 137, 138, 139, 144, 145, 146, 147, 156, 157, 160, 165, 166,
+            151, 152, 167, 168, 169, 170, 176, 184, 185, 186, 197, 198, 199, 200, 201, 202,
+            215, 216, 217, 218, 227, 228, 229, 230, 231, 232, 233, 234, 235, 243, 244,
+            247, 249, 263, 264, 265, 266, 267, 268, 269
     };
 
     public static final int[] BLOCKED_ANIMATED_TILE_IDS = { 96, 109 };
@@ -245,19 +246,19 @@ public class Util {
     public static Entity getEntity(int id, Vector2 position, TileMap map, ResourceManager rm) {
         switch (id) {
             case 2: return new Normal("slime", position, map, rm, 1, 0, 2, 1 / 3f);
-            case 3: return new Normal("blue slime", position, map, rm, 1, 2, 2, 1 / 3f);
-            case 4: return new Normal("blast slime", position, map, rm, 1, 4, 2, 1 / 3f);
-            case 5: return new Boss("slime king", 0, position, map, rm, 1, 6, 2, 1 / 3f);
-            case 6: return new Normal("ghost", position, map, rm, 2, 0, 2, 1 / 3f);
+            case 3: return new Normal("slime xanh", position, map, rm, 1, 2, 2, 1 / 3f);
+            case 4: return new Normal("slime nổ", position, map, rm, 1, 4, 2, 1 / 3f);
+            case 5: return new Boss("vua slime", 0, position, map, rm, 1, 6, 2, 1 / 3f);
+            case 6: return new Normal("bóng ma", position, map, rm, 2, 0, 2, 1 / 3f);
             case 7: return new Normal("zombie", position, map, rm, 2, 2, 2, 1 / 3f);
-            case 8: return new Normal("skeleton", position, map, rm, 2, 4, 2, 1 / 3f);
-            case 9: return new Normal("witch", position, map, rm, 2, 6, 2, 1 / 3f);
-            case 10: return new Boss("red reaper", 1, position, map, rm, 2, 8, 2, 1 / 3f);
-            case 11: return new Normal("snow puff", position, map, rm, 3, 0, 2, 1 / 3f);
-            case 12: return new Normal("angry penguin", position, map, rm, 3, 2, 2, 1 / 3f);
+            case 8: return new Normal("bộ xương", position, map, rm, 2, 4, 2, 1 / 3f);
+            case 9: return new Normal("phù thủy", position, map, rm, 2, 6, 2, 1 / 3f);
+            case 10: return new Boss("lưỡi hái đỏ", 1, position, map, rm, 2, 8, 2, 1 / 3f);
+            case 11: return new Normal("cục bông", position, map, rm, 3, 0, 2, 1 / 3f);
+            case 12: return new Normal("cánh cụt", position, map, rm, 3, 2, 2, 1 / 3f);
             case 13: return new Normal("yeti", position, map, rm, 3, 4, 2, 1 / 3f);
-            case 14: return new Normal("ice bat", position, map, rm, 3, 6, 2, 1 / 3f);
-            case 15: return new Boss("ice golem", 2, position, map, rm, 3, 8, 2, 1 / 3f);
+            case 14: return new Normal("dơi băng", position, map, rm, 3, 6, 2, 1 / 3f);
+            case 15: return new Boss("khổng lồ băng", 2, position, map, rm, 3, 8, 2, 1 / 3f);
         }
         return null;
     }

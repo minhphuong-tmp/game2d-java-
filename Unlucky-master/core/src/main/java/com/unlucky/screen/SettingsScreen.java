@@ -77,7 +77,7 @@ public class SettingsScreen extends MenuExtensionScreen {
         banner.setSize(164, 12);
         stage.addActor(banner);
 
-        bannerLabel = new Label("SETTINGS", rm.skin);
+        bannerLabel = new Label("CÀI ĐẶT", rm.skin);
         bannerLabel.setStyle(new Label.LabelStyle(rm.pixel10, new Color(1, 212 / 255.f, 0, 1)));
         bannerLabel.setSize(50, 12);
         bannerLabel.setTouchable(Touchable.disabled);
@@ -91,8 +91,8 @@ public class SettingsScreen extends MenuExtensionScreen {
         stage.addActor(bg);
 
         white = new Label.LabelStyle(rm.pixel10, Color.WHITE);
-        description = new Label("SOUND                                 MISC",
-            new Label.LabelStyle(rm.pixel10, new Color(1, 212 / 255.f, 0, 1)));
+        description = new Label("ÂM THANH                                 KHÁC",
+                new Label.LabelStyle(rm.pixel10, new Color(1, 212 / 255.f, 0, 1)));
         description.setFontScale(0.75f);
         description.setTouchable(Touchable.disabled);
         description.setPosition(14, 85);
@@ -101,8 +101,8 @@ public class SettingsScreen extends MenuExtensionScreen {
         // create settings labels
         settingLabels = new Label[7];
         String[] settingStrs = new String[] {
-            "MUSIC VOLUME", "SFX VOLUME", "MUTE MUSIC:", "MUTE SFX:",
-            "SHOW ENEMY LEVELS:", "WEATHER ANIMATIONS:", "SHOW FPS:"
+                "NHẠC", "HIỆU ỨNG", "TẮT NHẠC:", "TẮT HIỆU ỨNG:",
+                "HIỂN THỊ CẤP ĐỘ KẺ ĐỊCH:", "HIỆU ỨNG THỜI TIẾT:", "HIỂN THỊ FPS:"
         };
         for (int i = 0; i < 7; i++) {
             settingLabels[i] = new Label(settingStrs[i], white);
@@ -234,12 +234,12 @@ public class SettingsScreen extends MenuExtensionScreen {
             batchFade = true;
 
             stage.addAction(Actions.sequence(Actions.moveTo(0, 0), Actions.alpha(0),
-                Actions.run(new Runnable() {
-                @Override
-                public void run() {
-                    renderBatch = true;
-                }
-            }), Actions.fadeIn(0.5f)));
+                    Actions.run(new Runnable() {
+                        @Override
+                        public void run() {
+                            renderBatch = true;
+                        }
+                    }), Actions.fadeIn(0.5f)));
         }
         // slide in transition if in menu
         else {
