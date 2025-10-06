@@ -1,8 +1,8 @@
 {
 "rare0":[
 	{
-		"name":"Small Health Potion",
-		"desc":"Restores a small amount of HP.",
+		"name":"Bình Máu Nhỏ",
+		"desc":"Khôi phục một ít HP.",
 		"type":0,
 		"imgIndex":0,
 		"level":1,
@@ -12,8 +12,8 @@
 		"price":155
 	},
 	{
-		"name":"Medium Health Potion",
-		"desc":"Restores a decent amount of HP.",
+		"name":"Bình Máu Vừa",
+		"desc":"Khôi phục lượng HP kha khá.",
 		"type":0,
 		"imgIndex":1,
 		"level":5,
@@ -24,8 +24,8 @@
 	},
 
 	{
-		"name":"Bronze Helmet",
-		"desc":"A low tier helmet.",
+		"name":"Mũ Đồng",
+		"desc":"Mũ hạng thấp.",
 		"type":2,
 		"imgIndex":4,
 		"level":8,
@@ -37,8 +37,8 @@
 	},
 
 	{
-		"name":"Bronze Chestplate",
-		"desc":"A low tier chestplate.",
+		"name":"Áo Giáp Đồng",
+		"desc":"Áo giáp hạng thấp.",
 		"type":3,
 		"imgIndex":4,
 		"level":10,
@@ -49,8 +49,8 @@
 		"price":1900
 	},
 	{
-		"name":"Bronze Sword",
-		"desc":"A low tier sword.",
+		"name":"Kiếm Đồng",
+		"desc":"Kiếm hạng thấp.",
 		"type":4,
 		"imgIndex":4,
 		"level":12,
@@ -61,8 +61,8 @@
 		"price":2800
 	},
 	{
-		"name":"Bronze Gauntlet",
-		"desc":"A low tier gauntlet.",
+		"name":"Găng Tay Đồng",
+		"desc":"Găng tay hạng thấp.",
 		"type":5,
 		"imgIndex":2,
 		"level":10,
@@ -73,8 +73,8 @@
 		"price":1680
 	},
 	{
-		"name":"Bronze Boots",
-		"desc":"Low tier boots.",
+		"name":"Giày Đồng",
+		"desc":"Giày hạng thấp.",
 		"type":6,
 		"imgIndex":2,
 		"level":8,
@@ -85,8 +85,8 @@
 		"price":2680
 	},
 	{
-		"name":"Iron Helmet",
-		"desc":"A middle tier helmet.",
+		"name":"Mũ Sắt",
+		"desc":"Mũ hạng trung.",
 		"type":2,
 		"imgIndex":5,
 		"level":16,
@@ -100,8 +100,8 @@
 
 
 	{
-		"name":"Iron Chestplate",
-		"desc":"A middle tier chestplate.",
+		"name":"Áo Giáp Sắt",
+		"desc":"Áo giáp hạng trung.",
 		"type":3,
 		"imgIndex":5,
 		"level":16,
@@ -115,8 +115,8 @@
 
 
 	{
-		"name":"Iron Sword",
-		"desc":"A middle tier sword.",
+		"name":"Kiếm Sắt",
+		"desc":"Kiếm hạng trung.",
 		"type":4,
 		"imgIndex":5,
 		"level":19,
@@ -130,8 +130,8 @@
 
 
 	{
-		"name":"Iron Gauntlet",
-		"desc":"A middle tier gauntlet.",
+		"name":"Găng Tay Sắt",
+		"desc":"Găng tay hạng trung.",
 		"type":5,
 		"imgIndex":3,
 		"level":17,
@@ -145,8 +145,8 @@
 
 
 	{
-		"name":"Iron Boots",
-		"desc":"Middle tier boots.",
+		"name":"Giày Sắt",
+		"desc":"Giày hạng trung.",
 		"type":6,
 		"imgIndex":3,
 		"level":16,
@@ -158,8 +158,8 @@
 	},
 
 	{
-		"name":"Bronze Shield",
-		"desc":"A low tier shield.",
+		"name":"Khiên Đồng",
+		"desc":"Khiên hạng thấp.",
 		"type":8,
 		"imgIndex":1,
 		"level":10,
@@ -170,8 +170,8 @@
 		"price":3700
 	},
 	{
-		"name":"Iron Shield",
-		"desc":"A middle tier shield.",
+		"name":"Khiên Sắt",
+		"desc":"Khiên hạng trung.",
 		"type":8,
 		"imgIndex":2,
 		"level":18,
@@ -182,8 +182,8 @@
 		"price":6000
 	},
 	{
-		"name":"Silver Necklace",
-		"desc":"What does this even do?",
+		"name":"Vòng Cổ Bạc",
+		"desc":"Cái này làm gì nhỉ?",
 		"type":7,
 		"imgIndex":1,
 		"level":10,
@@ -197,8 +197,8 @@
 
 
 	{
-		"name":"Silver Ring",
-		"desc":"What does this even do?",
+		"name":"Nhẫn Bạc",
+		"desc":"Cái này làm gì nhỉ?",
 		"type":9,
 		"imgIndex":1,
 		"level":10,
@@ -211,8 +211,8 @@
 ],
 "rare1":[
 	{
-		"name":"Large Health Potion",
-		"desc":"Restores a large amount of HP.",
+		"name":"Bình Máu Lớn",
+		"desc":"Khôi phục lượng HP lớn.",
 		"type":0,
 		"imgIndex":2,
 		"level":1,
@@ -222,8 +222,8 @@
 		"price":520
 	},
 	{
-		"name":"Gold Helmet",
-		"desc":"A high tier helmet.",
+		"name":"Mũ Vàng",
+		"desc":"Mũ hạng cao.",
 		"type":2,
 		"imgIndex":6,
 		"level":28,
@@ -234,8 +234,8 @@
 		"price":9600
 	},
 	{
-		"name":"Gold Chestplate",
-		"desc":"A high tier chestplate.",
+		"name":"Áo Giáp Vàng",
+		"desc":"Áo giáp hạng cao.",
 		"type":3,
 		"imgIndex":6,
 		"level":28,
@@ -246,8 +246,8 @@
 		"price":13850
 	},
 	{
-		"name":"Gold Sword",
-		"desc":"A high tier sword.",
+		"name":"Kiếm Vàng",
+		"desc":"Kiếm hạng cao.",
 		"type":4,
 		"imgIndex":6,
 		"level":30,
@@ -258,8 +258,8 @@
 		"price":14000
 	},
 	{
-		"name":"Gold Gauntlet",
-		"desc":"A high tier gauntlet.",
+		"name":"Găng Tay Vàng",
+		"desc":"Găng tay hạng cao.",
 		"type":5,
 		"imgIndex":4,
 		"level":30,
@@ -270,8 +270,8 @@
 		"price":13500
 	},
 	{
-		"name":"Gold Boots",
-		"desc":"High tier boots.",
+		"name":"Giày Vàng",
+		"desc":"Giày hạng cao.",
 		"type":6,
 		"imgIndex":4,
 		"level":30,
@@ -282,8 +282,8 @@
 		"price":13500
 	},
 	{
-		"name":"Golden Shield",
-		"desc":"A high tier shield.",
+		"name":"Khiên Vàng",
+		"desc":"Khiên hạng cao.",
 		"type":8,
 		"imgIndex":3,
 		"level":28,
@@ -295,8 +295,8 @@
 	},
 
 	{
-		"name":"Golden Ring",
-		"desc":"A ring of precision.",
+		"name":"Nhẫn Vàng",
+		"desc":"Nhẫn chính xác.",
 		"type":9,
 		"imgIndex":0,
 		"level":10,
@@ -309,8 +309,8 @@
 ],
 "rare2":[
 	{
-		"name":"Special Health Potion",
-		"desc":"Restores a massive amount of HP.",
+		"name":"Bình Máu Đặc Biệt",
+		"desc":"Khôi phục lượng HP khổng lồ.",
 		"type":0,
 		"imgIndex":3,
 		"level":1,
@@ -320,8 +320,8 @@
 		"price":4950
 	},
 	{
-		"name":"Enchanted Health Potion",
-		"desc":"Restores a massive amount of HP.",
+		"name":"Bình Máu Phép Thuật",
+		"desc":"Khôi phục lượng HP khổng lồ.",
 		"type":0,
 		"imgIndex":4,
 		"level":1,
@@ -332,8 +332,8 @@
 	},
 
 	{
-		"name":"Runic Helmet",
-		"desc":"A helmet imbued\nwith runic energy.",
+		"name":"Mũ Rune",
+		"desc":"Mũ được truyền\nnăng lượng rune.",
 		"type":2,
 		"imgIndex":7,
 		"level":40,
@@ -344,8 +344,8 @@
 		"price":62000
 	},
 	{
-		"name":"Runic Chestplate",
-		"desc":"A chestplate imbued\nwith runic energy.",
+		"name":"Áo Giáp Rune",
+		"desc":"Áo giáp được truyền\nnăng lượng rune.",
 		"type":3,
 		"imgIndex":7,
 		"level":40,
