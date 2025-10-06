@@ -58,7 +58,7 @@ public class Save {
         player.setHp(psave.hp);
         player.setMaxHp(psave.maxHp);
 //        player.setLevel(psave.level);
-        player.fullLevel();
+//        player.fullLevel();
         player.setExp(psave.exp);
         player.setMaxExp(psave.maxExp);
         player.setGold(psave.gold);

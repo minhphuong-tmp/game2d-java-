@@ -865,7 +865,7 @@ public class InventoryUI extends UI {
      */
     private void updateText() {
         // update all text
-        headers[0].setText("LV. " + player.getLevel() + " NGƯỜI CHƠI");
+        headers[0].setText("LV. " + player.getLevel() );
         stats[0].setText("HP: " + player.getHp() + "/" + player.getMaxHp());
         stats[1].setText("SÁT THƯƠNG: " + player.getMinDamage() + "-" + player.getMaxDamage());
         stats[2].setText("ĐỌ CHÍNH XÁC: " + player.getAccuracy() + "%");
