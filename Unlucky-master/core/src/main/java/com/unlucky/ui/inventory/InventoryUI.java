@@ -536,14 +536,14 @@ public class InventoryUI extends UI {
                 if (currentItem != null) {
                     new Dialog("Sell", rm.dialogSkin) {
                         {
-                            Label l = new Label("Are you sure you want\nto sell " + currentItem.labelName + "?", rm.dialogSkin);
+                            Label l = new Label("Bạn có chắc muốn bán không?" + currentItem.labelName + "?", rm.dialogSkin);
                             l.setFontScale(0.5f);
                             l.setAlignment(Align.center);
                             text(l);
                             getButtonTable().defaults().width(40);
                             getButtonTable().defaults().height(15);
-                            button("Yes", "yes");
-                            button("No", "no");
+                            button("Có", "yes");
+                            button("Không", "no");
                         }
 
                         @Override
@@ -573,7 +573,7 @@ public class InventoryUI extends UI {
     private void applyEnchantBonus(final Item item, final Item scroll) {
         new Dialog("Enchant scroll", rm.dialogSkin) {
             {
-                Label l = new Label("Use enchant scroll on\n" + item.labelName + "?", rm.dialogSkin);
+                Label l = new Label("Sử dụng cuộn cường hóa lên\n" + item.labelName + "?", rm.dialogSkin);
                 l.setFontScale(0.5f);
                 l.setAlignment(Align.center);
                 text(l);
@@ -605,7 +605,7 @@ public class InventoryUI extends UI {
         if (player.getGold() < currentItem.enchantCost) {
             new Dialog("Cannot enchant", rm.dialogSkin) {
                 {
-                    Label l = new Label("You do not have enough\ngold to enchant this item.", rm.dialogSkin);
+                    Label l = new Label("Bạn không đủ vàng\nđể luyện vật phẩm này.", rm.dialogSkin);
                     l.setFontScale(0.5f);
                     l.setAlignment(Align.center);
                     text(l);
@@ -636,7 +636,7 @@ public class InventoryUI extends UI {
             tooltip.updateText(currentItem);
             new Dialog("Success!", rm.dialogSkin) {
                 {
-                    Label l = new Label("Enchanting succeeded.\nThe item has been upgraded.", rm.dialogSkin);
+                    Label l = new Label("Luyện thành công.\nVật phẩm đã được nâng cấp.", rm.dialogSkin);
                     l.setFontScale(0.5f);
                     l.setAlignment(Align.center);
                     text(l);
@@ -649,8 +649,8 @@ public class InventoryUI extends UI {
                 protected void result(Object object) {
                     if (!game.player.settings.muteSfx) rm.buttonclick2.play(game.player.settings.sfxVolume);
                     tooltip.setVisible(true);
-                    invButtonLabels[0].setText("ENCHANT FOR\n" + currentItem.enchantCost + " g");
-                    invButtonLabels[1].setText("SELL FOR\n" + currentItem.sell + " g");
+                    invButtonLabels[0].setText("LUYỆN \n" + currentItem.enchantCost + " g");
+                    invButtonLabels[1].setText("BÁN\n" + currentItem.sell + " g");
                 }
 
             }.show(stage).getTitleLabel().setAlignment(Align.center);
@@ -661,7 +661,7 @@ public class InventoryUI extends UI {
             if (Util.isSuccess(Util.DESTROY_ITEM_IF_FAIL)) {
                 new Dialog("Fail!", rm.dialogSkin) {
                     {
-                        Label l = new Label("Enchanting failed.\nThe item has been destroyed.", rm.dialogSkin);
+                        Label l = new Label("Luyện thất bại.\nVật phẩm bị nghiền nát.", rm.dialogSkin);
                         l.setFontScale(0.5f);
                         l.setAlignment(Align.center);
                         text(l);
@@ -683,7 +683,7 @@ public class InventoryUI extends UI {
             } else {
                 new Dialog("Fail!", rm.dialogSkin) {
                     {
-                        Label l = new Label("Enchanting failed.\nThe item is intact.", rm.dialogSkin);
+                        Label l = new Label("Luyện thất bại.\nVật phẩm hoàn trả.", rm.dialogSkin);
                         l.setFontScale(0.5f);
                         l.setAlignment(Align.center);
                         text(l);
@@ -709,19 +709,19 @@ public class InventoryUI extends UI {
     private void consume() {
         new Dialog("Consume", rm.dialogSkin) {
             {
-                Label l = new Label("Heal for " +
+                Label l = new Label("Sử dụng bình máu\nhồi " +
                     (currentItem.hp < 0 ? (int) ((-currentItem.hp / 100f) * player.getMaxHp()) : currentItem.hp)
-                    + " HP\nusing this potion?", rm.dialogSkin);
+                    + " HP?", rm.dialogSkin);
                 if (currentItem.exp > 0) {
-                    l.setText("Gain " + (int) ((currentItem.exp / 100f) * player.getMaxExp()) + " EXP\nfrom this potion?");
+                    l.setText("Nhận " + (int) ((currentItem.exp / 100f) * player.getMaxExp()) + " EXP\ntừ dược phẩm?");
                 }
                 l.setFontScale(0.5f);
                 l.setAlignment(Align.center);
                 text(l);
                 getButtonTable().defaults().width(40);
                 getButtonTable().defaults().height(15);
-                button("Yes", "yes");
-                button("No", "no");
+                button("Có", "yes");
+                button("Không", "no");
             }
 
             @Override
@@ -888,9 +888,9 @@ public class InventoryUI extends UI {
                     invButtons[i].setStyle(enabled);
                     // add enchant cost of item to button
                     if (currentItem.type >= 2 && currentItem.type <= 9)
-                        invButtonLabels[0].setText("LUYỆN VỚI\n" + currentItem.enchantCost + " g");
+                        invButtonLabels[0].setText("LUYỆN \n" + currentItem.enchantCost + " g");
                     // add sell value of item to button
-                    invButtonLabels[1].setText("BÁN VỚI\n" + currentItem.sell + " g");
+                    invButtonLabels[1].setText("BÁN \n" + currentItem.sell + " g");
                 }
             }
         } else {

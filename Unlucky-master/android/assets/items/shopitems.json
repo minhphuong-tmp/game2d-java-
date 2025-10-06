@@ -356,193 +356,185 @@
 		"price":93500
 	},
 	{
-		"name":"Runic Sabre",
-		"desc":"A sword imbued\nwith runic energy.",
-		"type":4,
-		"imgIndex":7,
-		"level":40,
-		"mhp":0,
-		"dmg":80,
-		"acc":0,
-		"sell":3000,
-		"price":95000
+		"name": "Gươm rune",
+		"desc": "Được truyền\nnăng lượng rune.",
+		"type": 4,
+		"imgIndex": 7,
+		"level": 40,
+		"mhp": 0,
+		"dmg": 80,
+		"acc": 0,
+		"sell": 3000,
+		"price": 95000
 	},
 	{
-		"name":"Runic Gauntlet",
-		"desc":"A gauntlet imbued\nwith runic energy.",
-		"type":5,
-		"imgIndex":5,
-		"level":42,
-		"mhp":84,
-		"dmg":3,
-		"acc":0,
-		"sell":2600,
-		"price":103000
+		"name": "Găng rune",
+		"desc": "Truyền sức mạnh\nrune.",
+		"type": 5,
+		"imgIndex": 5,
+		"level": 42,
+		"mhp": 84,
+		"dmg": 3,
+		"acc": 0,
+		"sell": 2600,
+		"price": 103000
 	},
 	{
-		"name":"Runic Greaves",
-		"desc":"Boots imbued with\nrunic energy.",
-		"type":6,
-		"imgIndex":5,
-		"level":42,
-		"mhp":84,
-		"dmg":3,
-		"acc":0,
-		"sell":2600,
-		"price":101000
+		"name": "Giày rune",
+		"desc": "Truyền sức mạnh\nrune.",
+		"type": 6,
+		"imgIndex": 5,
+		"level": 42,
+		"mhp": 84,
+		"dmg": 3,
+		"acc": 0,
+		"sell": 2600,
+		"price": 101000
 	},
 	{
-		"name":"Golden Necklace",
-		"desc":"A necklace of precision.",
-		"type":7,
-		"imgIndex":0,
-		"level":15,
-		"mhp":0,
-		"dmg":0,
-		"acc":2,
-		"sell":3000,
-		"price":111400
+		"name": "Dây chuyền vàng",
+		"desc": "Tăng độ chính xác.",
+		"type": 7,
+		"imgIndex": 0,
+		"level": 15,
+		"mhp": 0,
+		"dmg": 0,
+		"acc": 2,
+		"sell": 3000,
+		"price": 111400
 	},
 	{
-		"name":"Runic Shield",
-		"desc":"A shield imbued\nwith runic energy.",
-		"type":8,
-		"imgIndex":4,
-		"level":40,
-		"mhp":150,
-		"dmg":0,
-		"acc":0,
-		"sell":3000,
-		"price":135000
-	},
-
-
-
-
+		"name": "Khiên rune",
+		"desc": "Truyền năng lượng\nrune.",
+		"type": 8,
+		"imgIndex": 4,
+		"level": 40,
+		"mhp": 150,
+		"dmg": 0,
+		"acc": 0,
+		"sell": 3000,
+		"price": 135000
+	}
 ],
-"rare3":[
-	{
-		"name":"Elixir of Life",
-		"desc":"An epic health potion.",
-		"type":0,
-		"imgIndex":5,
-		"level":1,
-		"hp":-60,
-		"exp":0,
-		"sell":820,
-		"price":9000
-	},
-	{
-		"name":"Greater Elixir of Life",
-		"desc":"A legendary health potion.",
-		"type":0,
-		"imgIndex":6,
-		"level":1,
-		"hp":-80,
-		"exp":0,
-		"sell":1200,
-		"price":13000
-	},
-	{
-		"name":"Experience Potion",
-		"desc":"Grants a small\namount of experience.",
-		"type":0,
-		"imgIndex":7,
-		"level":1,
-		"hp":0,
-		"exp":3,
-		"sell":0,
-		"price":220000
-	},
-	{
-		"name":"Greater Experience Potion",
-		"desc":"Grants a massive amount\nof experience.",
-		"type":0,
-		"imgIndex":8,
-		"level":1,
-		"hp":0,
-		"exp":15,
-		"sell":0,
-		"price":1550000
-	},
-	{
-		"name":"Inferno Helmet",
-		"desc":"A helmet forged\nfrom the inferno.",
-		"type":2,
-		"imgIndex":8,
-		"level":50,
-		"mhp":175,
-		"dmg":15,
-		"acc":0,
-		"sell":56000,
-		"price":380000
-	},
-	{
-		"name":"Inferno Chestplate",
-		"desc":"A chestplate forged\nfrom the inferno.",
-		"type":3,
-		"imgIndex":8,
-		"level":50,
-		"mhp":670,
-		"dmg":25,
-		"acc":0,
-		"sell":79000,
-		"price":560000
-	},
-	{
-		"name":"Inferno Scimitar",
-		"desc":"A sword forged\nfrom the inferno.",
-		"type":4,
-		"imgIndex":8,
-		"level":50,
-		"mhp":0,
-		"dmg":182,
-		"acc":2,
-		"sell":80000,
-		"price":750000
-	},
-	{
-		"name":"Inferno Gauntlet",
-		"desc":"A gauntlet forged\nfrom the inferno.",
-		"type":5,
-		"imgIndex":6,
-		"level":50,
-		"mhp":132,
-		"dmg":8,
-		"acc":0,
-		"sell":58000,
-		"price":350000
-	},
-	{
-		"name":"Inferno Greaves",
-		"desc":"Boots forged in\nthe inferno.",
-		"type":6,
-		"imgIndex":6,
-		"level":50,
-		"mhp":132,
-		"dmg":8,
-		"acc":0,
-		"sell":58000,
-		"price":350000
-	},
-	{
-		"name":"Inferno Shield",
-		"desc":"A shield forged\nfrom the inferno.",
-		"type":8,
-		"imgIndex":5,
-		"level":50,
-		"mhp":360,
-		"dmg":18,
-		"acc":0,
-		"sell":70000,
-		"price":500000
-	},
 
-
-
-
-
-]
+"rare3": [
+		{
+			"name": "Sinh mệnh dược",
+			"desc": "Bình máu huyền thoại.",
+			"type": 0,
+			"imgIndex": 5,
+			"level": 1,
+			"hp": -60,
+			"exp": 0,
+			"sell": 820,
+			"price": 9000
+		},
+		{
+			"name": "Đại sinh mệnh dược",
+			"desc": "Bình máu truyền thuyết.",
+			"type": 0,
+			"imgIndex": 6,
+			"level": 1,
+			"hp": -80,
+			"exp": 0,
+			"sell": 1200,
+			"price": 13000
+		},
+		{
+			"name": "Bình kinh nghiệm",
+			"desc": "Tăng một ít\nkinh nghiệm.",
+			"type": 0,
+			"imgIndex": 7,
+			"level": 1,
+			"hp": 0,
+			"exp": 3,
+			"sell": 0,
+			"price": 220000
+		},
+		{
+			"name": "Bình kinh nghiệm cao cấp",
+			"desc": "Tăng lượng kinh nghiệm\ncực nhiều.",
+			"type": 0,
+			"imgIndex": 8,
+			"level": 1,
+			"hp": 0,
+			"exp": 15,
+			"sell": 0,
+			"price": 1550000
+		},
+		{
+			"name": "Mũ luyện ngục",
+			"desc": "Rèn từ\nlửa địa ngục.",
+			"type": 2,
+			"imgIndex": 8,
+			"level": 50,
+			"mhp": 175,
+			"dmg": 15,
+			"acc": 0,
+			"sell": 56000,
+			"price": 380000
+		},
+		{
+			"name": "Giáp ngực luyện ngục",
+			"desc": "Rèn từ\nlửa địa ngục.",
+			"type": 3,
+			"imgIndex": 8,
+			"level": 50,
+			"mhp": 670,
+			"dmg": 25,
+			"acc": 0,
+			"sell": 79000,
+			"price": 560000
+		},
+		{
+			"name": "Đao luyện ngục",
+			"desc": "Rèn từ\nlửa địa ngục.",
+			"type": 4,
+			"imgIndex": 8,
+			"level": 50,
+			"mhp": 0,
+			"dmg": 182,
+			"acc": 2,
+			"sell": 80000,
+			"price": 750000
+		},
+		{
+			"name": "Găng luyện ngục",
+			"desc": "Rèn từ\nlửa địa ngục.",
+			"type": 5,
+			"imgIndex": 6,
+			"level": 50,
+			"mhp": 132,
+			"dmg": 8,
+			"acc": 0,
+			"sell": 58000,
+			"price": 350000
+		},
+		{
+			"name": "Giày luyện ngục",
+			"desc": "Rèn trong\nlửa địa ngục.",
+			"type": 6,
+			"imgIndex": 6,
+			"level": 50,
+			"mhp": 132,
+			"dmg": 8,
+			"acc": 0,
+			"sell": 58000,
+			"price": 350000
+		},
+		{
+			"name": "Khiên luyện ngục",
+			"desc": "Rèn từ\nlửa địa ngục.",
+			"type": 8,
+			"imgIndex": 5,
+			"level": 50,
+			"mhp": 360,
+			"dmg": 18,
+			"acc": 0,
+			"sell": 70000,
+			"price": 500000
+		}
+	]
 }
 
 

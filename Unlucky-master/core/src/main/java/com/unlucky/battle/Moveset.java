@@ -48,15 +48,15 @@ public class Moveset {
             names[i] = moveset[i].name;
             // Concatenates move info into a full description
             if (moveset[i].type < 2) {
-                descriptions[i] = "dmg: " + Math.round(moveset[i].minDamage)
+                descriptions[i] = "DMG:" + Math.round(moveset[i].minDamage)
                         + "-" + Math.round(moveset[i].maxDamage);
             } else if (moveset[i].type == 2) {
-                descriptions[i] = "dmg: " + Math.round(moveset[i].minDamage) + " + "
-                        + moveset[i].crit + "% to crit";
+                descriptions[i] = "DMG:" + Math.round(moveset[i].minDamage) + "+ "
+                        + moveset[i].crit + "%crit";
             } else {
-                descriptions[i] = "HP: " + Math.round(moveset[i].minHeal)
-                        + "-" + Math.round(moveset[i].maxHeal) + ", -" + moveset[i].dmgReduction
-                        + "% DMG";
+                descriptions[i] = "HP:" + Math.round(moveset[i].minHeal)
+                        + "-" + Math.round(moveset[i].maxHeal) + ",-" + moveset[i].dmgReduction
+                        + "%DMG";
             }
         }
     }

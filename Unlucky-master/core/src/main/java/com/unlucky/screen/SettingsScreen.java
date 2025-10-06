@@ -101,8 +101,8 @@ public class SettingsScreen extends MenuExtensionScreen {
         // create settings labels
         settingLabels = new Label[7];
         String[] settingStrs = new String[] {
-                "NHẠC", "HIỆU ỨNG", "TẮT NHẠC:", "TẮT HIỆU ỨNG:",
-                "HIỂN THỊ CẤP ĐỘ KẺ ĐỊCH:", "HIỆU ỨNG THỜI TIẾT:", "HIỂN THỊ FPS:"
+                "NHẠC", "SFX", "TẮT NHẠC:", "TẮT SFX:",
+                "HIỂN THỊ LV. ĐỊCH:", "HIỆU ỨNG THỜI TIẾT:", "HIỂN THỊ FPS:"
         };
         for (int i = 0; i < 7; i++) {
             settingLabels[i] = new Label(settingStrs[i], white);
