@@ -14,27 +14,8 @@ import com.unlucky.resource.Util;
  */
 public class Tile {
 
-    // Image representation of tile
     public TextureRegion sprite;
-    // animation of a tile
     public AnimationManager anim;
-
-    /**
-     * Types of Tiles
-     * - normal: Player can pass through
-     * - blocked: Player cannot go through
-     * - change: Player goes forwards or backwards from the tile in the direction they entered
-     * - in and out: Player goes 1 tile in a random direction not the direction they entered the tile on
-     * - stop: Player's movement is stopped when this tile is stepped on
-     * - down, up, right, left: Player's direction is changed to 1 tile in the direction
-     * of the tile stepped on
-     * - question mark: Player can obtain gold, healing, or items from stepping on it. Once
-     * stepped on, it disappears
-     * - ice: Player slides on the ice, moving until it reaches the end of the ice or a blocked tile
-     * - teleport: Player teleports to another random teleportation tile on the map
-     * - exclamation mark: Player gets damaged or loses a random amount of gold
-     * - end: stepping on this tile means the player has completed the map
-     */
     public static final byte NORMAL = 0;
     public static final byte BLOCKED = 1;
     public static final byte CHANGE = 2;

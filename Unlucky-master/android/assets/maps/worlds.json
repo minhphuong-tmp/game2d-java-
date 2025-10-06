@@ -2,9 +2,9 @@
 "worlds": [
 	{
 		"name":"RỪNG SLIME",
-		"shortDesc":"LV. 1-6\nTRÙM: VUA SLIME",
+		"shortDesc":"LV. 1-3\nTRÙM: VUA SLIME",
 		"longDesc":"Ngày xưa rừng chỉ có muông thú. Một nhà khoa học điên làm thí nghiệm thất bại, biến chúng thành slime hung hãn. Chúng giết ông và chiếm lấy khu rừng.",
-		"numLevels":6,
+		"numLevels":3,
 		"levels": [
 			{ "name":"Lối vào rừng", "avgLevel":1 },
 			{ "name":"Giữa tán cây", "avgLevel":2 },
@@ -13,7 +13,7 @@
 	},
 	{
 		"name":"NGHĨA ĐỊA MA ÁM",
-		"shortDesc":"LV. 7-11\nTRÙM: LƯỠI HÁI ĐỎ",
+		"shortDesc":"LV. 4-6\nTRÙM: LƯỠI HÁI ĐỎ",
 		"longDesc":"Nghĩa địa này bị ám bởi những thực thể do một pháp sư hắc ám tạo ra từ ngàn xưa. Trong bóng tối, hồn ma và bộ xương rùng rợn canh giữ mộ phần. Tương truyền nơi sâu thẳm nhất còn có cả Thần Chết...",
 		"numLevels": 3,
 		"levels": [
