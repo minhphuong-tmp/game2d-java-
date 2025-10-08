@@ -18,17 +18,7 @@ import com.unlucky.resource.ResourceManager;
 import com.unlucky.resource.Util;
 import com.unlucky.screen.GameScreen;
 
-/**
- * Stores a tile map and the player configured with map
- * properties (night, day, lighting, weather, etc.)
- *
- * Tile maps will be separated by worlds and map levels
- * All maps in a world have similar themes
- * File names for maps are in the format:
- * "w[world index]_l[level index]"
- *
- * @author Ming Li
- */
+
 public class GameMap {
 
     // composite id

@@ -10,17 +10,6 @@
 			{ "name":"Giữa tán cây", "avgLevel":2 },
 			{ "name":"Đối mặt nhà vua", "avgLevel":3 }
 		]
-	},
-	{
-		"name":"NGHĨA ĐỊA MA ÁM",
-		"shortDesc":"LV. 4-6\nTRÙM: LƯỠI HÁI ĐỎ",
-		"longDesc":"Nghĩa địa này bị ám bởi những thực thể do một pháp sư hắc ám tạo ra từ ngàn xưa. Trong bóng tối, hồn ma và bộ xương rùng rợn canh giữ mộ phần. Tương truyền nơi sâu thẳm nhất còn có cả Thần Chết...",
-		"numLevels": 3,
-		"levels": [
-			{ "name":"Cổng ma ám", "avgLevel":7 },
-			{ "name":"Mộ phần rải rác", "avgLevel":8 },
-			{ "name":"Lưỡi hái đỏ", "avgLevel":11 }
-		]
 	}
 ]
 }

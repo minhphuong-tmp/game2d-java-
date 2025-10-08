@@ -6,12 +6,7 @@ import com.unlucky.animation.AnimationManager;
 import com.unlucky.entity.Entity;
 import com.unlucky.resource.Util;
 
-/**
- * Stores information about each tile on a map, including what it contains (Entity)
- * and how the player interacts with it
- *
- * @author Ming Li
- */
+
 public class Tile {
 
     public TextureRegion sprite;

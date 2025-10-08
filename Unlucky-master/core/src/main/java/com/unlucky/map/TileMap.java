@@ -12,52 +12,9 @@ import com.unlucky.entity.Entity;
 import com.unlucky.resource.ResourceManager;
 import com.unlucky.resource.Util;
 
-/**
- * Creates a tilemap from a text file.
- * A map file has the format:
- *
- * mapWidth
- * mapHeight
- * playerSpawn.x
- * playerSpawn.y
- * light (0 - daytime, 1 - nighttime)
- * weather (0 - none, 1 - rain, 2 - heavy rain, 3 - thunderstorm, 4 - snow, 5 - blizzard)
- * bottomLayer
- * s, s, s, s, ... -> mapWidth length
- * s, ...
- * s, ...
- * s, ...
- * mapHeight length
- * t, t, t, t, ... -> mapWidth length
- * t, ...
- * t, ...
- * t, ...
- * mapHeight length
- * topLayer (0 - no top layer, 1 - top layer)
- * (if top layer)
- * s, s, s, s, ... -> mapWidth length
- * s, ...
- * s, ...
- * s, ...
- * mapHeight length
- *
- * t can be one of the following:
- * - 0 for no tile
- * - tileID
- * - e[entityID] (means an Entity is placed on top of a tile)
- * - a[animIndex]|[numFrames]|[framesPerSecond] (an animated tile)
- *
- * s is the tileID of a NON-BLOCKED tile
- * if s is 0 then there is no tile
- *
- * A map will always have a bottom layer and tile map layer but does
- * not need to have a top layer
- *
- * @author Ming Li
- */
 public class TileMap {
 
-    // Tiles
+    // Tiless
     public int tileSize;
 
     // Map
