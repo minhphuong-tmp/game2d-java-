@@ -7,11 +7,7 @@ import com.unlucky.map.TileMap;
 import com.unlucky.resource.ResourceManager;
 import com.unlucky.resource.Util;
 
-/**
- * A boss enemy with special attributes
- *
- * @author Ming Li
- */
+
 public class Boss extends Enemy {
 
     // the unique identifier for bosses
