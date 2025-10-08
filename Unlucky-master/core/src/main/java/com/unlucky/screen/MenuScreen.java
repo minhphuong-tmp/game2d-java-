@@ -51,8 +51,6 @@ public class MenuScreen extends MenuExtensionScreen {
     private Group credits;
     private Image frame;
     private Label copyright;
-    private Label github;
-    private Label youtube;
     private Image[] creditsIcons;
     private ImageButton exitButton;
 

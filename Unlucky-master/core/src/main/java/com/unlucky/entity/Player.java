@@ -18,20 +18,8 @@ import com.unlucky.resource.Statistics;
 import com.unlucky.resource.Util;
 import com.unlucky.save.Settings;
 
-/**
- * The protagonist of the game.
- *
- * @author Ming Li
- */
 public class Player extends Entity {
 
-    /**
-     * -1 - stop
-     * 0 - down
-     * 1 - up
-     * 2 - right
-     * 3 - left
-     */
     public int moving = -1;
     // entity is in a continuous movement
     private float speed;
@@ -63,8 +51,9 @@ public class Player extends Entity {
     private int accuracyIncrease = 0;
     private int maxExpIncrease = 0;
 
+
     // gold
-    private int gold = 9999999;
+    private int gold = 0;
 
     // inventory and equips
     public Inventory inventory;
@@ -119,7 +108,6 @@ public class Player extends Entity {
 
         statusEffects = new StatusSet(true, rm);
         smoveset = new SpecialMoveset();
-        this.gold = 999999;
 
     }
 
@@ -416,9 +404,6 @@ public class Player extends Entity {
         }
     }
 
-    /**
-     * Increases the actual stats by their level up amounts
-     */
     public void applyLevelUp() {
         maxHp += hpIncrease;
         hp = maxHp;
@@ -434,11 +419,6 @@ public class Player extends Entity {
         maxExpIncrease = 0;
     }
 
-    /**
-     * Applies the stats of an equipable item
-     *
-     * @param item
-     */
     public void equip(Item item) {
         maxHp += item.mhp;
         hp = maxHp;
@@ -447,11 +427,7 @@ public class Player extends Entity {
         accuracy += item.acc;
     }
 
-    /**
-     * Removes the stats of an equipable item
-     *
-     * @param item
-     */
+
     public void unequip(Item item) {
         maxHp -= item.mhp;
         hp = maxHp;
@@ -475,9 +451,6 @@ public class Player extends Entity {
         moving = -1;
     }
 
-    /**
-     * After teleportation is done the player is moved out of the tile in a random direction
-     */
     public void finishTeleporting() {
         teleporting = false;
         changeDirection(MathUtils.random(3));
@@ -487,25 +460,10 @@ public class Player extends Entity {
         hp += heal;
         if (hp > maxHp) hp = maxHp;
     }
-
-    /**
-     * Applies a percentage health potion
-     * @param php
-     */
     public void percentagePotion(int php) {
         hp += (int) ((php / 100f) * maxHp);
         if (hp > maxHp) hp = maxHp;
     }
-
-    /**
-     * Green question mark tiles can drop 70% of the time
-     * if does drop:
-     * - gold (50% of the time) (based on map level)
-     * - heals based on map level (45% of the time)
-     * - items (5% of the time)
-     *
-     * @return
-     */
     public String[] getQuestionMarkDialog(int mapLevel, GameMap gameMap) {
         String[] ret = null;
 

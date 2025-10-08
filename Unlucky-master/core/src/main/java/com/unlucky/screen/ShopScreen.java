@@ -18,13 +18,6 @@ import com.unlucky.resource.ResourceManager;
 import com.unlucky.resource.Util;
 import com.unlucky.ui.inventory.ItemTooltip;
 
-/**
- * The screen for the shop UI where the player can buy/sell items
- * The shop has unique items that can't be dropped by monsters and
- * every item is rare or higher
- *
- * @author Ming Li
- */
 public class ShopScreen extends MenuExtensionScreen {
 
     private Player player;
@@ -102,9 +95,6 @@ public class ShopScreen extends MenuExtensionScreen {
         super.showSlide(false);
         addInventoryActors();
         handleInventoryEvents();
-
-        player.setGold(9999999);
-
 
         // update labels
         gold.setText("VÀNG: " + player.getGold());
