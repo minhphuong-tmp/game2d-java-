@@ -46,10 +46,6 @@ public class Save {
         file.writeString(Base64Coder.encodeString(json.prettyPrint(psave)), false);
     }
 
-    /**
-     * Reads the player data from the save json file and then
-     * loads the data into the game through the player
-     */
     public void load(ResourceManager rm) {
         if (!file.exists()) save();
         psave = json.fromJson(PlayerAccessor.class, Base64Coder.decodeString(file.readString()));
@@ -74,8 +70,8 @@ public class Save {
         loadInventory(rm);
         loadEquips(rm);
 
-        player.maxWorld = 2;   // world chỉ có 3, index 0,1,2
-        player.maxLevel = 12;   // giả sử mỗi world có ~10 level => index 0..9
+        player.maxWorld = 1;   // world chỉ có 3, index 0,1,2
+        player.maxLevel = 3;   // giả sử mỗi world có ~10 level => index 0..9
 
         // load smoveset
         for (int i = 0; i < SpecialMoveset.MAX_MOVES; i++) {
